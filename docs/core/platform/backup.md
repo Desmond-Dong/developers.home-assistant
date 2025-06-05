@@ -1,23 +1,23 @@
 ---
-title: "Backup"
+title: "备份"
 ---
 
-There are two main purposes for an integration to implement a backup platform:
+集成实现备份平台的主要目的是两个：
 
-1. Add a backup agent that can upload backups to some local or remote location.
-2. Pause or prepare integration operations before creating a backup and/or run some operation after a backup.
+1. 添加一个备份代理，能够将备份上传到本地或远程位置。
+2. 在创建备份之前暂停或准备集成操作和/或在备份后运行某些操作。
 
-## Backup Agents
+## 备份代理
 
-To add one or more backup agents, implement the two methods, `async_get_backup_agents` and `async_register_backup_agents_listener` in `backup.py`. Example:
+要添加一个或多个备份代理，请在 `backup.py` 中实现两个方法 `async_get_backup_agents` 和 `async_register_backup_agents_listener`。示例：
 
 ```python
 async def async_get_backup_agents(
     hass: HomeAssistant,
 ) -> list[BackupAgent]:
-    """Return a list of backup agents."""
+    """返回备份代理的列表。"""
     if not hass.config_entries.async_loaded_entries(DOMAIN):
-        LOGGER.debug("No config entry found or entry is not loaded")
+        LOGGER.debug("没有找到配置项或项未加载")
         return []
     return [ExampleBackupAgent()]
 
@@ -29,28 +29,28 @@ def async_register_backup_agents_listener(
     listener: Callable[[], None],
     **kwargs: Any,
 ) -> Callable[[], None]:
-    """Register a listener to be called when agents are added or removed.
+    """注册一个监听器，当代理被添加或移除时调用。
 
-    :return: A function to unregister the listener.
+    :return: 用于注销监听器的函数。
     """
     hass.data.setdefault(DATA_BACKUP_AGENT_LISTENERS, []).append(listener)
 
     @callback
     def remove_listener() -> None:
-        """Remove the listener."""
+        """移除监听器。"""
         hass.data[DATA_BACKUP_AGENT_LISTENERS].remove(listener)
 
     return remove_listener
 ```
 
-The listener stored in `async_register_backup_agents_listener` should be called every time there is the need to reload backup agents, to remove stale agents and add new ones. This can be done by registering the listeners during `async_setup_entry`:
+在需要重新加载备份代理时，应每次调用存储在 `async_register_backup_agents_listener` 中的监听器，以移除过时的代理并添加新的。这可以在 `async_setup_entry` 中注册监听器：
 
 ```python
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Set up config entry."""
-    # do things to set up your config entry
+    """设置配置项。"""
+    # 进行设置配置项的操作
 
-    # Notify backup listeners
+    # 通知备份监听器
     def notify_backup_listeners() -> None:
         for listener in hass.data.get(DATA_BACKUP_AGENT_LISTENERS, []):
             listener()
@@ -59,7 +59,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     return True
 ```
 
-A backup agent should implement the abstract interface of the `BackupAgent` base class as shown in this example:
+备份代理应实现 `BackupAgent` 基类的抽象接口，如下示例所示：
 
 ```python
 from homeassistant.components.backup import BackupAgent, BackupAgentError
@@ -68,10 +68,10 @@ from .const import DOMAIN
 
 
 class ExampleBackupAgent(BackupAgent):
-    """Backup agent interface."""
+    """备份代理接口。"""
 
     domain = DOMAIN
-    name = "Example Backup-Agent"
+    name = "示例备份代理"
     unique_id = "example_stable_id"
 
     async def async_download_backup(
@@ -79,12 +79,12 @@ class ExampleBackupAgent(BackupAgent):
         backup_id: str,
         **kwargs: Any,
     ) -> AsyncIterator[bytes]:
-        """Download a backup file.
+        """下载备份文件。
 
-        Raises BackupNotFound if the backup does not exist.
+        如果备份不存在则引发 BackupNotFound。
 
-        :param backup_id: The ID of the backup that was returned in async_list_backups.
-        :return: An async iterator that yields bytes.
+        :param backup_id: 在 async_list_backups 中返回的备份 ID。
+        :return: 一个异步迭代器，生成字节。
         """
 
     async def async_upload_backup(
@@ -94,10 +94,10 @@ class ExampleBackupAgent(BackupAgent):
         backup: AgentBackup,
         **kwargs: Any,
     ) -> None:
-        """Upload a backup.
+        """上传备份。
 
-        :param open_stream: A function returning an async iterator that yields bytes.
-        :param backup: Metadata about the backup that should be uploaded.
+        :param open_stream: 返回一个异步迭代器的函数，该迭代器生成字节。
+        :param backup: 需要上传的备份的元数据。
         """
 
     async def async_delete_backup(
@@ -105,48 +105,47 @@ class ExampleBackupAgent(BackupAgent):
         backup_id: str,
         **kwargs: Any,
     ) -> None:
-        """Delete a backup file.
+        """删除备份文件。
 
-        Raises BackupNotFound if the backup does not exist.
+        如果备份不存在则引发 BackupNotFound。
 
-        :param backup_id: The ID of the backup that was returned in async_list_backups.
+        :param backup_id: 在 async_list_backups 中返回的备份 ID。
         """
 
     async def async_list_backups(self, **kwargs: Any) -> list[AgentBackup]:
-        """List backups."""
+        """列出备份。"""
 
     async def async_get_backup(
         self,
         backup_id: str,
         **kwargs: Any,
     ) -> AgentBackup:
-        """Return a backup.
+        """返回一个备份。
 
-        Raises BackupNotFound if the backup does not exist.
+        如果备份不存在则引发 BackupNotFound。
         """
 ```
 
-Backup agents should raise a `BackupAgentError` (or a subclass of `BackupAgentError`) exception on error. Other exceptions are not expected to leave the backup agent.
+备份代理在出错时应引发 `BackupAgentError`（或 `BackupAgentError` 的子类）异常。其他异常不应离开备份代理。
 
-## Pre- and post-operations
+## 前后操作
 
-When Home Assistant is creating a backup, there might be a need to pause certain operations in the integration, or dumping data so it can properly be restored.
+当 Home Assistant 正在创建备份时，可能需要暂停集成中的某些操作，或转储数据以便能够正确恢复。
 
-This is done by adding two functions (`async_pre_backup` and `async_post_backup`) to `backup.py`
+这可以通过在 `backup.py` 中添加两个函数（`async_pre_backup` 和 `async_post_backup`）来完成。
 
-### Adding support
+### 添加支持
 
-The quickest way to add backup support to a new integration is by using our built-in scaffold template. From a Home Assistant dev environment, run `python3 -m script.scaffold backup` and follow the instructions.
+给新集成添加备份支持的最快方法是使用我们内置的脚手架模板。在 Home Assistant 开发环境中运行 `python3 -m script.scaffold backup` 并按照说明进行操作。
 
-If you prefer to go the manual route, create a new file in your integration folder called `backup.py` and implement the following method:
+如果您更喜欢手动方式，请在您的集成文件夹中创建一个名为 `backup.py` 的新文件，并实现以下方法：
 
 ```python
 from homeassistant.core import HomeAssistant
 
 
 async def async_pre_backup(hass: HomeAssistant) -> None:
-    """Perform operations before a backup starts."""
+    """在备份开始之前执行操作。"""
 
 async def async_post_backup(hass: HomeAssistant) -> None:
-    """Perform operations after a backup finishes."""
-```
+    """在备份完成后执行操作。"""

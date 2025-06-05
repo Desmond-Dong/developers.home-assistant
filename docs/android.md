@@ -1,40 +1,40 @@
 ---
-title: "Home Assistant Android"
-sidebar_label: "Introduction"
+title: "Home Assistant 安卓"
+sidebar_label: "介绍"
 ---
 
-## Welcome to the Home Assistant Android project
+## 欢迎来到 Home Assistant 安卓项目
 
-Are you ready to make a difference in the world of smart home technology? The **Home Assistant Android app** is an open-source project that empowers users to control their smart homes seamlessly. Whether you're a developer, designer, or enthusiast, **your contributions matter**!
+您准备好在智能家居技术的世界中带来改变了吗？**Home Assistant 安卓应用**是一个开源项目，赋予用户无缝控制智能家居的能力。无论您是开发者、设计师还是爱好者，**您的贡献很重要**！
 
-**[Explore the GitHub repository](https://ossinsight.io/analyze/home-assistant/android#overview)** to see how far we've come and where you can help!
-
----
-
-## Why contribute?
-
-- **Make an impact**: Improve the lives of thousands of users worldwide.
-- **Showcase your skills**: Build your portfolio by contributing to a widely recognized open-source project.
-- **Learn and grow**: Collaborate with a passionate community and enhance your technical expertise.
-- **Be part of a community**: Join a global network of developers and smart home enthusiasts.
+**[探索 GitHub 仓库](https://ossinsight.io/analyze/home-assistant/android#overview)**，看看我们取得了多大进展，您可以在哪里提供帮助！
 
 ---
 
-## How you can help
+## 为什么要贡献？
 
-We welcome contributions of all kinds! Here are some ways you can get involved:
-
-- **Code contributions**: Fix bugs, add features, or improve performance.
-- **Code reviews**: Help others by reviewing their work and providing constructive feedback.
-- **Documentation**: Keep our guides clear, concise, and up-to-date.
-- **Testing**: Ensure the app works flawlessly across devices.
-- **Feedback**: Share your ideas and suggestions to make the app even better.
+- **产生影响**：改善全球数千用户的生活。
+- **展示您的技能**：通过为广受认可的开源项目贡献来建立您的作品集。
+- **学习和成长**：与充满热情的社区合作，提升您的技术专业知识。
+- **成为社区的一部分**：加入全球开发者和智能家居爱好者的网络。
 
 ---
 
-## Ready to get started?
+## 您可以如何帮助
 
-1. **[Check out our get started guide](/docs/android/get_started)** for step-by-step instructions.
-2. **[Join our Discord community](https://discord.gg/c5DvZ4e)**, make sure you select the developer role and head to the **[Android](https://discord.com/channels/330944238910963714/1346948551892009101)** project thread to connect with other contributors.
+我们欢迎各种形式的贡献！以下是您可以参与的一些方式：
 
-Together, we can create something extraordinary. Let's build the future of smart homes, one contribution at a time!
+- **代码贡献**：修复错误、添加功能或提高性能。
+- **代码审核**：通过审核他人的工作并提供建设性反馈来帮助他人。
+- **文档**：保持我们的指南清晰、简洁和最新。
+- **测试**：确保应用在各种设备上完美运行。
+- **反馈**：分享您的想法和建议，以使应用变得更好。
+
+---
+
+## 准备好开始了吗？
+
+1. **[查看我们的入门指南](/docs/android/get_started)**，获取逐步说明。
+2. **[加入我们的 Discord 社区](https://discord.gg/c5DvZ4e)**，确保您选择开发者角色，并前往 **[Android](https://discord.com/channels/330944238910963714/1346948551892009101)** 项目线程，与其他贡献者连接。
+
+共同努力，我们可以创造非凡的东西。让我们一点一点地构建智能家居的未来！

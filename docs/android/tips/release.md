@@ -1,71 +1,70 @@
 ---
-title: "Build for release"
-sidebar_label: "Build for release"
+title: "构建发布版本"
+sidebar_label: "构建发布版本"
 ---
 
 :::warning
-Ensure the keystore is securely stored and not included in version control. It also applies for the credentials.
+确保密钥库安全存储，并且不包括在版本控制中。凭证也适用此原则。
 :::
 
-## Building for release
+## 构建发布版本
 
-To build the app for publishing, you need to sign it. Follow these steps:
+要发布应用程序，您需要对其进行签名。请遵循以下步骤：
 
-### Step 1: Create or use an existing keystore
+### 第1步：创建或使用现有的密钥库
 
-Before building the app, you must have a keystore. You can either create a new one or use an existing keystore.
+在构建应用程序之前，您必须有一个密钥库。您可以创建一个新的或使用现有的密钥库。
 
-#### Creating a keystore
+#### 创建密钥库
 
-You can create a keystore directly from Android Studio:
+您可以直接从 Android Studio 创建密钥库：
 
-1. Go to **Menu** > **Build** > **Generate Signed APK**.
-2. Select the option to create a new keystore.
-3. **Remember the passwords and the key alias** for future use.
+1. 转到 **菜单** > **构建** > **生成签名 APK**。
+2. 选择创建新密钥库的选项。
+3. **记住密码和密钥别名** 以备将来使用。
 
-#### Using an existing keystore
+#### 使用现有的密钥库
 
-If you already have a keystore, ensure it is named `release_keystore.keystore` and placed in the following folders:
+如果您已经有一个密钥库，请确保其名为 `release_keystore.keystore` 并放置在以下文件夹中：
 - `app`
 - `wear`
 
-Alternatively, you can specify a custom location by setting the `KEYSTORE_PATH` environment variable.
+或者，您可以通过设置 `KEYSTORE_PATH` 环境变量来指定自定义位置。
 
 ---
 
-### Step 2: Build the app
+### 第2步：构建应用程序
 
-You can build the app using either Android Studio or the command line (CLI).
+您可以使用 Android Studio 或命令行（CLI）来构建应用程序。
 
-#### From Android Studio
+#### 从 Android Studio
 
-1. Open Android Studio.
-2. Go to **Menu** > **Build** > **Generate Signed APK**.
-3. Select the keystore you created or an existing one.
-4. Follow the steps to build the app.
+1. 打开 Android Studio。
+2. 转到 **菜单** > **构建** > **生成签名 APK**。
+3. 选择您创建的密钥库或现有的密钥库。
+4. 按照步骤构建应用程序。
 
-#### From the CLI
+#### 从 CLI
 
-1. **Set environment variables**  
-   Define the following environment variables used in `app/build.gradle.kts`:
+1. **设置环境变量**  
+   定义 `app/build.gradle.kts` 中使用的以下环境变量：
    - `KEYSTORE_PASSWORD`
    - `KEYSTORE_ALIAS`
    - `KEYSTORE_ALIAS_PASSWORD`
-   - `KEYSTORE_PATH` (if your keystore is located in a custom location)
+   - `KEYSTORE_PATH`（如果您的密钥库位于自定义位置）
 
-2. **Build the app**  
-   To build the APK, run:
-
-   ```bash
-   ./gradlew assembleRelease # To build all the apps
-   # OR
-   ./gradlew :<GRADLE_MODULE>:assembleRelease # To build a specific module, such as :app, :automotive, or :wear
-   ```
-
-   To build the AAB, run:
+2. **构建应用程序**  
+   要构建 APK，请运行：
 
    ```bash
-   ./gradlew bundleRelease # To build all the apps
-   # OR
-   ./gradlew :<GRADLE_MODULE>:bundleRelease # To build a specific module, such as :app, :automotive, or :wear
+   ./gradlew assembleRelease # 构建所有应用程序
+   # 或
+   ./gradlew :<GRADLE_MODULE>:assembleRelease # 构建特定模块，例如 :app、:automotive 或 :wear
    ```
+
+   要构建 AAB，请运行：
+
+   ```bash
+   ./gradlew bundleRelease # 构建所有应用程序
+   # 或
+   ./gradlew :<GRADLE_MODULE>:bundleRelease # 构建特定模块，例如 :app、:automotive 或 :wear

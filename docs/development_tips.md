@@ -1,39 +1,39 @@
 ---
-title: "Tips and tricks"
+title: "提示和技巧"
 ---
 
-This page provides some tips and tricks that may help you as a contributor to Home Assistant. The list here is by no means exhaustive, and if you pick up any additional undocumented tips and tricks, please open a PR to add them here.
+此页面提供了一些提示和技巧，可能会帮助您作为 Home Assistant 的贡献者。这里的列表绝对不是详尽无遗的，如果您获得了任何其他未经文档记录的提示和技巧，请打开 PR 将它们添加到此处。
 
-## Tips and tricks
+## 提示和技巧
 
-### Keep PRs simple
+### 保持 PR 简洁
 
-See the [Component Checklist](/docs/creating_component_code_review#5-make-your-pull-request-as-small-as-possible) for PR expectations.
+请查看 [组件检查列表](/docs/creating_component_code_review#5-make-your-pull-request-as-small-as-possible) 以了解 PR 的期望。
 
-### Test package dependency changes in Home Assistant
+### 在 Home Assistant 中测试包依赖更改
 
-See the [API library docs](/docs/api_lib_index#trying-your-library-inside-home-assistant) for more information.
+有关更多信息，请查看 [API 库文档](/docs/api_lib_index#trying-your-library-inside-home-assistant)。
 
-### Test Core integration changes in your production Home Assistant environment
+### 在您的生产 Home Assistant 环境中测试核心集成更改
 
-To test a core integration change in your production Home Assistant environment:
-1. Copy the integration folder into `/config/custom_components`.
-2. Add a **version** field to `manifest.json` (for example, `"version": "0.0.0"`).
-3. If the integration uses localized strings, copy `strings.json` into `translations/en.json` under the integration folder as described in [Custom integration localization](/docs/internationalization/custom_integration).
-4. Restart Home Assistant.
+要在您的生产 Home Assistant 环境中测试核心集成更改：
+1. 将集成文件夹复制到 `/config/custom_components`。
+2. 在 `manifest.json` 中添加一个 **version** 字段（例如，`"version": "0.0.0"`）。
+3. 如果集成使用本地化字符串，请根据 [自定义集成本地化](/docs/internationalization/custom_integration) 的描述，将 `strings.json` 复制到集成文件夹中的 `translations/en.json`。
+4. 重启 Home Assistant。
 
-Home Assistant will always prioritize integrations in `custom_components` over the core integration. Don't forget to remove it once you are done testing; otherwise, you will be stuck on that version.
+Home Assistant 将始终优先考虑 `custom_components` 中的集成，而不是核心集成。测试完成后不要忘记将其删除；否则，您将停留在该版本上。
 
-### When adding a config flow to an integration, be aware of the frontend
+### 添加配置流程时，请注意前端
 
-The Home Assistant frontend caches aggressively, and as such, the first time you run Home Assistant with your new changes, you may not see the integration show up in the integration list. Check the logs to make sure there were no errors, and if not, perform a hard refresh of your browser window and try again; in many cases, that will resolve your issue.
+Home Assistant 前端缓存非常激进，因此，第一次使用您的新更改运行 Home Assistant 时，您可能不会在集成列表中看到集成。检查日志以确保没有错误，如果没有，请对您的浏览器窗口执行强制刷新，然后再试一次；在许多情况下，这将解决您的问题。
 
-### Getting additional support
+### 获取额外支持
 
-`#developers` on the Home Assistant [Discord](https://www.home-assistant.io/join-chat/) server are great places to ask questions. Pro tip: Before you post your question, push the code you are working on into a branch and push that branch somewhere public and paste a link to it along with your question so that the person who is helping you can see your code. Please do NOT paste code blobs into the channel as it's hard to read and hides other questions/discussions.
+在 Home Assistant [Discord](https://www.home-assistant.io/join-chat/) 服务器上的 `#developers` 是提出问题的好地方。专业提示：在您发布问题之前，将您正在处理的代码推送到一个分支，并将该分支推送到某个公共位置，并在您的问题中粘贴一个链接，以便帮助您的人员可以看到您的代码。请不要在频道中粘贴代码块，因为这很难阅读，并且会掩盖其他问题/讨论。
 
-If you see a way to improve the developer docs, please pay it forward and submit a PR to update them. See the next tip for more details.
+如果您看到可以改善开发者文档的方法，请将其转发并提交一个 PR 以更新文档。有关更多详细信息，请参见下一个提示。
 
-### Missing information in the developer docs
+### 开发者文档中的信息缺失
 
-The Home Assistant maintainers try to keep the developer docs up to date, but we also rely on contributors like you to help us correct, improve, and expand on our existing documentation. Like Home Assistant, this [documentation is open source](https://github.com/home-assistant/developers.home-assistant), and PRs are welcome. When in doubt, click the `Edit this page` button in the bottom left to get to the source file and to edit the file directly on GitHub. No command line is needed!
+Home Assistant 的维护者努力保持开发者文档的最新，但我们也依赖像您这样的贡献者来帮助我们纠正、改进和扩展现有文档。像 Home Assistant 一样，这份 [文档是开源的](https://github.com/home-assistant/developers.home-assistant)，欢迎 PR。如果有疑问，请单击左下角的 `编辑此页面` 按钮以访问源文件并直接在 GitHub 上编辑该文件。无需命令行！

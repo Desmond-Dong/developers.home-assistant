@@ -1,53 +1,53 @@
 ---
-title: "Tutorial: Making your first add-on"
+title: "教程：创建你的第一个插件"
 ---
 
-So you've got Home Assistant going and you've been enjoying the built-in add-ons but you're missing this one application. Time to make your own add-on!
+所以你已经启动了 Home Assistant，并且一直在享受内置的插件，但你缺少这个应用程序。是时候制作你自己的插件了！
 
-To get started with developing add-ons, we first need access to where Home Assistant looks for local add-ons. For this you can use the [Samba](https://my.home-assistant.io/redirect/supervisor_addon/?addon=core_samba) or the [SSH](https://my.home-assistant.io/redirect/supervisor_addon/?addon=core_ssh) add-ons.
+要开始开发插件，我们首先需要访问 Home Assistant 查找本地插件的位置。你可以使用 [Samba](https://my.home-assistant.io/redirect/supervisor_addon/?addon=core_samba) 或者 [SSH](https://my.home-assistant.io/redirect/supervisor_addon/?addon=core_ssh) 插件。
 
-For Samba, once you have enabled and started it, your Home Assistant instance will show up in your local network tab and share a folder called "addons". This is the folder to store your custom add-ons.
+对于 Samba，一旦你启用并启动它，你的 Home Assistant 实例将在你的本地网络标签中显示，并共享一个名为 "addons" 的文件夹。这是存储你自定义插件的文件夹。
 
 :::tip
-If you are on macOS and the folder is not showing up automatically, go to Finder and press CMD+K then enter `smb://homeassistant.local`
+如果你使用的是 macOS 而文件夹没有自动显示，请打开 Finder 并按 CMD+K，然后输入 `smb://homeassistant.local`
 :::
 
-For SSH, you will have to install it. Before you can start it, you will have to have a private/public key pair and store your public key in the add-on config ([see docs for more info](https://github.com/home-assistant/addons/blob/master/ssh/DOCS.md#configuration)). Once started, you can SSH to Home Assistant and store your custom add-ons in the `/addons` directory.
+对于 SSH，你需要安装它。在启动之前，你需要有一对私钥/公钥，并将你的公钥存储在插件配置中（[查看更多信息](https://github.com/home-assistant/addons/blob/master/ssh/DOCS.md#configuration)）。一旦启动，你可以通过 SSH 连接到 Home Assistant，并将你的自定义插件存储在 `/addons` 目录中。
 
-Once you have located your add-on directory, it's time to get started!
+一旦你找到插件目录，就可以开始了！
 
-## Step 1: The basics
+## 第一步：基本信息
 
-- Create a new directory called `hello_world`
-- Inside that directory create three files:
+- 创建一个名为 `hello_world` 的新目录
+- 在该目录内创建三个文件：
   - `Dockerfile`
   - `config.yaml`
   - `run.sh`
 
-### The `Dockerfile` file
+### `Dockerfile` 文件
 
-This is the image that will be used to build your add-on.
+这是将用于构建你的插件的镜像。
 
 ```dockerfile
 ARG BUILD_FROM
 FROM $BUILD_FROM
 
-# Copy data for add-on
+# 复制插件的数据
 COPY run.sh /
 RUN chmod a+x /run.sh
 
 CMD [ "/run.sh" ]
 ```
 
-### The `config.yaml` file
+### `config.yaml` 文件
 
-This is your add-on configuration, which tells the Supervisor what to do and how to present your add-on.
+这是你的插件配置，用于告诉 Supervisor 做什么以及如何展示你的插件。
 
-For an overview of all valid add-on configuration options have a look [here](/docs/add-ons/configuration#add-on-configuration)
+有关所有有效插件配置选项的概览，请查看 [这里](/docs/add-ons/configuration#add-on-configuration)
 
 ```yaml
 name: "Hello world"
-description: "My first real add-on!"
+description: "我的第一个真正的插件！"
 version: "1.0.0"
 slug: "hello_world"
 init: false
@@ -59,9 +59,9 @@ arch:
   - i386
 ```
 
-### The `run.sh` file
+### `run.sh` 文件
 
-This is the script that will run when your add-on starts.
+这是你的插件启动时将运行的脚本。
 
 ```shell
 #!/usr/bin/with-contenv bashio
@@ -70,78 +70,78 @@ echo "Hello world!"
 ```
 
 :::note
-Make sure your editor is using UNIX-like line breaks (LF), not DOS/Windows (CRLF).
+确保你的编辑器使用 UNIX 风格的换行符 (LF)，而不是 DOS/Windows 风格 (CRLF)。
 :::
 
-## Step 2: Installing and testing your add-on
+## 第二步：安装和测试你的插件
 
-Now comes the fun part, time to open the Home Assistant UI and install and run your add-on.
+现在进入有趣的部分，打开 Home Assistant 界面，安装和运行你的插件。
 
-- Open the Home Assistant frontend
-- Go to "Settings"
-- Click on "Add-ons"
-- Click "add-on store" in the bottom right corner.
+- 打开 Home Assistant 前端
+- 前往 "设置"
+- 点击 "插件"
+- 在右下角点击 "插件商店"。
 
-[![Open your Home Assistant instance and show the Supervisor add-on store.](https://my.home-assistant.io/badges/supervisor_store.svg)](https://my.home-assistant.io/redirect/supervisor_store/)
+[![打开你的 Home Assistant 实例并显示 Supervisor 插件商店。](https://my.home-assistant.io/badges/supervisor_store.svg)](https://my.home-assistant.io/redirect/supervisor_store/)
 
-- On the top right overflow menu, click the "Check for updates" button
-- Refresh your webpage when needed
-- You should now see a new section at the top of the store called "Local add-ons" that lists your add-on!
+- 在右上角的溢出菜单中，点击 "检查更新" 按钮
+- 根据需要刷新你的网页
+- 现在你应该在商店顶部看到一个名为 "本地插件" 的新部分，其中列出了你的插件！
 
-![Screenshot of the local repository card](/img/en/hass.io/screenshots/local_repository.png)
+![本地库卡片的截图](/img/en/hass.io/screenshots/local_repository.png)
 
-- Click on your add-on to go to the add-on details page.
-- Install your add-on
-- Start your add-on
-- Click on the "Logs" tab, and refresh the logs of your add-on, you should now see "Hello world!" in your logs.
+- 点击你的插件以查看插件详情页面。
+- 安装你的插件
+- 启动你的插件
+- 点击 "日志" 标签，并刷新你的插件日志，你应该现在在日志中看到 "Hello world!"。
 
-![Screenshot of the add-on logs](/img/en/hass.io/tutorial/addon_hello_world_logs.png)
+![插件日志的截图](/img/en/hass.io/tutorial/addon_hello_world_logs.png)
 
-### I don't see my add-on?!
+### 我看不到我的插件?!
 
-Oops! You clicked "Check for updates" in the store and your add-on didn't show up. Or maybe you just updated an option, clicked refresh and saw your add-on disappear.
+哎呀！你在商店中点击了 "检查更新"，但你的插件没有显示。或者你刚刚更新了一个选项，点击刷新后看到了你的插件消失。
 
-When this happens, try refreshing your browser's cache first by pressing `Ctrl + F5`. If that didn't help, it means that your `config.yaml` is invalid. It's either [invalid YAML](http://www.yamllint.com/) or one of the specified options is incorrect. To see what went wrong, go to the Supervisor panel and in the supervisor card click on "View logs". This should bring you to a page with the logs of the supervisor. Scroll to the bottom and you should be able to find the validation error.
+发生这种情况时，首先尝试通过按 `Ctrl + F5` 刷新浏览器的缓存。如果这没有帮助，说明你的 `config.yaml` 无效。它可能是 [无效的 YAML](http://www.yamllint.com/) 或者指定的某个选项不正确。要查看发生了什么错误，请转到 Supervisor 面板，在 Supervisor 卡片上点击 "查看日志"。这将带你到一个显示 Supervisor 日志的页面。滚动到底部，你应该能够找到验证错误。
 
-Once you fixed the error, go to the add-on store and click "Check for updates" again.
+一旦你修正了错误，转到插件商店再次点击 "检查更新"。
 
-## Step 3: Hosting a server
+## 第三步：托管服务器
 
-Until now we've been able to do some basic stuff, but it's not very useful yet. So let's take it one step further and host a server that we expose on a port. For this we're going to use the built-in HTTP server that comes with Python 3.
+到目前为止我们已经能够做一些基本的事情，但这还不够有用。接下来我们进一步，托管一个服务器并在一个端口上公开它。为此我们将使用 Python 3 自带的 HTTP 服务器。
 
-To do this, we will need to update our files as follows:
+为此，我们需要按如下方式更新文件：
 
-- `Dockerfile`: Install Python 3
-- `config.yaml`: Make the port from the container available on the host
-- `run.sh`: Run the Python 3 command to start the HTTP server
+- `Dockerfile`：安装 Python 3
+- `config.yaml`：让容器中的端口可在主机上使用
+- `run.sh`：运行 Python 3 命令以启动 HTTP 服务器
 
-Update your `Dockerfile`:
+更新你的 `Dockerfile`：
 
 ```dockerfile
 ARG BUILD_FROM
 FROM $BUILD_FROM
 
-# Install requirements for add-on
+# 安装插件的需求
 RUN \
   apk add --no-cache \
     python3
 
-# Python 3 HTTP Server serves the current working dir
-# So let's set it to our add-on persistent data directory.
+# Python 3 HTTP 服务器提供当前工作目录
+# 所以我们将它设置为我们的插件持久数据目录。
 WORKDIR /data
 
-# Copy data for add-on
+# 复制插件的数据
 COPY run.sh /
 RUN chmod a+x /run.sh
 
 CMD [ "/run.sh" ]
 ```
 
-Add "ports" to `config.yaml`. This will make TCP on port 8000 inside the container available on the host on port 8000.
+在 `config.yaml` 中添加 "ports"。这将使容器内的 TCP 端口 8000 在主机上的 8000 端口上可用。
 
 ```yaml
 name: "Hello world"
-description: "My first real add-on!"
+description: "我的第一个真正的插件！"
 version: "1.1.0"
 slug: "hello_world"
 init: false
@@ -156,7 +156,7 @@ ports:
   8000/tcp: 8000
 ```
 
-Update `run.sh` to start the Python 3 server:
+更新 `run.sh` 以启动 Python 3 服务器：
 
 ```shell
 #!/usr/bin/with-contenv bashio
@@ -166,21 +166,21 @@ echo "Hello world!"
 python3 -m http.server 8000
 ```
 
-## Step 4: Installing the update
+## 第四步：安装更新
 
-Since we updated the version number in our `config.yaml`, Home Assistant will show an update button when looking at the add-on details. You might have to refresh your browser or click the "Check for updates" button in the add-on store for it to show up. If you did not update the version number, you can also uninstall and install the add-on again. After installing the add-on again, make sure you start it.
+由于我们在 `config.yaml` 中更新了版本号，Home Assistant 在查看插件详情时会显示更新按钮。你可能需要刷新浏览器或在插件商店中点击 "检查更新" 按钮以使其显示。如果你没有更新版本号，你也可以卸载并再次安装插件。再次安装插件后，请确保启动它。
 
-Now navigate to [http://homeassistant.local:8000](http://homeassistant.local:8000) to see our server in action!
+现在导航到 [http://homeassistant.local:8000](http://homeassistant.local:8000) 以查看我们的服务器在运行！
 
-![Screenshot of the file index served by the add-on](/img/en/hass.io/tutorial/python3-http-server.png)
+![插件提供的文件索引的截图](/img/en/hass.io/tutorial/python3-http-server.png)
 
-## Bonus: Working with add-on options
+## 附加内容：处理插件选项
 
-In the screenshot you've probably seen that our server only served up 1 file: `options.json`. This file contains the user configuration for this add-on. Because we specified two empty objects for the keys "options" and "schema" in our `config.yaml`, the resulting file is currently empty.
+在截图中，你可能看到我们的服务器只服务了一个文件：`options.json`。该文件包含此插件的用户配置。因为我们在 `config.yaml` 中为键 "options" 和 "schema" 指定了两个空对象，所以结果文件当前是空的。
 
-Let's see if we can get some data into that file!
+让我们看看能否在该文件中获取一些数据！
 
-To do this, we need to specify the default options and a schema for the user to change the options. Change the options and schema entries in your `config.yaml` with the following:
+为此，我们需要指定默认选项以及一个让用户更改选项的模式。在 `config.yaml` 中将选项和模式条目更改为以下内容：
 
 ```yaml
 ...
@@ -199,8 +199,8 @@ schema:
 ...
 ```
 
-Reload the add-on store and re-install your add-on. You will now see the options available in the add-on config screen. When you now go back to our Python 3 server and download `options.json`, you'll see the options you set. [Example of how options.json can be used inside `run.sh`](https://github.com/home-assistant/addons/blob/master/dhcp_server/data/run.sh#L10-L13)
+重新加载插件商店并重新安装你的插件。现在你会在插件配置屏幕中看到可用的选项。当你现在返回到我们的 Python 3 服务器并下载 `options.json` 时，你会看到你设置的选项。[在 `run.sh` 中使用 options.json 的示例](https://github.com/home-assistant/addons/blob/master/dhcp_server/data/run.sh#L10-L13)
 
-## Bonus: Template add-on repository
+## 附加内容：模板插件库
 
-We maintain a full template example repository for add-ons you can use to get started. You can find that in the [`home-assistant/addons-example` repository](https://github.com/home-assistant/addons-example).
+我们维护了一个完整的插件模板示例库，你可以使用它来入门。你可以在 [`home-assistant/addons-example` 仓库](https://github.com/home-assistant/addons-example) 中找到它。

@@ -1,90 +1,89 @@
 ---
-title: "Assist satellite entity"
-sidebar_label: Assist satellite
+title: "辅助卫星实体"
+sidebar_label: 辅助卫星
 ---
 
-An Assist Satellite entity represents the Assist pipeline-powered voice assistant capabilities of a device. Devices with such entities can allow users to control Home Assistant using their voice.
+辅助卫星实体代表设备的基于辅助管道的语音助手功能。具有此类实体的设备可以允许用户通过声音控制家庭助理。
 
-An Assist satellite entity is derived from the [`homeassistant.components.assist_satellite.AssistSatelliteEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/assist_satellite/__init__.py).
+辅助卫星实体派生自 [`homeassistant.components.assist_satellite.AssistSatelliteEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/assist_satellite/__init__.py)。
 
-## Properties
+## 属性
 
-| Name                 | Type                   | Default           | Description                                                           |
-|----------------------|------------------------|-------------------|-----------------------------------------------------------------------|
-| `pipeline_entity_id` | <code>str; None</code> | <code>None</code> | Id of the `select` entity with the [pipeline id](/docs/voice/pipelines/) or `None`. |
-| `vad_sensitivity_entity_id` | <code>str; None</code> | <code>None</code> | Id of the `select` entity with the [voice activity detection sensitivity](https://github.com/home-assistant/core/blob/dev/homeassistant/components/assist_pipeline/vad.py) or `None`. |
-| `tts_options` | <code>dict; None</code> | <code>None</code> | Options passed to the [text-to-speech system](https://www.home-assistant.io/integrations/tts/) when responding. |
+| 名称                     | 类型                      | 默认值              | 描述                                                               |
+|--------------------------|---------------------------|---------------------|--------------------------------------------------------------------|
+| `pipeline_entity_id`     | <code>str; None</code>   | <code>None</code>   | 带有 [pipeline id](/docs/voice/pipelines/) 的 `select` 实体的 Id 或 `None`。 |
+| `vad_sensitivity_entity_id` | <code>str; None</code>   | <code>None</code>   | 带有 [语音活动检测敏感度](https://github.com/home-assistant/core/blob/dev/homeassistant/components/assist_pipeline/vad.py) 的 `select` 实体的 Id 或 `None`。 |
+| `tts_options`            | <code>dict; None</code>  | <code>None</code>   | 响应时传递给 [文本转语音系统](https://www.home-assistant.io/integrations/tts/) 的选项。 |
 
 
-## States
+## 状态
 
-The state of an `AssistSatelliteEntity` follows its currently running [pipeline](/docs/voice/pipelines/). The `AssistSatelliteState` enum stores the possible states.
+`AssistSatelliteEntity` 的状态遵循其当前运行的 [管道](/docs/voice/pipelines/)。 `AssistSatelliteState` 枚举存储可能的状态。
 
 :::tip
-You must call the `tts_response_finished` method on your entity when a text-to-speech response **has finished playing** to return to the `IDLE` state.
+当文本到语音响应 **播放完成** 时，您必须在实体上调用 `tts_response_finished` 方法以返回到 `IDLE` 状态。
 :::
 
-| Constant     | Description                                                              |
-|--------------|--------------------------------------------------------------------------|
-| `IDLE`       | Device is waiting for user input, such as a wake word or a button press. |
-| `LISTENING`  | Device is streaming audio with the voice command to Home Assistant.      |
-| `PROCESSING` | Home Assistant is processing the voice command.                          |
-| `RESPONDING` | Device is speaking the response.                                         |
+| 常量        | 描述                                                              |
+|-------------|-------------------------------------------------------------------|
+| `IDLE`      | 设备正在等待用户输入，例如唤醒词或按钮按下。                        |
+| `LISTENING` | 设备正在与家庭助理流式传输语音命令。                               |
+| `PROCESSING` | 家庭助理正在处理语音命令。                                       |
+| `RESPONDING` | 设备正在说出响应。                                               |
 
-## Supported features
+## 支持的功能
 
-Supported features are defined by using values in the `AssistSatelliteEntityFeature` enum
-and are combined using the bitwise or (`|`) operator.
+支持的功能通过使用 `AssistSatelliteEntityFeature` 枚举中的值进行定义，并使用按位或 (`|`) 运算符进行组合。
 
-| Value      | Description                                       |
-|------------|---------------------------------------------------|
-| `ANNOUNCE` | Device supports remotely triggered announcements. Implement the `async_announce` method to play back the provided `media_id` from `AssistSatelliteAnnouncement`. This method should only return once the announcement has finished playing on the device. |
-| `START_CONVERSATION` | Device supports remotely triggered conversations, which plays an announcement and then listens for one or more voices commands. Implement the `async_start_conversation` method to play back the provided `media_id` from `AssistSatelliteAnnouncement` and then listen for voice commands. This method should only return once the announcement has finished playing. |
+| 值          | 描述                                             |
+|-------------|---------------------------------------------------|
+| `ANNOUNCE`  | 设备支持远程触发的公告。实现 `async_announce` 方法以播放提供的 `media_id` 来自 `AssistSatelliteAnnouncement`。该方法应仅在公告在设备上播放完成后返回。 |
+| `START_CONVERSATION` | 设备支持远程触发的对话，先播放公告，然后监听一个或多个语音命令。实现 `async_start_conversation` 方法以播放提供的 `media_id` 来自 `AssistSatelliteAnnouncement`，然后监听语音命令。该方法应仅在公告播放完成后返回。 |
 
-## Methods
+## 方法
 
-### Running a pipeline and handling events
+### 运行管道和处理事件
 
-Satellite entities should only run [Assist pipelines](/docs/voice/pipelines/) using the `async_accept_pipeline_from_satellite` method. [Events from the pipeline](/docs/voice/pipelines/#events) are handled by implementing the `on_pipeline_event` method.
+卫星实体应仅使用 `async_accept_pipeline_from_satellite` 方法运行 [辅助管道](/docs/voice/pipelines/)。 [管道中的事件](/docs/voice/pipelines/#events) 通过实现 `on_pipeline_event` 方法进行处理。
 
-The satellite entity's [state](#states) is automatically updated when a pipeline is run, with the exception of `RESPONDING` to `IDLE`. The `tts_response_finished` method must be called by the developer when the satellite has finished speaking the response on the device.
+卫星实体的 [状态](#states) 在运行管道时会自动更新，但 `RESPONDING` 到 `IDLE` 的情况除外。开发者必须在卫星在设备上完成响应播放后调用 `tts_response_finished` 方法。
 
-### Get configuration
+### 获取配置
 
-The `async_get_configuration` method must return a (cached) `AssistSatelliteConfiguration`. If the entity must communicate with the device to retrieve the configuration, this should be during initialization.
+`async_get_configuration` 方法必须返回 (缓存的) `AssistSatelliteConfiguration`。如果实体必须与设备通信以获取配置，则应在初始化期间进行。
 
-A [websocket command](#getting-the-satellite-configuration) is available for getting an entity's configuration.
+可以使用 [websocket 命令](#getting-the-satellite-configuration) 来获取实体的配置。
 
-### Set configuration
+### 设置配置
 
-The `async_set_configuration` method updates the device's configuration, and must only return once the device's and Home Assistant's `AssistSatelliteConfiguration` are synchronized.
+`async_set_configuration` 方法更新设备的配置，必须在设备和家庭助理的 `AssistSatelliteConfiguration` 同步后返回。
 
-A [websocket command](#setting-the-active-wake-words) is available for setting the active wake words.
+可以使用 [websocket 命令](#setting-the-active-wake-words) 来设置活动唤醒词。
 
-### Announcements
+### 公告
 
-If the device has the `ANNOUNCE` [supported feature](#supported-features), then the `async_announce` method should be implemented to announce the provided `media_id` within `AssistSatelliteAnnouncement`. If `preannouncement_media_id` is provided, it should be played before the `media_id`.
-The `async_announce` method should only return when the announcement is finished playing on the device.
+如果设备具有 `ANNOUNCE` [支持的功能](#supported-features)，则应实现 `async_announce` 方法来在 `AssistSatelliteAnnouncement` 中宣布提供的 `media_id`。如果提供了 `preannouncement_media_id`，则应在 `media_id` 之前播放。
+`async_announce` 方法仅应在设备上播放完成时返回。
 
-An [announce action](https://home-assistant.io/integrations/assist_satellite#action-assist_satelliteannounce) is available for automating announcements.
+有可用于自动化公告的 [announce action](https://home-assistant.io/integrations/assist_satellite#action-assist_satelliteannounce)。
 
-### Start Conversation
+### 开始对话
 
-If the device has the `START_CONVERSATION` [supported feature](#supported-features), then the `async_start_conversation` method should be implemented to:
+如果设备具有 `START_CONVERSATION` [支持的功能](#supported-features)，则应实现 `async_start_conversation` 方法来：
 
-1. Announce `preannouncement_media_id` within `AssistSatelliteAnnouncement`, if provided
-2. Announce the provided `media_id` within `AssistSatelliteAnnouncement`, then
-3. Listen for one or more follow-up voice commands
+1. 在 `AssistSatelliteAnnouncement` 中宣布 `preannouncement_media_id`，如果提供
+2. 在 `AssistSatelliteAnnouncement` 中宣布提供的 `media_id`，然后
+3. 监听一个或多个后续语音命令
 
-The `async_start_conversation` method should only return when the announcement is finished playing on the device. The conversation will continue between the user and the satellite.
+`async_start_conversation` 方法仅应在设备上公告播放完成时返回。对话将在用户和卫星之间继续进行。
 
-A [start conversation action](https://home-assistant.io/integrations/assist_satellite#action-assist_satellitestart_conversation) is available for automating conversations.
+有可用于自动化对话的 [start conversation action](https://home-assistant.io/integrations/assist_satellite#action-assist_satellitestart_conversation)。
 
 ## WebSocket API
 
-### Intercepting wake words
+### 拦截唤醒词
 
-The integration offers a websocket API to intercept wake word detections and announce them to the user. This is used by the voice wizard to help the user onboard and get familiar with the wake word.
+该集成提供一个 websocket API 用于拦截唤醒词检测并将其宣布给用户。这被语音向导用于帮助用户入门并熟悉唤醒词。
 
 ```json
 {
@@ -93,9 +92,9 @@ The integration offers a websocket API to intercept wake word detections and ann
 }
 ```
 
-The entity id must be of an Assist satellite entity which supports the `ANNOUNCE` feature.
+实体 ID 必须是支持 `ANNOUNCE` 功能的辅助卫星实体。
 
-Once a wake word is detected, a response is returned like:
+一旦检测到唤醒词，将返回如下响应：
 
 ```json
 {
@@ -103,9 +102,9 @@ Once a wake word is detected, a response is returned like:
 }
 ```
 
-### Getting the satellite configuration
+### 获取卫星配置
 
-The current configuration for the satellite, including available and active wake words, can get retrieved with:
+可以通过以下方式检索卫星的当前配置，包括可用和活动的唤醒词：
 
 ```json
 {
@@ -114,7 +113,7 @@ The current configuration for the satellite, including available and active wake
 }
 ```
 
-A response will be returned like this:
+将返回如下响应：
 
 ```json
 {
@@ -143,15 +142,14 @@ A response will be returned like this:
 }
 ```
 
-The `active_wake_words` list contains the ids of wake words from `available_wake_words`.
+`active_wake_words` 列表包含来自 `available_wake_words` 的唤醒词的 ID。
 
-The `pipeline_entity_id` contains the id of the select entity which controls the pipeline that the device will run.
-The `vad_entity_id` contains the id of the select entity with the voice activity detector (VAD) sensitivity level.
+`pipeline_entity_id` 包含控制设备将运行的管道的选择实体的 ID。
+`vad_entity_id` 包含具有语音活动检测器 (VAD) 敏感度级别的选择实体的 ID。
 
+### 设置活动唤醒词
 
-### Setting the active wake words
-
-Set the active wake words using:
+使用以下方式设置活动唤醒词：
 
 ```json
 {
@@ -161,5 +159,4 @@ Set the active wake words using:
 }
 ```
 
-The `wake_word_ids` must contain ids from the `available_wake_words` list from the `assist_satellite/get_configuration` command.
-The size of `wake_word_ids` should also not exceed `max_active_wake_words`.
+`wake_word_ids` 必须包含来自 `assist_satellite/get_configuration` 命令的 `available_wake_words` 列表中的 ID。`wake_word_ids` 的大小也不应超过 `max_active_wake_words`。

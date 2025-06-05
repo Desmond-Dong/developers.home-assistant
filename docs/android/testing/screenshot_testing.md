@@ -1,69 +1,69 @@
 ---
-title: "Android screenshot testing"
-sidebar_label: "Screenshot testing"
+title: "Android 截图测试"
+sidebar_label: "截图测试"
 ---
 
-## Why do we perform screenshot testing?
+## 为什么我们要进行截图测试？
 
-Screenshot testing is used to verify that the current UI matches the reference UI stored in the repository. By doing this, we can ensure that any changes impacting the UI are intentional and validated. The scope of these tests is limited to the UI.
+截图测试用于验证当前的用户界面是否与存储在仓库中的参考用户界面相匹配。通过这样做，我们可以确保对用户界面的任何更改都是有意的并经过验证。这些测试的范围仅限于用户界面。
 
-We should test on various device shapes and sizes, ranging from small screens (e.g., Wear OS devices) to large screens (e.g., 55" TVs).
+我们应该在各种设备形状和尺寸上进行测试，从小屏幕（例如，Wear OS 设备）到大屏幕（例如，55" 电视）。
 
-### Benefits of screenshot testing
+### 截图测试的好处
 
-- **UI Consistency**: Ensures that the UI remains consistent across updates.
-- **Library Updates**: Validates that updates to UI libraries do not introduce unintended changes.
-- **Broad Device Coverage**: Tests across multiple screen sizes and shapes to ensure compatibility.
+- **用户界面一致性**：确保在更新中用户界面保持一致。
+- **库更新**：验证对用户界面库的更新不会引入意外的更改。
+- **广泛的设备覆盖**：跨多个屏幕尺寸和形状进行测试，以确保兼容性。
 
-### Real-world example
+### 真实案例
 
-Screenshot testing has proven useful when using beta versions of libraries, such as the Wear Compose library, where changes in the library could impact the UI.
+在使用库的测试版时，截图测试已证明其有效性，例如 Wear Compose 库，其中库的变化可能影响用户界面。
 
-## Compose screenshot testing
+## Compose 截图测试
 
-We use the [Compose Preview Screenshot Testing](https://developer.android.com/studio/preview/compose-screenshot-testing) framework to assert that the UI does not change unexpectedly.
+我们使用 [Compose 预览截图测试](https://developer.android.com/studio/preview/compose-screenshot-testing) 框架来断言用户界面不会意外变化。
 
-### Advantages of compose screenshot testing
+### Compose 截图测试的优势
 
-- **No emulator required**: These tests do not require an emulator, making them less resource-intensive and significantly faster than [integration tests](/docs/android/testing/integration_testing).
-- **Fast feedback**: Developers can quickly verify UI changes without waiting for emulator boot times.
+- **无需模拟器**：这些测试不需要模拟器，使其占用资源更少，并且相比于 [集成测试](/docs/android/testing/integration_testing) 快得多。
+- **快速反馈**：开发人员可以快速验证用户界面更改，而无需等待模拟器启动时间。
 
-### Reference screenshots
+### 参考截图
 
-The reference screenshots are stored under `src/debug/screenshotTest/reference` in each Gradle module. To update the reference screenshots, run the following command:
+参考截图存储在每个 Gradle 模块的 `src/debug/screenshotTest/reference` 下。要更新参考截图，请运行以下命令：
 
 ```bash
 ./gradlew updateDebugScreenshotTest
 ```
 
-### CI integration
+### CI 集成
 
-Our [CI pipeline](/docs/android/ci) verifies the test reports for any errors. If discrepancies are found, the CI blocks the pull request until the issues are resolved.
+我们的 [CI 流水线](/docs/android/ci) 验证测试报告以查找任何错误。如果发现差异，CI 会阻止拉取请求，直到问题解决。
 
-## Avoiding duplication in Compose previews
+## 避免在 Compose 预览中重复
 
-To avoid duplicating Compose previews in your tests, ensure that you reuse existing composables and preview annotations wherever possible. This reduces redundancy and ensures consistency between previews and tests.
+为了避免在测试中重复 Compose 预览，请确保尽可能重用现有的可组合项和预览注释。这减少了冗余，并确保预览和测试之间的一致性。
 
-## Configuring annotations for tests
+## 配置测试的注释
 
-When writing screenshot tests, use appropriate configuration annotations to define the device size, theme, and other parameters. This ensures that the tests accurately reflect the intended UI.
+编写截图测试时，使用适当的配置注释来定义设备大小、主题和其他参数。这确保测试准确反映预期的用户界面。
 
-## Handling threshold updates
+## 处理阈值更新
 
-Screenshot tests can fail when run on different operating systems due to subtle differences in rendering, such as antialiasing. This issue is discussed in detail in this [Google issue tracker](https://issuetracker.google.com/issues/348590914).
+截图测试在不同操作系统上运行时可能会失败，原因是渲染中的细微差异，例如抗锯齿。该问题在此 [Google 问题跟踪器](https://issuetracker.google.com/issues/348590914) 中进行了详细讨论。
 
-### Current approach
+### 当前方法
 
-- We aim to keep the threshold as low as possible to avoid masking real issues.
-- If your tests fail due to minor rendering differences, you may need to adjust the threshold.
+- 我们的目标是将阈值保持尽可能低，以避免掩盖真实问题。
+- 如果由于轻微的渲染差异导致测试失败，您可能需要调整阈值。
 
-To adjust the threshold, update the configuration in your test file to allow for slight variations while still catching significant changes.
+要调整阈值，请在测试文件中更新配置，以允许轻微的变化，同时仍然捕获重大的更改。
 
-## Best practices for screenshot testing
+## 截图测试的最佳实践
 
-- **Test across devices**: Ensure your tests cover a range of screen sizes and shapes.
-- **Keep reference screenshots updated**: Regularly update reference screenshots to reflect intentional UI changes, and explain the changes in your PR.
-- **Minimize thresholds**: Use the smallest possible threshold to avoid hiding real issues.
-- **Reuse previews**: Avoid duplicating Compose previews by reusing existing composables and annotations.
+- **跨设备测试**：确保您的测试覆盖一系列屏幕尺寸和形状。
+- **保持参考截图更新**：定期更新参考截图以反映有意的用户界面更改，并在您的 PR 中解释更改。
+- **最小化阈值**：使用尽可能小的阈值，以避免隐藏真实问题。
+- **重用预览**：通过重用现有的可组合项和注释，避免重复 Compose 预览。
 
-By following these practices, you can ensure that your UI remains consistent and reliable across updates and device configurations.
+通过遵循这些实践，您可以确保您的用户界面在更新和设备配置之间保持一致和可靠。

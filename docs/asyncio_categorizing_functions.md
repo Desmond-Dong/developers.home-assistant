@@ -1,18 +1,18 @@
 ---
-title: "Categorizing functions"
+title: "函数分类"
 ---
 
-A piece of work within Home Assistant is represented by a function that will be invoked. It will either run inside our event loop or inside our thread pool, depending on if it is async safe.
+在Home Assistant中，一项工作通过一个将被调用的函数表示。根据它是否是异步安全的，它将运行在我们的事件循环中或线程池内。
 
-Home Assistant uses the convention that all functions that must be run from within the event loop are prefixed with `async_`.
+Home Assistant使用的约定是，所有必须在事件循环中运行的函数都以`async_`作为前缀。
 
-## The coroutine function
+## 协程函数
 
-Coroutines are special functions based on Python’s generators syntax which allows them to suspend execution while waiting on a result.
+协程是基于Python生成器语法的特殊函数，允许它们在等待结果时挂起执行。
 
-Invoking a coroutine function will return a Generator object back, but will not actually begin execution. This object will execute the task when it is either awaited (from within another coroutine) or it is scheduled on the event loop.
+调用协程函数将返回一个生成器对象，但实际上不会开始执行。该对象将在被等待（从另一个协程内部）或者在事件循环中调度时执行任务。
 
-To declare a function a coroutine, add `async` before the `def` of the function definition.
+要声明一个函数为协程，请在函数定义的`def`前添加`async`。
 
 ```python
 async def async_look_my_coroutine(target):
@@ -24,15 +24,15 @@ async def async_look_my_coroutine(target):
 hass.loop.create_task(async_look_my_coroutine("world"))
 ```
 
-In this example, we schedule the coroutine by calling `hass.loop.create_task`. This will add the coroutine to the queue of tasks to be run. When the event loop is running `async_look_my_coroutine` it will suspend the task when `await entity.async_turn_on()` is called. At that point a new task will be scheduled to execute `entity.async_turn_on()`. When that job has been executed, `async_look_my_coroutine` will resume.
+在这个例子中，我们通过调用`hass.loop.create_task`来调度协程。这将把协程添加到待运行任务的队列中。当事件循环正在运行`async_look_my_coroutine`时，当调用`await entity.async_turn_on()`时，它将挂起该任务。此时，将调度一个新任务以执行`entity.async_turn_on()`。当该作业执行完毕后，`async_look_my_coroutine`将恢复。
 
-## The callback function
+## 回调函数
 
-This is a normal function that is considered safe to be run from within the event loop. A callback is unable to suspend itself and thus cannot do any I/O or call a coroutine. A callback is capable of scheduling a new task but it will not be able to wait for the results.
+这是一个被认为安全在事件循环内部运行的普通函数。回调无法挂起自身，因此不能进行任何I/O或调用协程。回调能够调度一个新任务，但无法等待结果。
 
-To declare a function as a callback, import the callback annotation from the core package and annotate your function.
+要将函数声明为回调，从核心包导入回调注解并对函数进行注解。
 
-A common use case for a callback in Home Assistant is as a listener for an event or a service action call. It can process the incoming information and then schedule the right calls to be made. Example from the automation engine.
+在Home Assistant中，回调的常见用例是作为事件监听器或服务动作调用。它可以处理传入的信息，然后调度正确的调用。例如来自自动化引擎的示例。
 
 ```python
 from homeassistant.core import callback
@@ -40,30 +40,30 @@ from homeassistant.core import callback
 
 @callback
 def async_trigger_service_handler(service_call):
-    """Handle automation trigger service action call."""
+    """处理自动化触发服务动作调用。"""
     vars = service_call.data.get(ATTR_VARIABLES)
     for entity in component.async_extract_from_service(service_call):
         hass.loop.create_task(entity.async_trigger(vars, True))
 ```
 
-In this example, `entity.async_trigger` is a coroutine function. Invoking the coroutine function will return a coroutine task. The passed in parameters will be used when the task gets executed.
+在这个例子中，`entity.async_trigger`是一个协程函数。调用协程函数将返回一个协程任务。当任务被执行时，传入的参数将被使用。
 
-To execute the task we have to schedule it for execution on the event loop. This is done by calling `hass.loop.create_task`.
+要执行任务，我们必须将其调度在事件循环中执行。这是通过调用`hass.loop.create_task`来完成的。
 
-### Why even have callbacks?
+### 为什么还要有回调？
 
-You might wonder, if a coroutine can do everything a callback can do, why even have a callback. The reason is performance and better state consistency of the core API objects.
+你可能会想，如果协程能做回调能做的所有事情，为什么还要有回调。原因是性能和核心API对象的状态一致性更好。
 
-When coroutine A waits for coroutine B, it will suspend itself and schedule a new task to run B. This means that the event loop is now running A, B and then A again. If B is a callback, A will never have to suspend itself and thus the event loop is just running A. The consistency implication is that other events queued to run on the event loop continue to wait until callbacks complete, but will be interleaved when yielding to another coroutine.
+当协程A等待协程B时，它将挂起自己并调度一个新任务去运行B。这意味着事件循环现在运行A、B，然后再运行A。如果B是回调，A将永远不需要挂起自己，因此事件循环只在运行A。其一致性的影响在于，排队在事件循环上运行的其他事件将继续等待回调完成，但在让出给另一个协程时，将会交错执行。
 
-## Event loop and thread safe
+## 事件循环与线程安全
 
-These are functions that are safe to run both in a thread and inside the event loop. These functions are usually performing a computation or transform data in memory. Anything that does I/O does not fall under this category. Many standard library functions fall in this category. For example generating the sum of a set of numbers using sum or merging two dictionaries.
+这些是安全地在线程和事件循环内部运行的函数。这些函数通常执行计算或在内存中转换数据。任何执行I/O的任务都不属于此类。这类函数中有许多标准库函数。例如，使用sum生成一组数字的和或合并两个字典。
 
-There is no special annotation to mark functions as part of this category and care should be taken when using these functions from inside the event loop. When in doubt, look at their implementation.
+没有特殊注释来标记函数属于这一类别，使用这些函数时需小心。在有疑虑时，请查看它们的实现。
 
-## Other functions
+## 其他函数
 
-These are all the functions that did not fit in the previous categories. These functions are either thread-safe or not considered safe to be run within the event loop. These are functions that use sleep, or perform I/O.
+这些是所有不适合前面类别的函数。这些函数可能是线程安全的，也可能被认为不安全在事件循环内部运行。这些是会使用sleep或执行I/O的函数。
 
-There is no special annotation necessary to be considered part of this category.
+没有特殊注释被认为是这一类别的一部分。

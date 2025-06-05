@@ -1,5 +1,5 @@
 ---
-title: "Integration needs to be able to be set up via the UI"
+title: "集成需要能够通过UI进行设置"
 related_rules:
   - test-before-configure
   - unique-config-entry
@@ -10,32 +10,32 @@ related_rules:
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+## 推理
 
-Since its introduction in 2018, the config flow has become the standard way to set up integrations in Home Assistant.
-They allow for a consistent user experience across integrations and provide a way to guide users through the setup process.
+自2018年引入以来，配置流程已成为在Home Assistant中设置集成的标准方式。
+它们提供了一致的用户体验，并提供了一种引导用户完成设置过程的方式。
 
-Because of the better user experience, we want to make sure that all integrations are able to set up via the config flow.
+由于更好的用户体验，我们希望确保所有集成都能够通过配置流程进行设置。
 
-Since this is the entrypoint for users to start using an integration, we should make sure that the config flow is very user-friendly and understandable.
-This means we should use the right selectors at the right place, validate the input where needed, and use `data_description` in the `strings.json` to give context about the input field.
+由于这是用户开始使用集成的切入点，我们应该确保配置流程非常用户友好和易于理解。
+这意味着我们应该在合适的地方使用正确的选择器，在需要的地方验证输入，并在`strings.json`中使用`data_description`来提供有关输入字段的上下文。
 
-The integration should store all configuration in the `ConfigEntry.data` field, while all settings that are not needed for the connection to be made should be stored in the `ConfigEntry.options` field.
+集成应该将所有配置存储在`ConfigEntry.data`字段中，而所有不需要连接的设置应该存储在`ConfigEntry.options`字段中。
 
-## Example implementation
+## 示例实现
 
-To use a config flow in your integration, you need to create a `config_flow.py` file in your integration folder and set `config_flow` in your `manifest.json` to `true`.
-The text that is shown in the config flow is defined in the `strings.json` file.
+要在您的集成中使用配置流程，您需要在集成文件夹中创建一个`config_flow.py`文件，并在您的`manifest.json`中将`config_flow`设置为`true`。
+在配置流程中显示的文本在`strings.json`文件中定义。
 
 `config_flow.py`:
 ```python
 class MyConfigFlow(ConfigFlow, domain=DOMAIN):
-    """My config flow."""
+    """我的配置流程。"""
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Handle a flow initialized by the user."""
+        """处理由用户初始化的流程。"""
         errors: dict[str, str] = {}
         if user_input:
             return self.async_create_entry(
@@ -49,17 +49,17 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
         )
 ```
 
-`string.json`: 
+`strings.json`: 
 ```json
 {
   "config": {
     "step": {
       "user": {
         "data": {
-          "host": "Host"
+          "host": "主机"
         },
         "data_description": {
-          "host": "The hostname or IP address of the MyIntegration device."
+          "host": "MyIntegration设备的主机名或IP地址。"
         }
       }
     }
@@ -67,15 +67,15 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
 }
 ```
 
-## Additional resources
+## 额外资源
 
-More information about config flows can be found in the [config flow documentation](/docs/config_entries_config_flow_handler).
-More information about the architecture decision around config flows can be found in [ADR-0010](https://github.com/home-assistant/architecture/blob/master/adr/0010-integration-configuration.md)
+有关配置流程的更多信息可以在[配置流程文档](/docs/config_entries_config_flow_handler)中找到。
+有关配置流程架构决策的更多信息可以在[ADR-0010](https://github.com/home-assistant/architecture/blob/master/adr/0010-integration-configuration.md)中找到。
 
-## Exceptions
+## 例外
 
-The integrations that are exempt in [ADR-0010](https://github.com/home-assistant/architecture/blob/master/adr/0010-integration-configuration.md) are exempt from this rule.
+在[ADR-0010](https://github.com/home-assistant/architecture/blob/master/adr/0010-integration-configuration.md)中豁免的集成不受此规则的限制。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

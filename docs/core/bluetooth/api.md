@@ -1,14 +1,14 @@
 ---
-title: "Bluetooth APIs"
+title: "蓝牙 API"
 ---
 
-### Subscribing to Bluetooth discoveries
+### 订阅蓝牙发现
 
-Some integrations may need to know when a device is discovered right away. The Bluetooth integration provides a registration API to receive callbacks when a new device is discovered that matches specific key values. The same format for `bluetooth` in [`manifest.json`](../../creating_integration_manifest#bluetooth) is used for matching. In addition to the matchers used in the `manifest.json`, `address` can also be used as a matcher.
+某些集成可能需要立即知道设备何时被发现。蓝牙集成提供了一个注册 API，它可以在发现匹配特定键值的新设备时接收回调。用于匹配的格式与 [`manifest.json`](../../creating_integration_manifest#bluetooth) 中的 `bluetooth` 相同。除了在 `manifest.json` 中使用的匹配器外，`address` 也可以作为匹配器使用。
 
-The function `bluetooth.async_register_callback` is provided to enable this ability. The function returns a callback that will cancel the registration when called.
+提供了 `bluetooth.async_register_callback` 函数来实现此功能。该函数返回一个回调，用于在调用时取消注册。
 
-The below example shows registering to get callbacks when a Switchbot device is nearby.
+以下示例演示了如何注册以获取 Switchbot 设备附近时的回调。
 
 ```python
 from homeassistant.components import bluetooth
@@ -17,8 +17,8 @@ from homeassistant.components import bluetooth
 
 @callback
 def _async_discovered_device(service_info: bluetooth.BluetoothServiceInfoBleak, change: bluetooth.BluetoothChange) -> None:
-    """Subscribe to bluetooth changes."""
-    _LOGGER.warning("New service_info: %s", service_info)
+    """订阅蓝牙变化。"""
+    _LOGGER.warning("新 service_info: %s", service_info)
 
 entry.async_on_unload(
     bluetooth.async_register_callback(
@@ -27,7 +27,7 @@ entry.async_on_unload(
 )
 ```
 
-The below example shows registering to get callbacks for HomeKit devices.
+以下示例演示了如何注册以获取 HomeKit 设备的回调。
 
 ```python
 from homeassistant.components import bluetooth
@@ -41,7 +41,7 @@ entry.async_on_unload(
 )
 ```
 
-The below example shows registering to get callbacks for Nespresso Prodigios.
+以下示例演示了如何注册以获取 Nespresso Prodigio 的回调。
 
 ```python
 from homeassistant.components import bluetooth
@@ -55,7 +55,7 @@ entry.async_on_unload(
 )
 ```
 
-The below example shows registering to get callbacks for a device with the address `44:33:11:22:33:22`.
+以下示例演示了如何注册以获取地址为 `44:33:11:22:33:22` 的设备的回调。
 
 ```python
 from homeassistant.components import bluetooth
@@ -69,9 +69,9 @@ entry.async_on_unload(
 )
 ```
 
-### Fetch the shared BleakScanner instance
+### 获取共享的 BleakScanner 实例
 
-Integrations that need an instance of a `BleakScanner` should call the `bluetooth.async_get_scanner` API. This API returns a wrapper around a single `BleakScanner` that allows integrations to share without overloading the system.
+需要 `BleakScanner` 实例的集成应调用 `bluetooth.async_get_scanner` API。该 API 返回一个围绕单个 `BleakScanner` 的包装器，使集成能够共享而不造成系统过负荷。
 
 ```python
 from homeassistant.components import bluetooth
@@ -79,10 +79,9 @@ from homeassistant.components import bluetooth
 scanner = bluetooth.async_get_scanner(hass)
 ```
 
+### 确定扫描器是否在运行
 
-### Determine if a scanner is running
-
-The Bluetooth integration may be set up but has no connectable adapters or remotes. The `bluetooth.async_scanner_count` API can be used to determine if there is a scanner running that will be able to receive advertisements or generate `BLEDevice`s that can be used to connect to the device. An integration may want to raise a more helpful error during setup if there are no scanners that will generate connectable `BLEDevice` objects.
+蓝牙集成可能已经设置，但没有可连接的适配器或遥控器。可以使用 `bluetooth.async_scanner_count` API 来确定是否有正在运行的扫描器，该扫描器能够接收广告或生成可用于连接设备的 `BLEDevice`。如果没有能够生成可连接 `BLEDevice` 对象的扫描器，集成可能希望在设置期间引发更加有用的错误。
 
 ```python
 from homeassistant.components import bluetooth
@@ -90,24 +89,24 @@ from homeassistant.components import bluetooth
 count = bluetooth.async_scanner_count(hass, connectable=True)
 ```
 
-### Subscribing to unavailable callbacks
+### 订阅不可用的回调
 
-To get a callback when the Bluetooth stack can no longer see a device, call the `bluetooth.async_track_unavailable` API. For performance reasons, it may take up to five minutes to get a callback once the device is no longer seen.
+要在蓝牙堆栈无法再看到设备时获取回调，请调用 `bluetooth.async_track_unavailable` API。出于性能原因，一旦设备不再被看到，获取回调可能需要长达五分钟的时间。
 
-If the `connectable` argument is set to `True`, if any `connectable` controller can reach the device, the device will be considered available. If only non-connectable controllers can reach the device, the device will be considered unavailable. If the argument is set to `False`, the device will be considered available if any controller can see it.
+如果将 `connectable` 参数设置为 `True`，则如果任何可连接的控制器可以达到设备，则设备将被视为可用。如果只有不可连接的控制器可以达到设备，则设备将被视为不可用。如果参数设置为 `False`，则如果任何控制器可以看到设备，则设备将被视为可用。
 
 ```python
 from homeassistant.components import bluetooth
 
 def _unavailable_callback(info: bluetooth.BluetoothServiceInfoBleak) -> None:
-    _LOGGER.debug("%s is no longer seen", info.address)
+    _LOGGER.debug("%s 不再被看到", info.address)
 
 cancel = bluetooth.async_track_unavailable(hass, _unavailable_callback, "44:44:33:11:23:42", connectable=True)
 ```
 
-### Finding out the availability timeout
+### 查找可用性超时
 
-Availability is based on the time since the device's last known broadcast. This timeout is learned automatically based on the device's regular broadcasting pattern. You can find out this with the `bluetooth.async_get_learned_advertising_interval` API.
+可用性根据设备最后已知广播后的时间来确定。此超时会根据设备的常规广播模式自动学习。您可以使用 `bluetooth.async_get_learned_advertising_interval` API 找到这一点。
 
 ```python
 from homeassistant.components import bluetooth
@@ -115,7 +114,7 @@ from homeassistant.components import bluetooth
 learned_interval = bluetooth.async_get_learned_advertising_interval(hass, "44:44:33:11:23:42")
 ```
 
-If the advertising interval is not yet known, this will return `None`. In that case, unavailability tracking will try the fallback interval for that address. The below example returns the interval that has been set manually by an integration:
+如果广告间隔尚未知道，这将返回 `None`。在这种情况下，不可用性跟踪将尝试该地址的回退间隔。以下示例返回集成手动设置的间隔：
 
 ```python
 from homeassistant.components import bluetooth
@@ -125,7 +124,7 @@ bluetooth.async_set_fallback_availability_interval(hass, "44:44:33:11:23:42", 64
 fallback_interval = bluetooth.async_get_fallback_availability_interval(hass, "44:44:33:11:23:42")
 ```
 
-If there is no learned interval or fallback interval for the device, a hardcoded safe default interval is used:
+如果设备没有学习到的间隔或回退间隔，将使用硬编码的安全默认间隔：
 
 ```python
 from homeassistant.components import bluetooth
@@ -133,12 +132,11 @@ from homeassistant.components import bluetooth
 default_fallback_interval = bluetooth.FALLBACK_MAXIMUM_STALE_ADVERTISEMENT_SECONDS
 ```
 
+### 从 `address` 获取 bleak `BLEDevice`
 
-### Fetching the bleak `BLEDevice` from the `address`
+集成应避免通过调用 `bluetooth.async_ble_device_from_address` API 启动额外扫描器以解析地址，该 API 返回最近配置的可以达到设备的 `bluetooth` 适配器的 `BLEDevice`。如果没有适配器可以达到设备，则 `bluetooth.async_ble_device_from_address` API 将返回 `None`。
 
-Integrations should avoid the overhead of starting an additional scanner to resolve the address by calling the `bluetooth.async_ble_device_from_address` API, which returns a `BLEDevice` for the nearest configured `bluetooth` adapter that can reach the device. If no adapters can reach the device, the `bluetooth.async_ble_device_from_address` API, will return `None`.
-
-Suppose the integration wants to receive data from `connectable` and non-connectable controllers. In that case, it can exchange the `BLEDevice` for a `connectable` one when it wants to make an outgoing connection as long as at least one `connectable` controller is in range.
+假设集成想要从可连接和不可连接控制器接收数据。在这种情况下，它可以在想要进行外部连接时，用 `connectable` 的 `BLEDevice` 交换 `BLEDevice`，只要至少有一个可连接控制器处于范围内。
 
 ```python
 from homeassistant.components import bluetooth
@@ -146,9 +144,9 @@ from homeassistant.components import bluetooth
 ble_device = bluetooth.async_ble_device_from_address(hass, "44:44:33:11:23:42", connectable=True)
 ```
 
-### Fetching the latest `BluetoothServiceInfoBleak` for a device
+### 获取设备的最新 `BluetoothServiceInfoBleak`
 
-The latest advertisement and device data are available with the `bluetooth.async_last_service_info` API, which returns a `BluetoothServiceInfoBleak` from the scanner with the best RSSI of the requested connectable type.
+最新的广告和设备数据可以通过 `bluetooth.async_last_service_info` API 获取，该 API 返回来自最强 RSSI 的可连接类型的 `BluetoothServiceInfoBleak`。
 
 ```python
 from homeassistant.components import bluetooth
@@ -156,9 +154,9 @@ from homeassistant.components import bluetooth
 service_info = bluetooth.async_last_service_info(hass, "44:44:33:11:23:42", connectable=True)
 ```
 
-### Checking if a device is present
+### 检查设备是否存在
 
-To determine if a device is still present, call the `bluetooth.async_address_present` API. This call is helpful if your integration needs the device to be present to consider it available.
+要确定设备是否仍然存在，请调用 `bluetooth.async_address_present` API。如果您的集成需要设备存在才能视其为可用，则此调用非常有用。
 
 ```python
 from homeassistant.components import bluetooth
@@ -166,9 +164,9 @@ from homeassistant.components import bluetooth
 bluetooth.async_address_present(hass, "44:44:33:11:23:42", connectable=True)
 ```
 
-### Fetching all discovered devices
+### 获取所有已发现的设备
 
-To access the list of previous discoveries, call the `bluetooth.async_discovered_service_info` API. Only devices that are still present will be in the cache.
+要访问以前发现的设备列表，请调用 `bluetooth.async_discovered_service_info` API。只有仍然存在的设备会在缓存中。
 
 ```python
 from homeassistant.components import bluetooth
@@ -176,33 +174,32 @@ from homeassistant.components import bluetooth
 service_infos = bluetooth.async_discovered_service_info(hass, connectable=True)
 ```
 
-### Fetching all discovered devices and advertisement data by each Bluetooth adapter
+### 获取每个蓝牙适配器的所有已发现设备和广告数据
 
-To access the list of previous discoveries and advertisement data received by each adapter independently, call the `bluetooth.async_scanner_devices_by_address` API. The call returns a list of `BluetoothScannerDevice` objects. The same device and advertisement data may appear multiple times, once per Bluetooth adapter that reached it.
+要独立访问以前发现的设备列表和每个适配器接收到的广告数据，请调用 `bluetooth.async_scanner_devices_by_address` API。该调用返回一个 `BluetoothScannerDevice` 对象的列表。相同的设备和广告数据可能会多次出现，每个达到它的蓝牙适配器一次。
 
 ```python
 from homeassistant.components import bluetooth
 
 device = bluetooth.async_scanner_devices_by_address(hass, "44:44:33:11:23:42", connectable=True)
-# device.ble_device is a bleak `BLEDevice`
-# device.advertisement is a bleak `AdvertisementData`
-# device.scanner is the scanner that found the device
+# device.ble_device 是一个 bleak `BLEDevice`
+# device.advertisement 是一个 bleak `AdvertisementData`
+# device.scanner 是找到设备的扫描器
 ```
 
-### Triggering rediscovery of devices
+### 触发设备的重新发现
 
-When a configuration entry or device is removed from Home Assistant, trigger rediscovery of its address to make sure they are available to be set up without restarting Home Assistant. You can make use of the Bluetooth connection property of the device registry if your integration manages multiple devices per configuration entry.
+当从 Home Assistant 中删除配置条目或设备时，触发其地址的重新发现，以确保它们可以在不重启 Home Assistant 的情况下进行设置。如果您的集成管理每个配置条目的多个设备，您可以利用设备注册表的蓝牙连接属性。
 
 ```python
-
 from homeassistant.components import bluetooth
 
 bluetooth.async_rediscover_address(hass, "44:44:33:11:23:42")
 ```
 
-### Waiting for a specific advertisement
+### 等待特定广告
 
-To wait for a specific advertisement, call the `bluetooth.async_process_advertisements` API.
+要等待特定广告，请调用 `bluetooth.async_process_advertisements` API。
 
 ```python
 from homeassistant.components import bluetooth
@@ -210,7 +207,7 @@ from homeassistant.components import bluetooth
 def _process_more_advertisements(
     service_info: BluetoothServiceInfoBleak,
 ) -> bool:
-    """Wait for an advertisement with 323 in the manufacturer_data."""
+    """等待包含 323 的 manufacturer_data 的广告。"""
     return 323 in service_info.manufacturer_data
 
 service_info = await bluetooth.async_process_advertisements(
@@ -222,13 +219,13 @@ service_info = await bluetooth.async_process_advertisements(
 )
 ```
 
-### Registering an external scanner
+### 注册外部扫描器
 
-Integrations that provide a Bluetooth adapter should add `bluetooth` in [`dependencies`](../../creating_integration_manifest#dependencies) in their [`manifest.json`](../../creating_integration_manifest) and be added to [`after_dependencies`](../../creating_integration_manifest#after-dependencies) to the `bluetooth_adapters` integration.
+提供蓝牙适配器的集成应在它们的 [`manifest.json`](../../creating_integration_manifest) 中将 `bluetooth` 添加到 [`dependencies`](../../creating_integration_manifest#dependencies) 中，并添加到 [`after_dependencies`](../../creating_integration_manifest#after-dependencies) 到 `bluetooth_adapters` 集成中。
 
-To register an external scanner, call the `bluetooth.async_register_scanner` API. The scanner must inherit from `BaseHaScanner`.
+要注册外部扫描器，请调用 `bluetooth.async_register_scanner` API。扫描器必须继承自 `BaseHaScanner`。
 
-If the scanner needs connection slot management to avoid overloading the adapter, pass the number of connection slots as an integer value via the `connection_slots` argument.
+如果扫描器需要连接插槽管理以避免过载适配器，则通过 `connection_slots` 参数以整数值传递连接插槽的数量。
 
 ```python
 from homeassistant.components import bluetooth
@@ -236,7 +233,7 @@ from homeassistant.components import bluetooth
 cancel = bluetooth.async_register_scanner(hass, scanner, connection_slots=slots)
 ```
 
-The scanner will need to feed advertisement data to the central Bluetooth manager in the form of `BluetoothServiceInfoBleak` objects. The callback needed to send the data to the central manager can be obtained with the `bluetooth.async_get_advertisement_callback` API.
+扫描器需要以 `BluetoothServiceInfoBleak` 对象的形式将广告数据馈送给中央蓝牙管理器。通过 `bluetooth.async_get_advertisement_callback` API，可以获得将数据发送到中央管理器所需的回调。
 
 ```python
 callback = bluetooth.async_get_advertisement_callback(hass)
@@ -244,12 +241,11 @@ callback = bluetooth.async_get_advertisement_callback(hass)
 callback(BluetoothServiceInfoBleak(...))
 ```
 
-### Removing an external scanner
+### 移除外部扫描器
 
-To permanently remove an external scanner, call the `bluetooth.async_remove_scanner` API with the `source` (MAC address) of the scanner. This will remove any advertisement history associated with the scanner.
+要永久移除外部扫描器，请调用 `bluetooth.async_remove_scanner` API 并传入扫描器的 `source`（MAC 地址）。这将删除与扫描器相关的任何广告历史记录。
 
 ```python
 from homeassistant.components import bluetooth
 
 bluetooth.async_remove_scanner(hass, source)
-```

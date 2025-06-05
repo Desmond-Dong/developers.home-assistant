@@ -1,77 +1,77 @@
 ---
-title: "Python library: modelling data"
-sidebar_label: Modelling data
+title: "Python库：建模数据"
+sidebar_label: 建模数据
 ---
 
-Now that we have authentication going, we can start making authenticated requests and fetch data!
+现在我们已经设置好认证，可以开始进行认证请求并获取数据了！
 
-When modelling the data, it is important that we expose the data from the API in the same structure as that the API offers it. Some API designs might not make a lot of sense or contain typos. It is important that we still represent them in our objects. This makes it easy for developers using your library to follow the API documentation and know how it will work in your library.
+在建模数据时，重要的是我们要以API提供的相同结构来暴露数据。一些API设计可能没有太多意义或包含拼写错误。我们仍然需要在我们的对象中表示它们。这可以让使用您库的开发者方便地跟随API文档，了解它在您的库中是如何工作的。
 
-API libraries should try to do as little as possible. So it is okay to represent data structures as classes, but you should not transform data from one value into another. For example, you should not implement conversion between Celsius and Fahrenheit temperatures. This involves making decisions on precisions of results and should therefore be left to the developer using the library.
+API库应尽量做到简单。因此，表示数据结构为类是可以的，但不应将数据从一个值转换为另一个值。例如，您不应实现摄氏度和华氏度之间的转换。这涉及到结果的精度决策，因此应留给使用库的开发者。
 
-For this example we're going to model an async library for a Rest API named ExampleHub that has two endpoints:
+在这个示例中，我们将建模一个名为ExampleHub的Rest API的异步库，该API有两个端点：
 
-- get `/light/<id>`: query the information of a single light.
+- get `/light/<id>`：查询单个灯的信息。
 
   ```json
   {
     "id": 1234,
-    "name": "Example Light",
+    "name": "示例灯",
     "is_on": true
   }
   ```
 
-- post `/light/<id>`: control the light. Example JSON to send: `{ "is_on": false }`. Responds with the new state of the light.
+- post `/light/<id>`：控制灯。示例JSON：`{ "is_on": false }`。响应灯的新状态。
 
-- get `/lights`: return a list of all lights
+- get `/lights`：返回所有灯的列表
   ```json
   [
     {
       "id": 1234,
-      "name": "Example Light",
+      "name": "示例灯",
       "is_on": true
     },
     {
       "id": 5678,
-      "name": "Example Light 2",
+      "name": "示例灯2",
       "is_on": false
     }
   ]
   ```
 
-As this API represents lights, we're first going to create a class to represent a light.
+由于该API表示灯，所以我们首先要创建一个类来表示灯。
 
 ```python
 from .auth import Auth
 
 
 class Light:
-    """Class that represents a Light object in the ExampleHub API."""
+    """表示ExampleHub API中的Light对象的类。"""
 
     def __init__(self, raw_data: dict, auth: Auth):
-        """Initialize a light object."""
+        """初始化灯对象。"""
         self.raw_data = raw_data
         self.auth = auth
 
-    # Note: each property name maps the name in the returned data
+    # 注意：每个属性名称映射返回数据中的名称
 
     @property
     def id(self) -> int:
-        """Return the ID of the light."""
+        """返回灯的ID。"""
         return self.raw_data["id"]
 
     @property
     def name(self) -> str:
-        """Return the name of the light."""
+        """返回灯的名称。"""
         return self.raw_data["name"]
 
     @property
     def is_on(self) -> bool:
-        """Return if the light is on."""
-        return self.raw_data["id"]
+        """返回灯是否开启。"""
+        return self.raw_data["is_on"]
 
     async def async_control(self, is_on: bool):
-        """Control the light."""
+        """控制灯。"""
         resp = await self.auth.request(
             "post", f"light/{self.id}", json={"is_on": is_on}
         )
@@ -79,13 +79,13 @@ class Light:
         self.raw_data = await resp.json()
 
     async def async_update(self):
-        """Update the light data."""
+        """更新灯的数据。"""
         resp = await self.auth.request("get", f"light/{self.id}")
         resp.raise_for_status()
         self.raw_data = await resp.json()
 ```
 
-Now that we have a light class, we can model the root of the API, which provides the entry points into the data.
+现在我们有了灯类，可以建模API的根，这提供了数据的入口点。
 
 ```python
 from typing import List
@@ -95,26 +95,26 @@ from .light import Light
 
 
 class ExampleHubAPI:
-    """Class to communicate with the ExampleHub API."""
+    """与ExampleHub API通信的类。"""
 
     def __init__(self, auth: Auth):
-        """Initialize the API and store the auth so we can make requests."""
+        """初始化API并存储auth，以便我们可以进行请求。"""
         self.auth = auth
 
     async def async_get_lights(self) -> List[Light]:
-        """Return the lights."""
+        """返回灯的列表。"""
         resp = await self.auth.request("get", "lights")
         resp.raise_for_status()
         return [Light(light_data, self.auth) for light_data in await resp.json()]
 
     async def async_get_light(self, light_id) -> Light:
-        """Return the lights."""
+        """返回灯的信息。"""
         resp = await self.auth.request("get", f"light/{light_id}")
         resp.raise_for_status()
         return Light(await resp.json(), self.auth)
 ```
 
-With these two files in place, we can now control our lights like this:
+有了这两个文件，我们现在可以像这样控制我们的灯：
 
 ```python
 import asyncio
@@ -130,14 +130,13 @@ async def main():
 
         lights = await api.async_get_lights()
 
-        # Print light states
+        # 打印灯的状态
         for light in lights:
-            print(f"The light {light.name} is {light.is_on}")
+            print(f"灯 {light.name} 是 {'开启' if light.is_on else '关闭'}")
 
-        # Control a light.
+        # 控制一盏灯。
         light = lights[0]
         await light.async_control(not light.is_on)
 
 
 asyncio.run(main())
-```

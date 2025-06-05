@@ -1,14 +1,13 @@
 ---
-title: "Has branding assets available for the integration"
+title: "集成有品牌资产可用"
 ---
 
-## Reasoning
+## 理由
 
-Branding assets are important for the integration to be easily recognizable and to provide a consistent look and feel across all integrations.
-The project keeps track of them in the [brands repository](https://github.com/home-assistant/brands).
+品牌资产对于使集成易于识别以及在所有集成之间提供一致的外观和感觉至关重要。该项目在[品牌仓库](https://github.com/home-assistant/brands)中跟踪这些资产。
 
-The requirements on the needed assets can be found in the [readme](https://github.com/home-assistant/brands/blob/master/README.md) of the brands repository.
+所需资产的要求可以在品牌仓库的[自述文件](https://github.com/home-assistant/brands/blob/master/README.md)中找到。
 
-## Exceptions
+## 例外情况
 
-There are no exceptions to this rule.
+此规则没有例外。

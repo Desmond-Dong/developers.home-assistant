@@ -1,35 +1,34 @@
 ---
-title: "Thread safety with asyncio"
+title: "使用 asyncio 的线程安全性"
 ---
 
-Developing with asyncio requires careful attention to thread safety, as nearly all asyncio objects are not thread-safe. If you are just getting started with asyncio, review Python's documentation on [Developing with asyncio](https://docs.python.org/3/library/asyncio-dev.html) for tips to avoid pitfalls. 
+使用 asyncio 进行开发需要特别注意线程安全，因为几乎所有的 asyncio 对象都不是线程安全的。如果你刚开始接触 asyncio，请查看 Python 的文档 [使用 asyncio 进行开发](https://docs.python.org/3/library/asyncio-dev.html)，获得避免陷阱的技巧。
 
-Home Assistant has some conventions for handling async and non-async code in the same code base. The top highlights are:
+Home Assistant 在同一代码库中处理异步和非异步代码时有一些约定。主要要点包括：
 
-- Deciding how to run a function from a helper depends on whether it is decorated with `@callback` to indicate it will not block and is safe to run in the event loop; for more details, see [Working with Async](asyncio_working_with_async.md).
-- Most APIs have a sync and async version when calling a function from a thread. The async APIs are prefixed with `async_`. For example, when firing an event from a thread other than the event loop, use `hass.bus.fire` instead of `hass.bus.async_fire`.
+- 从辅助函数运行一个函数的方式取决于它是否被 `@callback` 装饰，以指示它不会阻塞并且安全在事件循环中运行；详细信息，请参见 [处理异步](asyncio_working_with_async.md)。
+- 大多数 API 在从线程调用函数时都有同步和异步版本。异步 API 以 `async_` 前缀开头。例如，当从事件循环以外的线程触发事件时，使用 `hass.bus.fire` 而不是 `hass.bus.async_fire`。
 
 :::tip
-Be sure to enable [`asyncio` debug mode](https://docs.python.org/3/library/asyncio-dev.html#debug-mode) and [Home Assistant's built-in debug mode](https://www.home-assistant.io/integrations/homeassistant/#debug) during development as many thread safety errors can be detected automatically.
+在开发过程中，请确保启用 [`asyncio` 调试模式](https://docs.python.org/3/library/asyncio-dev.html#debug-mode) 和 [Home Assistant 的内置调试模式](https://www.home-assistant.io/integrations/homeassistant/#debug)，因为许多线程安全错误可以自动检测到。
 :::
 
-## Solving thread safety errors
+## 解决线程安全错误
 
-You may have reached this page because Home Assistant detected and reported a thread safety error. Beginning in version 2024.5.0, Home Assistant can detect, report, and block some non-thread-safe operations to prevent system instability. Before Home Assistant could detect these errors, they may have led to unexpected restarts or undefined behaviors, as they can corrupt the internal asyncio state. Below are some tips on how to correct non-threaded operations.
+您可能访问此页面是因为 Home Assistant 检测并报告了线程安全错误。从版本 2024.5.0 开始，Home Assistant 可以检测、报告并阻止某些非线程安全操作，以防止系统不稳定。在 Home Assistant 能够检测这些错误之前，它们可能导致意外重启或未定义行为，因为它们可能会破坏内部 asyncio 状态。以下是一些如何纠正非线程操作的技巧。
 
-## Ensuring code is run in the correct thread
+## 确保代码在正确的线程中运行
 
-### Built-in helpers that take a callback
+### 接受回调的内置助手
 
-When using Home Assistant's built-in helpers such as `event.async_track_state_change_event` or `event.track_state_change_event`, it's important to call the correct API based on which thread the code runs in. If the code runs in a thread other than the event loop, use the non-`async` version.
+当使用 Home Assistant 的内置助手，例如 `event.async_track_state_change_event` 或 `event.track_state_change_event` 时，根据代码运行的线程调用正确的 API 非常重要。如果代码在事件循环以外的线程中运行，请使用非 `async` 版本。
 
-In the below example, everything will run in the event loop thread, and when `async_track_state_change_event` fires,
-`async_update_event_state_callback` will also be run in the event loop thread because it is decorated with `@callback`. If the `@callback` decorator is missing, `async_update_event_state_callback` would be run in the executor, which would make a non-thread-safe call to `async_write_ha_state`.
+在下面的示例中，所有内容都将在事件循环线程中运行，当 `async_track_state_change_event` 被触发时，`async_update_event_state_callback` 也将在事件循环线程中运行，因为它被 `@callback` 装饰。如果缺少 `@callback` 装饰器，`async_update_event_state_callback` 将在执行器中运行，这将导致对 `async_write_ha_state` 的非线程安全调用。
 
 ```python
 
     async def async_added_to_hass(self) -> None:
-        """Entity has been added to hass."""
+        """实体已被添加到 hass。"""
         self.async_on_remove(
             async_track_state_change_event(
                 self.hass,
@@ -40,7 +39,7 @@ In the below example, everything will run in the event loop thread, and when `as
 
     @callback
     def async_update_event_state_callback(self, event: Event[EventStateChangedData]) -> None:
-        """Call when entity state changes."""
+        """当实体状态变化时调用。"""
         new_state = event.data["new_state"]
         if new_state is None or new_state.state in (STATE_UNAVAILABLE, STATE_UNKNOWN):
             return
@@ -48,118 +47,118 @@ In the below example, everything will run in the event loop thread, and when `as
 
 ```
 
-### Specific API calls
+### 特定的 API 调用
 
-You may find you need to call one of the async API calls from a thread other than the event loop thread. In most cases, `hass.add_job` can safely call an async API from another thread. Some helpers have specific sync APIs to use when calling from another thread. Below is a list of the most commonly called async APIs and the method to call them from another thread.
+您可能会发现需要从事件循环线程以外的线程调用某个异步 API 调用。在大多数情况下，`hass.add_job` 可以安全地从另一个线程调用异步 API。一些助手在从另一个线程调用时具有特定的同步 API。以下是最常调用的异步 API 及其在另一个线程中调用的方法列表。
 
 #### hass.async_create_task
 
-When creating a task from a thread other than the event loop thread, instead use `hass.create_task`
+当从事件循环线程以外的线程创建任务时，请使用 `hass.create_task`
 
 #### hass.bus.async_fire
 
-When firing an event from a thread other than the event loop thread, instead use `hass.bus.fire`
+当从事件循环线程以外的线程触发事件时，请使用 `hass.bus.fire`
 
 #### hass.services.async_register
 
-When registering a service action from a thread other than the event loop thread, instead use `hass.services.register`
+当从事件循环线程以外的线程注册服务操作时，请使用 `hass.services.register`
 
 #### hass.services.async_remove
 
-When removing a service action from a thread other than the event loop thread, instead use `hass.services.remove`
+当从事件循环线程以外的线程移除服务操作时，请使用 `hass.services.remove`
 
 #### async_write_ha_state
 
-When writing the state of an entity from a thread other than the event loop thread, instead use `self.schedule_update_ha_state`
+当从事件循环线程以外的线程写入实体状态时，请使用 `self.schedule_update_ha_state`
 
 #### hass.config_entries.async_update_entry
 
-Updating config entry must be done in the event loop thread. There is no sync API to update config entries. If it is not a mistake that the calling function is running in another thread, use `hass.add_job` to schedule a function in the event loop that calls `hass.config_entries.async_update_entry`.
+更新配置条目必须在事件循环线程中完成。没有同步 API 来更新配置条目。如果调用函数在另一个线程中运行并不是错误，请使用 `hass.add_job` 在事件循环中调度一个调用 `hass.config_entries.async_update_entry` 的函数。
 
 #### async_dispatcher_send
 
-When calling the dispatcher from a thread other than the event loop thread, instead use `dispatcher_send`.
+当从事件循环线程以外的线程调用调度器时，请使用 `dispatcher_send`。
 
 #### async_render_to_info
 
-Templates must be rendered in the event loop thread. There is no sync API to render templates. Use `hass.add_job` to schedule a function in the event loop that calls `async_render_to_info`.
+模板必须在事件循环线程中渲染。没有同步 API 来渲染模板。使用 `hass.add_job` 在事件循环中调度一个调用 `async_render_to_info` 的函数。
 
 #### area_registry.async_create
 
-The area registry must be modified in the event loop thread. There is no sync API for the area registry. Use `hass.add_job` to schedule a function in the event loop that calls `area_registry.async_create`.
+区域注册表必须在事件循环线程中修改。没有同步 API 用于区域注册表。使用 `hass.add_job` 在事件循环中调度一个调用 `area_registry.async_create` 的函数。
 
 #### area_registry.async_delete
 
-The area registry must be modified in the event loop thread. There is no sync API for the area registry. Use `hass.add_job` to schedule a function in the event loop that calls `area_registry.async_delete`.
+区域注册表必须在事件循环线程中修改。没有同步 API 用于区域注册表。使用 `hass.add_job` 在事件循环中调度一个调用 `area_registry.async_delete` 的函数。
 
 #### area_registry.async_update
 
-The area registry must be modified in the event loop thread. There is no sync API for the area registry. Use `hass.add_job` to schedule a function in the event loop that calls `area_registry.async_update`.
+区域注册表必须在事件循环线程中修改。没有同步 API 用于区域注册表。使用 `hass.add_job` 在事件循环中调度一个调用 `area_registry.async_update` 的函数。
 
 #### category_registry.async_create
 
-The category registry must be modified in the event loop thread. There is no sync API for the category registry. Use `hass.add_job` to schedule a function in the event loop that calls `category_registry.async_create`.
+类别注册表必须在事件循环线程中修改。没有同步 API 用于类别注册表。使用 `hass.add_job` 在事件循环中调度一个调用 `category_registry.async_create` 的函数。
 
 #### category_registry.async_delete
 
-The category registry must be modified in the event loop thread. There is no sync API for the category registry. Use `hass.add_job` to schedule a function in the event loop that calls `category_registry.async_delete`.
+类别注册表必须在事件循环线程中修改。没有同步 API 用于类别注册表。使用 `hass.add_job` 在事件循环中调度一个调用 `category_registry.async_delete` 的函数。
 
 #### category_registry.async_update
 
-The category registry must be modified in the event loop thread. There is no sync API for the category registry. Use `hass.add_job` to schedule a function in the event loop that calls `category_registry.async_update`.
+类别注册表必须在事件循环线程中修改。没有同步 API 用于类别注册表。使用 `hass.add_job` 在事件循环中调度一个调用 `category_registry.async_update` 的函数。
 
 #### device_registry.async_update_device
 
-The device registry must be modified in the event loop thread. There is no sync API for the device registry. Use `hass.add_job` to schedule a function in the event loop that calls `device_registry.async_update_device`.
+设备注册表必须在事件循环线程中修改。没有同步 API 用于设备注册表。使用 `hass.add_job` 在事件循环中调度一个调用 `device_registry.async_update_device` 的函数。
 
 #### device_registry.async_remove_device
 
-The device registry must be modified in the event loop thread. There is no sync API for the device registry. Use `hass.add_job` to schedule a function in the event loop that calls `device_registry.async_remove_device`.
+设备注册表必须在事件循环线程中修改。没有同步 API 用于设备注册表。使用 `hass.add_job` 在事件循环中调度一个调用 `device_registry.async_remove_device` 的函数。
 
 #### entity_registry.async_get_or_create
 
-The entity registry must be modified in the event loop thread. There is no sync API for the entity registry. Use `hass.add_job` to schedule a function in the event loop that calls `entity_registry.async_get_or_create`.
+实体注册表必须在事件循环线程中修改。没有同步 API 用于实体注册表。使用 `hass.add_job` 在事件循环中调度一个调用 `entity_registry.async_get_or_create` 的函数。
 
 #### entity_registry.async_remove
 
-The entity registry must be modified in the event loop thread. There is no sync API for the entity registry. Use `hass.add_job` to schedule a function in the event loop that calls `entity_registry.async_remove`.
+实体注册表必须在事件循环线程中修改。没有同步 API 用于实体注册表。使用 `hass.add_job` 在事件循环中调度一个调用 `entity_registry.async_remove` 的函数。
 
 #### entity_registry.async_update_entity
 
-The entity registry must be modified in the event loop thread. There is no sync API for the entity registry. Use `hass.add_job` to schedule a function in the event loop that calls `entity_registry.async_update_entity`.
+实体注册表必须在事件循环线程中修改。没有同步 API 用于实体注册表。使用 `hass.add_job` 在事件循环中调度一个调用 `entity_registry.async_update_entity` 的函数。
 
 #### floor_registry.async_create
 
-The floor registry must be modified in the event loop thread. There is no sync API for the floor registry. Use `hass.add_job` to schedule a function in the event loop that calls `floor_registry.async_create`.
+楼层注册表必须在事件循环线程中修改。没有同步 API 用于楼层注册表。使用 `hass.add_job` 在事件循环中调度一个调用 `floor_registry.async_create` 的函数。
 
 #### floor_registry.async_delete
 
-The floor registry must be modified in the event loop thread. There is no sync API for the floor registry. Use `hass.add_job` to schedule a function in the event loop that calls `floor_registry.async_delete`.
+楼层注册表必须在事件循环线程中修改。没有同步 API 用于楼层注册表。使用 `hass.add_job` 在事件循环中调度一个调用 `floor_registry.async_delete` 的函数。
 
 #### floor_registry.async_update
 
-The floor registry must be modified in the event loop thread. There is no sync API for the floor registry. Use `hass.add_job` to schedule a function in the event loop that calls `floor_registry.async_update`.
+楼层注册表必须在事件循环线程中修改。没有同步 API 用于楼层注册表。使用 `hass.add_job` 在事件循环中调度一个调用 `floor_registry.async_update` 的函数。
 
 #### issue_registry.async_get_or_create
 
-The issue registry must be modified in the event loop thread. Call `issue_registry.create_issue` instead.
+问题注册表必须在事件循环线程中修改。在此调用 `issue_registry.create_issue`。
 
 #### issue_registry.async_delete
 
-The issue registry must be modified in the event loop thread. Call `issue_registry.delete_issue` instead.
+问题注册表必须在事件循环线程中修改。在此调用 `issue_registry.delete_issue`。
 
 #### issue_registry.async_ignore
 
-The issue registry must be modified in the event loop thread. There is no sync API to ignore an issue in the issue registry. Use `hass.add_job` to schedule a function in the event loop that calls `issue_registry.async_ignore_issue`.
+问题注册表必须在事件循环线程中修改。没有同步 API 可以在问题注册表中忽略问题。使用 `hass.add_job` 在事件循环中调度一个调用 `issue_registry.async_ignore_issue` 的函数。
 
 #### label_registry.async_create
 
-The label registry must be modified in the event loop thread. There is no sync API for the label registry. Use `hass.add_job` to schedule a function in the event loop that calls `label_registry.async_create`.
+标签注册表必须在事件循环线程中修改。没有同步 API 用于标签注册表。使用 `hass.add_job` 在事件循环中调度一个调用 `label_registry.async_create` 的函数。
 
 #### label_registry.async_delete
 
-The label registry must be modified in the event loop thread. There is no sync API for the label registry. Use `hass.add_job` to schedule a function in the event loop that calls `label_registry.async_delete`.
+标签注册表必须在事件循环线程中修改。没有同步 API 用于标签注册表。使用 `hass.add_job` 在事件循环中调度一个调用 `label_registry.async_delete` 的函数。
 
 #### label_registry.async_update
 
-The label registry must be modified in the event loop thread. There is no sync API for the label registry. Use `hass.add_job` to schedule a function in the event loop that calls `label_registry.async_update`.
+标签注册表必须在事件循环线程中修改。没有同步 API 用于标签注册表。使用 `hass.add_job` 在事件循环中调度一个调用 `label_registry.async_update` 的函数。

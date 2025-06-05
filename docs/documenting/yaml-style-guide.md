@@ -1,265 +1,235 @@
 ---
-title: "YAML Style Guide"
+title: "YAML 风格指南"
 ---
 
-In addition to our general [documentation standards](/documenting/standards.md),
-we also have a set of standards for documenting snippets of YAML. The standards
-described on this page, apply to all our YAML based code across the project,
-with the main focus on documentation.
+除了我们一般的 [文档标准](/documenting/standards.md) 外，
+我们还有一套用于记录 YAML 片段的标准。本页面描述的标准
+适用于项目中的所有基于 YAML 的代码，主要关注文档。
 
-Our YAML standards provide our end-users with a consistent look, the best
-practices and a uniform approach for solving problems in YAML.
+我们的 YAML 标准为最终用户提供了一致的外观，最佳
+实践和统一的问题解决方法。
 
 ## YAML
 
-This section is about basic YAML usage, and thus not Home Assistant specific.
+本节介绍基本的 YAML 用法，因此不特定于家庭助理。
 
-### Indentation
+### 缩进
 
-An indentation of 2 spaces must be used.
+必须使用 2 个空格缩进。
 
 ```yaml
-# Good
+# 好
 example:
   one: 1
 
-# Bad
+# 坏
 example:
     bad: 2
 ```
 
-### Booleans
+### 布尔值
 
-We should avoid the use of truthy boolean values in YAML. They often throw
-off people new to YAML. Therefore, we only allow the use of `true` and `false`
-as boolean values, in lower case.
+我们应避免在 YAML 中使用真值布尔值。它们通常会让新手感到困惑。因此，我们只允许使用小写的 `true` 和 `false` 作为布尔值。
 
-This keeps it compatible with the YAML 1.2 specifications as well, since that
-version dropped support for several unquoted truthy booleans (e.g., `y`, `n`,
-`yes`, `no`, `on`, `off` and similar).
+这也保持了与 YAML 1.2 规范的兼容性，因为该版本去掉了对多个非引号真值布尔的支持（例如 `y`、`n`、`yes`、`no`、`on`、`off` 等）。
 
-  ```yaml
-# Good
+```yaml
+# 好
 one: true
 two: false
 
-# Bad
+# 坏
 one: True
 two: on
 three: yes
 ```
 
-### Comments
+### 注释
 
-Adding comments to blocks of YAML can really help the reader understand the
-example better.
+为 YAML 块添加注释可以帮助读者更好地理解示例。
 
-The indentation level of the comment must match the current indentation level. Preferably the comment is written above the line the comment applies to, otherwise lines
-may become hard to read on smaller displays.
+注释的缩进级别必须与当前缩进级别匹配。最好将注释放在所适用行的上方，否则在小显示器上，行可能变得难以阅读。
 
-Comments should start with a capital letter and have a space between the
-comment hash `#` and the start of the comment.
+注释应以大写字母开头，并在注释哈希 `#` 和注释开头之间留一个空格。
 
 ```yaml
-# Good
+# 好
 example:
-  # Comment
+  # 注释
   one: true
 
-# Acceptable, but prefer the above
+# 可接受，但更愿意使用上面的形式
 example:
-  one: true # Comment
+  one: true # 注释
 
-# Bad
+# 坏
 example:
-# Comment
+# 注释
   one: false
-  #Comment
+  #注释
   two: false
-  # comment
+  # 注释
   three: false
 ```
 
-### Sequences
+### 序列
 
-Sequences in YAML are also known as lists or arrays. In the Home Assistant
-world, we refer to them as lists in end-user documentation. This originates
-from the Python language the Home Assistant core is developed in.
+YAML 中的序列也称为列表或数组。在家庭助理的世界中，我们在最终用户文档中称它们为列表。这源于家庭助理核心开发用的 Python 语言。
 
-Sequences can be written in two different styles; block and flow style. We
-prefer the use of block style sequences.
+序列可以用两种不同的样式书写；块样式和流样式。我们更倾向于使用块样式序列。
 
-#### Block style sequences
+#### 块样式序列
 
-Block style sequences need to be indented under the key they belong to.
+块样式序列需要在它们所属的键下缩进。
 
 ```yaml
-# Good
+# 好
 example:
   - 1
   - 2
   - 3
 
-# Bad
+# 坏
 example:
 - 1
 - 2
 - 3
 ```
 
-#### Flow style sequences
+#### 流样式序列
 
-The use of flow style should be avoided. While simple, short and clean,
-with longer data in it, it becomes harder to read.
+应避免使用流样式。虽然简单、短小且清晰，但在包含较长数据时，阅读起来更困难。
 
-If used, flow style sequences have space after each comma `,` and no white
-space before opening and closing:
+如果使用流样式，逗号 `,` 后面应该有空格，并且在开闭括号前后没有空白：
 
 ```yaml
-# Good
+# 好
 example: [1, 2, 3]
 
-# Bad
+# 坏
 example: [ 1,2,3 ]
 example: [ 1, 2, 3 ]
 example: [1,2,3]
 example: ["light.living_room_window", "light.living_room_corner", "light.living_room_table"]
 ```
 
-### Mappings
+### 映射
 
-Mappings in YAML are also known as associative arrays, hash tables,
-key/value pairs, collections or dictionaries. In the Home Assistant world,
-we refer to them as mappings in end-user documentation.
+YAML 中的映射也称为关联数组、哈希表、键/值对、集合或字典。在家庭助理的世界中，我们在最终用户文档中称它们为映射。
 
-Mappings can be written in different styles, however, we only allow the use
-of block style mappings. Flow style (that looks like JSON) is not allowed.
+映射可以用不同的样式书写，但我们只允许使用块样式映射。不允许使用流样式（看起来像 JSON）。
 
 ```yaml
-# Good
+# 好
 example:
   one: 1
   two: 2
 
-# Bad
+# 坏
 example: { one: 1, two: 2 }
 ```
 
-### Null values
+### 空值
 
-Null values should be implicitly marked. The use of explicit null values should
-be avoided (`~` and `null`).
+空值应隐式标记。应避免使用显式空值（`~` 和 `null`）。
 
 ```yaml
-# Good
+# 好
 example:
 
-# Bad
+# 坏
 example: ~
 example: null
 ```
 
-### Strings
+### 字符串
 
-Strings are preferably quoted with double quotes (`"`).
-
+字符串最好用双引号（`"`）引起来。
 
 ```yaml
-# Good
+# 好
 example: "Hi there!"
 
-# Avoid
+# 避免
 example: Hi there!
 
-# Bad
+# 坏
 example: 'Hi there!'
 ```
 
-#### Multi-line strings
+#### 多行字符串
 
-Avoid the use of `\n` or other new line indicators in YAML configuration when
-possible. The same applies to avoiding long, single line, strings.
+在 YAML 配置中尽可能避免使用 `\n` 或其他换行符。避免长的单行字符串也是如此。
 
-Instead, make use of the literal style (preserves new lines) and folded style
-(does not preserve new lines) strings.
+相反，使用字面量样式（保留换行）和折叠样式（不保留换行）字符串。
 
 ```yaml
-# Good
+# 好
 literal_example: |
-  This example is an example of literal block scalar style in YAML.
-  It allows you to split a string into multiple lines.
+  这个示例是 YAML 中字面块标量样式的例子。
+  它允许你将字符串拆分成多行。
 folded_example: >
-  This example is an example of a folded block scalar style in YAML.
-  It allows you to split a string into multi lines, however, it magically
-  removes all the new lines placed in your YAML.
+  这个示例是 YAML 中折叠块标量样式的例子。
+  它允许你将字符串拆分成多行，但会神奇地
+  移除你 YAML 中放置的所有换行符。
 
-# Bad
-literal_example: "This example is an example of literal block scalar style in YAML.\nIt allows you to split a string into multiple lines.\n"
-folded_example_same_as: "This example is an example of a folded block scalar style in YAML. It allows you to split a string into multi lines, however, it magically removes all the new lines placed in your YAML.\n"
+# 坏
+literal_example: "这个示例是 YAML 中字面块标量样式的例子。\n它允许你将字符串拆分成多行。\n"
+folded_example_same_as: "这个示例是 YAML 中折叠块标量样式的例子。它允许你将字符串拆分成多行，但会神奇地移除你 YAML 中放置的所有换行符。\n"
 ```
 
-In the examples above the no chomping operators are used (`|`, `>`). This is
-preferred, unless the example requires a different handling of the ending new
-line. In those cases the use of the strip operator (`|-`, `>-`: no trailing new
-line, any additional new lines are removed from the end) or keep operator
-(`|+`, `>+`: trailing new line, and keep all additional new lines from the end)
-is allowed.
+在上述示例中未使用任何切割运算符（`|`、`>`）。这更受欢迎，除非示例需要不同的换行处理。在这些情况下，可以使用切除运算符（`|-`、`>-`：无尾部换行，移除结尾的任何额外换行符）或保留运算符（`|+`、`>+`：尾部换行，并保留结尾的所有额外换行符）。
 
-### Additional string guidance
+### 额外的字符串指导
 
-The Home Assistant YAML section, provides additional guidelines on how
-to handle strings in Home Assistant configuration examples.
+家庭助理 YAML 部分提供了关于如何在家庭助理配置示例中处理字符串的附加指导。
 
-## Home Assistant YAML
+## 家庭助理 YAML
 
-Within Home Assistant, we also have some things that can be done in different
-ways, while still adhering to the above set styling. This part is here to take
-care of that.
+在家庭助理中，我们还有一些可以用不同方式完成的事情，同时仍遵循上述设定的样式。这部分正是为了解决这个问题。
 
-### Default values
+### 默认值
 
-A configuration option using a default value, should not be part of the example.
-Unless, the example is specifically for educating about that option.
+使用默认值的配置选项，不应成为示例的一部分。
+除非示例专门用于教育该选项。
 
-For example, our `condition` options in automations, is optional and an empty
-list `[]` by default.
+例如，我们的自动化中的 `condition` 选项是可选的，默认是空列表 `[]`。
 
 ```yaml
-# Good
-- alias: "Test"
+# 好
+- alias: "测试"
   triggers:
     - trigger: state
       entity_id: binary_sensor.motion
 
-# Bad
-- alias: "Test"
+# 坏
+- alias: "测试"
   triggers:
     - trigger: state
       entity_id: binary_sensor.motion
   condition: []
 ```
 
-### Strings (continued)
+### 字符串（续）
 
-As written in the first chapter, strings are preferably enquoted with double
-quotes. However, the following value types are exempted from this rule,
-as is makes our examples more readable:
+正如第一章所写，字符串最好用双引号引起来。然而，以下值类型不在此规则之内，
+因为它使我们的示例更易读：
 
-- Entity IDs (e.g., `binary_sensor.motion`)
-- Entity attributes (e.g., `temperature`)
-- Device IDs
-- Area IDs
-- Platform types (e.g., `light`, `switch`)
-- Condition types (e.g., `numeric_state`, `state`)
-- Trigger types (e.g., `state`, `time`)
-- Action names (e.g., `light.turn_on`)
-- Device classes (e.g., `problem`, `motion`)
-- Event names
-- Values that accept a limited set of possible, hardcoded values.
-  For example, `mode` in automations.
+- 实体 ID（例如，`binary_sensor.motion`）
+- 实体属性（例如，`temperature`）
+- 设备 ID
+- 区域 ID
+- 平台类型（例如，`light`、`switch`）
+- 条件类型（例如，`numeric_state`、`state`）
+- 触发器类型（例如，`state`、`time`）
+- 动作名称（例如，`light.turn_on`）
+- 设备类别（例如，`problem`、`motion`）
+- 事件名称
+- 接受有限集可能的硬编码值的值。
+  例如，自动化中的 `mode`。
 
 ```yaml
-# Good
+# 好
 actions:
   - action: notify.frenck
     data:
@@ -271,28 +241,23 @@ actions:
     data:
       transition: 10
 
-# Bad
+# 坏
 actions:
   - action: "notify.frenck"
     data:
       message: Hi there!
 ```
 
-### Service action targets
+### 服务动作目标
 
-If you want to fire a service action call for an entity ID (for example, to turn
-on a light), you can do so in three different ways.
+如果您想对实体 ID 触发服务动作调用（例如，打开灯），可以用三种不同的方式完成。
 
-The entity ID can be specified as a property of the action level, part of the
-data that is sent in the service action call or as an entity in a service
-action target.
+实体 ID 可以作为动作级别的属性、作为服务动作调用中发送的数据的一部分，或作为服务动作目标中的实体来指定。
 
-Service action targets is the most modern way and allows one to target a
-service action call for an entity, device or area. Therefore, the target is the
-most flexible of the options available and is the one that should be used.
+服务动作目标是最现代的方式，允许将服务动作调用瞄准一个实体、设备或区域。因此，目标是可用选项中最灵活的，应优先使用。
 
 ```yaml
-# Good
+# 好
 actions:
   - action: light.turn_on
     target:
@@ -306,7 +271,7 @@ actions:
       entity_id: light.office_desk
       device_id: 21349287492398472398
 
-# Bad
+# 坏
 actions:
   - action: light.turn_on
     entity_id: light.living_room
@@ -315,107 +280,95 @@ actions:
       entity_id: light.living_room
 ```
 
-### Properties that accept a scalar or a list of scalars
+### 接受标量或标量列表的属性
 
-Home Assistant has a lot of places that access both a scalar value or a list
-of scalar values. Additionally, sometimes, it even accepts a comma-separated
-string value as a list.
+家庭助理有许多地方同时访问标量值或标量值列表。此外，有时它甚至接受以逗号分隔的字符串值作为列表。
 
-The following applies in case a single value or a list of scalar values
-is accepted:
+如果接受单个值或标量值列表，则适用以下内容：
 
-- Putting multiple values in a single scalar value (comma separated string)
-  must not be used.
-- If a list is used, it must be block style.
-- A list with a single scalar value should not be used.
-- The use of a single scalar value is allowed.
+- 不应将多个值放在单个标量值中（逗号分隔字符串）。
+- 如果使用列表，则必须是块样式。
+- 不应使用只有一个标量值的列表。
+- 允许使用单个标量值。
 
 ```yaml
-# Good
+# 好
 entity_id: light.living_room
 entity_id:
   - light.living_room
   - light.office
 
-# Bad
+# 坏
 entity_id: light.living_room, light.office
 entity_id: [light.living_room, light.office]
 entity_id:
   - light.living_room
 ```
 
-### Properties that accept a mapping or a list of mappings
+### 接受映射或映射列表的属性
 
-Home Assistant has properties that accept both a mapping or a list of mappings.
-Well known examples are: `condition`, `action`, `sequence`.
+家庭助理有接受映射或映射列表的属性。
+众所周知的例子有：`condition`、`action`、`sequence`。
 
-In case a property accepts a single mapping or a list of mappings, a list of
-mappings must be used, even when a single mapping is passed in.
+如果属性接受单个映射或映射列表，必须使用映射列表，即使只传递一个映射。
 
-This makes it easier to understand that one can add more items to it and also easier to
-copy and paste a single item into your own code.
+这使得更容易理解可以添加更多项，也更容易将单个项复制粘贴到您自己的代码中。
 
 ```yaml
-# Good
+# 好
 actions:
   - action: light.turn_on
     target:
       entity_id: light.living_room
 
-# Bad
+# 坏
 actions:
   action: light.turn_on
   target:
     entity_id: light.living_room
 ```
 
-### Templates
+### 模板
 
-Home Assistant templates are powerful, but they can be really confusing or hard
-to understand for a less experienced user. Therefore, the use of templates
-should be avoided if a pure YAML version is available.
+家庭助理模板功能强大，但对于经验较少的用户可能会很混乱或难以理解。因此，如果有纯 YAML 版本可用，应该避免使用模板。
 
-Additionally, the use of templates requires additional escaping in our
-documentation to avoid our website code to confuse it for the Liquid syntax.
-Avoiding templates in general removes the need of additional escaping.
+此外，使用模板会需要在我们的文档中进行了额外的转义，以避免我们网站代码将其误认为 Liquid 语法。
+总的来说，避免模板会消除额外转义的需要。
 
 ```yaml
-# Good
+# 好
 conditions:
   - condition: numeric_state
     entity_id: sun.sun
     attribute: elevation
     below: 4
 
-# Bad
+# 坏
 conditions:
   - condition: template
     value_template: "{{ state_attr('sun.sun', 'elevation') < 4 }}"
 ```
 
-#### Quoting style
+#### 引号风格
 
-Templates are strings, and thus are double-quoted. As a result of that,
-single quotes should be used inside the template.
+模板是字符串，因此是双引号。因此，在模板内部应使用单引号。
 
 ```yaml
-# Good
-example: "{{ 'some_value' == some_other_value }}" 
+# 好
+example: "{{ 'some_value' == some_other_value }}"
 
-# Bad
+# 坏
 example: '{{ "some_value" == some_other_value }}'
 ```
 
-#### Template string length
+#### 模板字符串长度
 
-Long lines in templates should be avoided and split across multiple lines to
-make more clear what happens and keep them readable.
+应避免在模板中使用长行，并将其拆分为多行，以便更清晰地了解发生了什么，并保持可读性。
 
-See the chapters on strings above for additional information on multi-line
-string formatting.
+有关多行字符串格式的其他信息，请参见上述字符串章节。
 
 ```yaml
-# Good
+# 好
 value_template: >-
   {{
     is_state('sensor.bedroom_co_status', 'Ok')
@@ -423,60 +376,56 @@ value_template: >-
     and is_state('sensor.wardrobe_co_status', 'Ok')
   }}
 
-# Bad
+# 坏
 value_template: "{{ is_state('sensor.bedroom_co_status', 'Ok') and is_state('sensor.kitchen_co_status', 'Ok') and is_state('sensor.wardrobe_co_status', 'Ok') }}"
 ```
 
-#### Short style condition syntax
+#### 简短样式条件语法
 
-Prefer shorthand style templates over-expressive format, as they provide a
-cleaner syntax.
+更喜欢简写样式模板，而不是过于表现的格式，因为它们提供了更清晰的语法。
 
 ```yaml
-# Good
-conditions: "{{ some_value == some_other_value }}" 
+# 好
+conditions: "{{ some_value == some_other_value }}"
 
-# Bad
+# 坏
 conditions:
   - condition: template
     value_template: "{{ some_value == some_other_value }}"
 ```
 
-#### Filters
+#### 过滤器
 
-Spacing around the filter pipe marker ` | ` is required. If this makes
-readability unclear, the use of additional parentheses is recommended.
+过滤器管道符号 ` | ` 周围需要留有空格。如果这使可读性不清晰，则建议使用额外的括号。
 
 ```yaml
-# Good
+# 好
 conditions:
-  - "{{ some_value | float }}" 
-  - "{{ some_value == (some_other_value | some_filter) }}" 
+  - "{{ some_value | float }}"
+  - "{{ some_value == (some_other_value | some_filter) }}"
 
-# Bad
+# 坏
 conditions:
-  - "{{ some_value == some_other_value|some_filter }}" 
+  - "{{ some_value == some_other_value|some_filter }}"
   - "{{ some_value == (some_other_value|some_filter) }}"
 ```
 
-#### Accessing states & state attributes
+#### 访问状态和状态属性
 
-We do not allow the use of the states object directly if a helper method is
-available.
+如果有可用的辅助方法，我们不允许直接使用状态对象。
 
-For example; don't use `states.sensor.temperature.state`, instead use
-`states('sensor.temperature')`.
+例如；不要使用 `states.sensor.temperature.state`，而是使用 `states('sensor.temperature')`。
 
 ```yaml
-# Good
+# 好
 one: "{{ states('sensor.temperature') }}"
 two: "{{ state_attr('climate.living_room', 'temperature') }}"
 
-# Bad
+# 坏
 one: "{{ states.sensor.temperature.state }}"
 two: "{{ states.climate.living_room.attributes.temperature }}"
 ```
 
-This applies to  `states()`, `is_state()`, `state_attr()` and `is_state_attr()`,
-to avoid errors and error messages when the entity isn’t ready yet
-(e.g., during Home Assistant startup).
+这适用于 `states()`、`is_state()`、`state_attr()` 和 `is_state_attr()`，
+以避免在实体尚未准备好时出现错误和错误消息
+（例如，在家庭助理启动期间）。

@@ -1,39 +1,39 @@
 ---
-title: "Service actions are registered in async_setup"
+title: "服务操作在 async_setup 中注册"
 related_rules:
   - action-exceptions
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+## 理由
 
-Integrations can add their own service actions to Home Assistant.
-In the past, they have been frequently registered in the `async_setup_entry` method and removed in the `async_unload_entry` method.
-The result of this is that the service actions are only available when there is a loaded entry.
-This is not ideal, since this way we can't validate automations users create that use these service actions, since it is possible that the configuration entry could not be loaded.
+集成可以向 Home Assistant 添加自己的服务操作。
+在过去，这些操作经常在 `async_setup_entry` 方法中注册，并在 `async_unload_entry` 方法中移除。
+这样导致的结果是，服务操作仅在存在加载的条目时可用。
+这并不理想，因为这样我们无法验证用户创建的使用这些服务操作的自动化，因为配置条目可能无法加载。
 
-We rather prefer integrations to set up their service actions in the `async_setup` method.
-This way we can let the user know why the service action did not work, if the targeted configuration entry is not loaded.
-The validation should happen inside the service action, and should raise `ServiceValidationError` if the input is invalid.
+我们更希望集成在 `async_setup` 方法中设置它们的服务操作。
+这样，如果目标配置条目未加载，我们可以让用户知道服务操作为什么没有工作。
+验证应该发生在服务操作内部，并在输入无效时抛出 `ServiceValidationError`。
 
-## Example implementation
+## 示例实现
 
-The example below is a snippet where the service action is registered in the `async_setup` method.
-In this example, the service call requires a configuration entry id as parameter.
-This is used to first fetch the configuration entry, and then check if it is loaded.
-If the configuration entry does not exist or the configuration entry that we found is not loaded, we raise a relevant error which is shown to the user.
+以下示例是一个在 `async_setup` 方法中注册服务操作的代码片段。
+在此示例中，服务调用需要一个配置条目 ID 作为参数。
+这用于首先获取配置条目，然后检查其是否已加载。
+如果配置条目不存在或找到的配置条目未加载，我们将引发相关错误并显示给用户。
 
 `__init__py`:
 ```python {13-19} showLineNumbers
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
-    """Set up my integration."""
+    """设置我的集成."""
 
     async def async_get_schedule(call: ServiceCall) -> ServiceResponse:
-        """Get the schedule for a specific range."""
+        """获取特定范围的日程安排."""
         if not (entry := hass.config_entries.async_get_entry(call.data[ATTR_CONFIG_ENTRY_ID])):
-            raise ServiceValidationError("Entry not found")
+            raise ServiceValidationError("条目未找到")
         if entry.state is not ConfigEntryState.LOADED:
-            raise ServiceValidationError("Entry not loaded")
+            raise ServiceValidationError("条目未加载")
         client = cast(MyConfigEntry, entry).runtime_data
         ...
 
@@ -46,14 +46,14 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     )
 ```
 
-## Additional resources
+## 其他资源
 
-For more information on how to set up service actions, see the [service documentation](/docs/dev_101_services).
+有关如何设置服务操作的更多信息，请参见 [服务文档](/docs/dev_101_services)。
 
-## Exceptions
+## 例外情况
 
-There are no exceptions to this rule.
+此规则没有例外。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

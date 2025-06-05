@@ -1,5 +1,5 @@
 ---
-title: "Entities use has_entity_name = True"
+title: "实体使用 has_entity_name = True"
 related_rules:
   - entity-translations
   - entity-device-class
@@ -7,26 +7,26 @@ related_rules:
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+## 理由
 
-`has_entity_name` is an entity attribute that is used to improve the naming of entities in Home Assistant.
-It is introduced to show a better name of the entity to the user depending on the context where the name is shown.
+`has_entity_name` 是一个实体属性，用于改善 Home Assistant 中实体的命名。
+它的引入是为了根据名称显示的上下文向用户展示更好的实体名称。
 
-We consider this a good practice because it allows for consistency in naming between integrations.
+我们认为这是一个良好的实践，因为它允许集成之间保持命名的一致性。
 
-## Example implementation
+## 示例实现
 
-In the example below, if the name of the device is "My device" and the field is "temperature", the name of the entity will be shown as "My device temperature".
+在下面的示例中，如果设备的名称为 "My device"，字段为 "temperature"，则实体的名称将显示为 "My device temperature"。
 
 `sensor.py`
 ```python {4} showLineNumbers
 class MySensor(SensorEntity):
-    """Representation of a sensor."""
+    """传感器的表示。"""
 
     _attr_has_entity_name = True
 
     def __init__(self, device: Device, field: str) -> None:
-        """Initialize the sensor."""
+        """初始化传感器。"""
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, device.id)},
             name=device.name,
@@ -34,35 +34,35 @@ class MySensor(SensorEntity):
         self._attr_name = field
 ```
 
-However, when the name of the entity is set to `None`, the name of the device will be used as the name of the entity.
-In this case, the lock entity will just be called "My device".
-This should be done for the main feature of the device.
+然而，当实体的名称设置为 `None` 时，设备的名称将被用作实体的名称。
+在这种情况下，锁实体将只被称为 "My device"。
+这应该在设备的主要功能中完成。
 
 `lock.py`
 ```python {4-5,11} showLineNumbers
 class MyLock(LockEntity):
-    """Representation of a lock."""
+    """锁的表示。"""
 
     _attr_has_entity_name = True
     _attr_name = None
 
     def __init__(self, device: Device) -> None:
-        """Initialize the lock."""
+        """初始化锁。"""
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, device.id)},
             name=device.name,
         )
 ```
 
-## Additional resources
+## 附加资源
 
-More information about entity naming can be found in the [entity](/docs/core/entity#has_entity_name-true-mandatory-for-new-integrations) documentation.
-More information about devices can be found in the [device](/docs/device_registry_index) documentation.
+关于实体命名的更多信息可以在 [entity](/docs/core/entity#has_entity_name-true-mandatory-for-new-integrations) 文档中找到。
+关于设备的更多信息可以在 [device](/docs/device_registry_index) 文档中找到。
 
-## Exceptions
+## 例外情况
 
-There are no exceptions to this rule.
+此规则没有例外情况。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

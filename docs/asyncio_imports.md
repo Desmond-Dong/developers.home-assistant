@@ -1,34 +1,34 @@
 ---
-title: "Importing code with asyncio"
+title: "使用 asyncio 导入代码"
 ---
 
-Determining when it is safe to import code when using asyncio can be tricky because two constraints need to be considered:
+在使用 asyncio 时，确定何时安全导入代码可能比较棘手，因为需要考虑两个约束：
 
-- Importing code can do blocking I/O to load the files from the disk
-- Importing code in [cpython is not thread-safe](https://github.com/python/cpython/issues/83065)
+- 导入代码可能会进行阻塞 I/O，从磁盘加载文件
+- 在 [cpython 中导入代码不是线程安全的](https://github.com/python/cpython/issues/83065)
 
-## Module level imports
+## 模块级导入
 
-If your imports are at the **module level** (also called **top-level imports**) and all the necessary modules are imported in `__init__.py`, Home Assistant will load your integration either **before the event loop starts** or in a background thread using the **import executor**.
+如果您的导入位于 **模块级**（也称为 **顶级导入**），并且所有必要的模块都在 `__init__.py` 中导入，Home Assistant 会在 **事件循环开始之前** 或者使用 **导入执行器** 在后台线程中加载您的集成。
 
-In this scenario, your imports are generally handled safely, so you **don’t need to worry** about whether they’re event-loop safe.
+在这种情况下，您的导入通常是安全处理的，因此您 **不需要担心** 它们是否对事件循环安全。
 
-## Imports outside of module level
+## 模块级以外的导入
 
-If your imports are not happening at module level, you must carefully consider each import, as the import machinery has to read the module from disk which does blocking I/O. If possible, it's usually best to change to a module level import, as it avoids much complexity and the risk of mistakes. Importing modules is both CPU-intensive and involves blocking I/O, so it is crucial to ensure these operations are executed in the executor.
+如果您的导入没有在模块级进行，您必须仔细考虑每个导入，因为导入机制必须从磁盘读取模块，这会导致阻塞 I/O。如果可能，最好将其更改为模块级导入，因为这避免了复杂性和错误的风险。导入模块既消耗 CPU 资源，又涉及阻塞 I/O，因此确保这些操作在执行器中执行至关重要。
 
-If you can be sure that the modules have already been imported, using a bare [`import`](https://docs.python.org/3/reference/simple_stmts.html#import) statement is safe since Python will not load the modules again.
+如果您可以确保模块已经被导入，使用裸 [`import`](https://docs.python.org/3/reference/simple_stmts.html#import) 语句是安全的，因为 Python 不会再次加载这些模块。
 
-If the integration will always use the module, it's usually best to include a module-level import in `__init__.py` to ensure the module is loaded. However, if this creates a circular import, one of the solutions below will need to be used instead.
+如果集成将始终使用该模块，通常最好在 `__init__.py` 中包括模块级导入，以确保模块被加载。但是，如果这会产生循环导入，您需要使用以下解决方案之一。
 
-If the module is only used conditionally, and will only ever be imported in a single place, the standard executor calls can be used:
+如果模块仅在条件下使用，并且只会在单个位置导入，则可以使用标准执行器调用：
 
-- For imports inside of Home Assistant `hass.async_add_executor_job(_function_that_does_late_import)`
-- For imports outside of Home Assistant: [`loop.run_in_executor(None, _function_that_does_late_import)`](https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.loop.run_in_executor)
-If the same module may be imported concurrently in different parts of the application, use the thread-safe `homeassistant.helpers.importlib.import_module` helper.
+- 对于 Home Assistant 内部的导入 `hass.async_add_executor_job(_function_that_does_late_import)`
+- 对于 Home Assistant 外部的导入: [`loop.run_in_executor(None, _function_that_does_late_import)`](https://docs.python.org/3/library/asyncio-eventloop.html#asyncio.loop.run_in_executor)
+如果同一模块可能在应用程序的不同部分被并发导入，请使用线程安全的 `homeassistant.helpers.importlib.import_module` 辅助函数。
 
-If it's possible the module may be imported from multiple different paths, use `async_import_module`:
-Example:
+如果可能从多个不同路径导入模块，请使用 `async_import_module`：
+示例：
 
 ```python
 from homeassistant.helpers.importlib import async_import_module
@@ -36,25 +36,25 @@ from homeassistant.helpers.importlib import async_import_module
 platform = await async_import_module(hass, f"homeassistant.components.homeassistant.triggers.{platform_name}")
 ```
 
-## Determining if a module is already loaded
+## 判断模块是否已经加载
 
-If you are unsure if a module is already loaded, you can check if the module is already in [`sys.modules`](https://docs.python.org/3/library/sys.html#sys.modules). You should know that the module will appear in `sys.modules` as soon as it begins loading, and [cpython imports are not thread-safe](https://github.com/python/cpython/issues/83065). For this reason, it's important to consider race conditions when code may be imported from multiple paths.
+如果您不确定一个模块是否已经加载，您可以检查该模块是否已经在 [`sys.modules`](https://docs.python.org/3/library/sys.html#sys.modules) 中。您应该知道，一旦模块开始加载，它将出现在 `sys.modules` 中，并且 [cpython 导入不是线程安全的](https://github.com/python/cpython/issues/83065)。因此，在代码可能从多个路径导入时，考虑竞态条件很重要。
 
-## Avoiding imports that are only used for type-checking
+## 避免仅用于类型检查的导入
 
-If an imported module is only used for type checking, it is recommended to guard it with an `if TYPE_CHECKING:` block to avoid it being imported at runtime.
+如果导入的模块仅用于类型检查，建议使用 `if TYPE_CHECKING:` 块来保护它，以避免在运行时被导入。
 
 ```python
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from some_module import SomeClass  # Only imported for type checking
+    from some_module import SomeClass  # 仅用于类型检查而导入
 
 def some_function() -> SomeClass:
-    # Function implementation
+    # 函数实现
     pass
 ```
 
-## Avoid importing code that is rarely used
+## 避免导入很少使用的代码
 
-Importing modules can be both CPU and I/O intensive, so it’s important to avoid importing code that will rarely be used. While importing code outside the module level does add some runtime overhead, this approach is often more efficient when the code is only needed occasionally. By deferring imports, you ensure that resources are only used when necessary, reducing unnecessary processing and improving overall performance.
+导入模块可能既耗费 CPU 又耗费 I/O 资源，因此重要的是避免导入很少使用的代码。虽然在模块级之外导入代码确实会增加一些运行时开销，但当代码仅偶尔需要时，这种方法通常更高效。通过延迟导入，您确保在必要时才使用资源，从而减少不必要的处理，提高整体性能。

@@ -1,36 +1,36 @@
 ---
-title: "Hass object"
-sidebar_label: "Introduction"
+title: "Hass 对象"
+sidebar_label: "介绍"
 ---
 
-While developing Home Assistant you will see a variable that is everywhere: `hass`. This is the Home Assistant instance that will give you access to all the various parts of the system.
+在开发 Home Assistant 时，你会看到一个无处不在的变量：`hass`。这是 Home Assistant 实例，它将让你访问系统的各个部分。
 
-### The `hass` object
+### `hass` 对象
 
-The Home Assistant instance contains four objects to help you interact with the system.
+Home Assistant 实例包含四个对象，帮助你与系统进行交互。
 
-| Object | Description |
+| 对象 | 描述 |
 | ------ | ----------- |
-| `hass` | This is the instance of Home Assistant. Allows starting, stopping and enqueuing new jobs. |
-| `hass.config` | This is the core configuration of Home Assistant exposing location, temperature preferences and config directory path. |
-| `hass.states` | This is the StateMachine. It allows you to set states and track when they are changed. [See available methods.](https://developers.home-assistant.io/docs/dev_101_states) |
-| `hass.bus` | This is the EventBus. It allows you to trigger and listen for events. [See available methods.](https://developers.home-assistant.io/docs/dev_101_events) |
-| `hass.services` | This is the ServiceRegistry. It allows you to register service actions. [See available methods.](https://developers.home-assistant.io/docs/dev_101_services) |
+| `hass` | 这是 Home Assistant 的实例。允许启动、停止和排队新的任务。 |
+| `hass.config` | 这是 Home Assistant 的核心配置，暴露位置、温度偏好和配置目录路径。 |
+| `hass.states` | 这是状态机。它允许你设置状态并跟踪状态何时被更改。[查看可用的方法。](https://developers.home-assistant.io/docs/dev_101_states) |
+| `hass.bus` | 这是事件总线。它允许你触发和侦听事件。[查看可用的方法。](https://developers.home-assistant.io/docs/dev_101_events) |
+| `hass.services` | 这是服务注册表。它允许你注册服务操作。[查看可用的方法。](https://developers.home-assistant.io/docs/dev_101_services) |
 
 <img class='invertDark'
-  alt='Overview of the Home Assistant core architecture'
+  alt='Home Assistant 核心架构概述'
   src='/img/en/architecture/ha_architecture.svg'
 />
 
-### Where to find `hass`
+### 在哪里找到 `hass`
 
-Depending on what you're writing, there are different ways the `hass` object is made available.
+根据你正在编写的内容，`hass` 对象的可用方式不同。
 
-**Component**
-Passed into `setup(hass, config)` or `async_setup(hass, config)`.
+**组件**
+传入 `setup(hass, config)` 或 `async_setup(hass, config)`。
 
-**Platform**
-Passed into `setup_platform(hass, config, add_entities, discovery_info=None)` or `async_setup_platform(hass, config, async_add_entities, discovery_info=None)`.
+**平台**
+传入 `setup_platform(hass, config, add_entities, discovery_info=None)` 或 `async_setup_platform(hass, config, async_add_entities, discovery_info=None)`。
 
-**Entity**
-Available as `self.hass` once the entity has been added via the `add_entities` callback inside a platform.
+**实体**
+一旦通过平台内的 `add_entities` 回调添加，作为 `self.hass` 可用。

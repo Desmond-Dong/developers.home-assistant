@@ -1,48 +1,45 @@
 ---
-title: "The documentation provides troubleshooting information"
+title: "文档提供故障排除信息"
 ---
 
-## Reasoning
+## 理由
 
-We should provide instructions on how to fix a common issue.
-If possible, a troubleshooting topic should include a description of the symptom and the steps needed to fix the situation.
-This decreases the amount of support requests and improves the user experience.
+我们应该提供关于如何修复常见问题的说明。如果可能，故障排除主题应包含症状的描述以及修复情况所需的步骤。这减少了支持请求的数量，并改善了用户体验。
 
-## Example implementation
+## 示例实现
 
 ```markdown showLineNumbers
-## Troubleshooting
+## 故障排除
 
-### Can’t set up the device
+### 无法设置设备
 
-#### Symptom: “This device can’t be reached”
+#### 症状：“无法访问此设备”
 
-When trying to set up the integration, the form shows the message “This device can’t be reached”.
+在尝试设置集成时，表单显示消息“无法访问此设备”。
 
-##### Description
+##### 描述
 
-This means the settings on the device are incorrect, since the device needs to be enabled for local communication.
+这意味着设备上的设置不正确，因为该设备需要启用本地通信。
 
-##### Resolution
+##### 解决方案
 
-To resolve this issue, try the following steps:
+要解决此问题，请尝试以下步骤：
 
-1. Make sure your device is powered up (LEDs are on).
-2. Make sure your device is connected to the internet:
-   - Make sure the app of the manufacturer can see the device.
-3. Make sure the device has the local communication enabled:
-   - Check the device’s settings.
-   - Check the device’s manual.
+1. 确保您的设备已通电（LED灯亮）。
+2. 确保您的设备已连接到互联网：
+   - 确保制造商的应用程序可以看到该设备。
+3. 确保设备已启用本地通信：
+   - 检查设备的设置。
+   - 查阅设备的手册。
 ...
- 
-### I can't see my devices
-Make sure the devices are visible and controllable via the manufacturer's app.
-If they are not, check the device's power and network connection.
 
-### The device goes unavailable after a day
-Make sure you turned off the device's power-saving mode.
+### 我看不到我的设备
+确保设备在制造商的应用程序中可见且可控制。如果不可见，请检查设备的电源和网络连接。
+
+### 设备在一天后变得不可用
+确保您已关闭设备的省电模式。
 ```
 
-## Exceptions
+## 例外情况
 
-There are no exceptions to this rule.
+对此规则没有例外。

@@ -1,5 +1,5 @@
 ---
-title: "Entities use device classes where possible"
+title: "实体尽可能使用设备类别"
 related_rules:
   - has-entity-name
   - entity-translations
@@ -7,48 +7,48 @@ related_rules:
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+## 理由
 
-Device classes are a way to give context to an entity.
-These are used by Home Assistant for various purposes like:
-- Allowing the user to switch to another unit of measurement than what the device provides.
-- They are used for voice control to ask questions like "What is the temperature in the living room?".
-- They are used for exposing entities to cloud based ecosystems like Google Assistant and Amazon Alexa.
-- They are used to adjust the representation in the Home Assistant UI.
-- They can be used to set a default name of the entity to decrease the burden on our translators.
+设备类别是为实体提供上下文的一种方式。
+这些被Home Assistant用于多种目的，例如：
+- 允许用户切换到设备提供的不同计量单位。
+- 用于语音控制，以询问问题，例如“客厅的温度是多少？”。
+- 用于将实体暴露给基于云的生态系统，如Google Assistant和Amazon Alexa。
+- 用于调整Home Assistant UI中的表示。
+- 可以用于设置实体的默认名称，以减轻我们翻译者的负担。
 
-Because of these reasons, it is important to use device classes where possible.
+由于这些原因，尽可能使用设备类别是很重要的。
 
-## Example implementation
+## 示例实现
 
-In the example below we have a temperature sensor that uses the device class `temperature`.
-The name of this entity will be `My device temperature`.
+在下面的示例中，我们有一个温度传感器，它使用设备类别`temperature`。
+这个实体的名称将是`My device temperature`。
 
 `sensor.py`
 ```python {5} showLineNumbers
 class MyTemperatureSensor(SensorEntity):
-    """Representation of a sensor."""
+    """传感器的表示。"""
 
     _attr_has_entity_name = True
     _attr_device_class = SensorDeviceClass.TEMPERATURE
 
     def __init__(self, device: Device) -> None:
-        """Initialize the sensor."""
+        """初始化传感器。"""
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, device.id)},
             name="My device",
         )
 ```
 
-## Additional resources
+## 附加资源
 
-A list of available device classes can be found in the entity pages under the [entity](/docs/core/entity) page.
-More information about entity naming can be found in the [entity](/docs/core/entity#has_entity_name-true-mandatory-for-new-integrations) documentation.
+可用的设备类别列表可以在[实体](/docs/core/entity)页面下的实体页面中找到。
+有关实体命名的更多信息，请参见[实体](/docs/core/entity#has_entity_name-true-mandatory-for-new-integrations)文档。
 
-## Exceptions
+## 异常
 
-There are no exceptions to this rule.
+此规则没有例外。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

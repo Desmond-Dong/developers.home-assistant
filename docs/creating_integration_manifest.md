@@ -1,14 +1,14 @@
 ---
-title: "Integration manifest"
-sidebar_label: "Manifest"
+title: "集成清单"
+sidebar_label: "清单"
 ---
 
-Every integration has a manifest file to specify its basic information. This file is stored as `manifest.json` in your integration directory. It is required to add such a file.
+每个集成都有一个清单文件来指定其基本信息。该文件存储为 `manifest.json` 在您的集成目录中。添加此类文件是必需的。
 
 ```json
 {
   "domain": "hue",
-  "name": "Philips Hue",
+  "name": "飞利浦Hue",
   "after_dependencies": ["http"],
   "codeowners": ["@balloob"],
   "dependencies": ["mqtt"],
@@ -22,7 +22,7 @@ Every integration has a manifest file to specify its basic information. This fil
 }
 ```
 
-Or a minimal example that you can copy into your project:
+或者一个您可以复制到项目中的最小示例：
 
 ```json
 {
@@ -37,78 +37,70 @@ Or a minimal example that you can copy into your project:
 }
 ```
 
-## Domain
+## 域
 
-The domain is a short name consisting of characters and underscores. This domain has to be unique and cannot be changed. Example of the domain for the mobile app integration: `mobile_app`. The domain key has to match the directory this file is in.
+域是由字符和下划线组成的短名称。此域必须是唯一的，并且不能更改。移动应用集成的域示例：`mobile_app`。域密钥必须与该文件所在目录匹配。
 
-## Name
+## 名称
 
-The name of the integration.
+集成的名称。
 
-## Version
+## 版本
 
-For core integrations, this should be omitted.
+对于核心集成，这应被省略。
 
-The version of the integration is required for custom integrations. The version needs to be a valid version recognized by [AwesomeVersion](https://github.com/ludeeus/awesomeversion) like [CalVer](https://calver.org/) or [SemVer](https://semver.org/).
+集成的版本是自定义集成所必需的。版本需要是一个有效版本，被 [AwesomeVersion](https://github.com/ludeeus/awesomeversion) 认可，如 [CalVer](https://calver.org/) 或 [SemVer](https://semver.org/)。
 
-## Integration type
+## 集成类型
 
-Integrations are split into multiple integration types. Each integration
-must provide an `integration_type` in their manifest, that describes its main
-focus.
+集成分为多种集成类型。每个集成都必须在其清单中提供一个 `integration_type`，描述其主要焦点。
 
 :::warning
-When not set, we currently default to `hub`. This default is temporary during
-our transition period, every integration should set an `integration_type` and
-it thus will become mandatory in the future.
+如果未设置，我们当前默认为 `hub`。此默认设置在过渡期间是暂时的，每个集成都应设置 `integration_type`，因此将来将变为强制要求。
 :::
 
-| Type |  Description
+| 类型 | 描述
 | ---- | -----------
-| `device` | Provides a single device like, for example, ESPHome. |
-| `entity` | Provides a basic entity platform, like sensor or light. This should generally not be used. |
-| `hardware` | Provides a hardware integration, like Raspbery Pi or Hardkernel. This should generally not be used. |
-| `helper` | Provides an entity to help the user with automations like input boolean, derivative or group. |
-| `hub` | Provides a hub integration, with multiple devices or services, like Philips Hue. |
-| `service` | Provides a single service, like DuckDNS or AdGuard. |
-| `system` | Provides a system integration and is reserved, should generally not be used. |
-| `virtual` | Not an integration on its own. Instead it points towards another integration or IoT standard. See [virtual integration](#virtual-integration) section. |
+| `device` | 提供单个设备，例如 ESPHome。 |
+| `entity` | 提供基本实体平台，如传感器或灯。这通常不应使用。 |
+| `hardware` | 提供硬件集成，如 Raspberry Pi 或 Hardkernel。这通常不应使用。 |
+| `helper` | 提供实体以帮助用户进行自动化，如输入布尔值、导数或组。 |
+| `hub` | 提供集线器集成，支持多个设备或服务，如飞利浦Hue。 |
+| `service` | 提供单个服务，如 DuckDNS 或 AdGuard。 |
+| `system` | 提供系统集成并保留，通常不应使用。 |
+| `virtual` | 本身不是集成。相反，它指向另一个集成或物联网标准。请参阅 [虚拟集成](#虚拟集成) 部分。 |
 
 :::info
-The difference between a `hub` and a `service` or `device` is defined by the nature
-of the integration. A `hub` provides a gateway to multiple other devices or
-services. `service` and `device` are integrations that provide a single device
-or service per config entry.
+`hub` 与 `service` 或 `device` 之间的区别由集成的性质定义。`hub` 提供对多个其他设备或服务的网关。`service` 和 `device` 是每个配置条目提供单个设备或服务的集成。
 :::
 
-## Documentation
+## 文档
 
-The website containing documentation on how to use your integration. If this integration is being submitted for inclusion in Home Assistant, it should be `https://www.home-assistant.io/integrations/<domain>`
+包含有关如何使用您的集成的文档的网站。如果该集成是提交给 Home Assistant 的，它应为 `https://www.home-assistant.io/integrations/<domain>`
 
-## Issue tracker
+## 问题跟踪
 
-The issue tracker of your integration, where users reports issues if they run into one.
-If this integration is being submitted for inclusion in Home Assistant, it should be omitted. For built-in integrations, Home Assistant will automatically generate the correct link.
+集成的问题跟踪，用户在遇到问题时报告。如果该集成是提交给 Home Assistant 的，则应省略。对于内置集成，Home Assistant 将自动生成正确的链接。
 
-## Dependencies
+## 依赖项
 
-Dependencies are other Home Assistant integrations you want Home Assistant to set up successfully before the integration is loaded. Adding an integration to dependencies will ensure the depending integration is loaded before setup, but it does not guarantee all dependency configuration entries have been set up. Adding dependencies can be necessary if you want to offer functionality from that other integration, like webhooks or an MQTT connection. Adding an [after dependency](#after-dependencies) might be a better alternative if a dependency is optional but not critical. See the [MQTT section](#mqtt) for more details on handling this for MQTT.
+依赖项是您希望 Home Assistant 在加载该集成之前成功设置的其他 Home Assistant 集成。将集成添加到依赖项将确保依赖集成在设置之前加载，但不能保证所有依赖配置条目都已设置。如果您希望提供来自其他集成的功能，例如 Webhook 或 MQTT 连接，则添加依赖项可能是必要的。如果依赖项是可选但不是关键的，添加 [后依赖项](#after-dependencies) 可能是更好的选择。有关处理 MQTT 的更多详细信息，请参阅 [MQTT 部分](#mqtt)。
 
-Built-in integrations shall only specify other built-in integrations in `dependencies`. Custom integrations may specify both built-in and custom integrations in `dependencies`.
+内置集成仅应在 `dependencies` 中指定其他内置集成。自定义集成可以在 `dependencies` 中同时指定内置和自定义集成。
 
-## After dependencies
+## 后依赖项
 
-This option is used to specify dependencies that might be used by the integration but aren't essential. When `after_dependencies` is present, set up of an integration will wait for the integrations listed in `after_dependencies`, which are configured either via YAML or a config entry, to be set up first before the integration is set up. It will also make sure that the requirements of `after_dependencies` are installed so methods from the integration can be safely imported, regardless of whether the integrations listed in `after_dependencies` are configured or not. For example, if the `camera` integration might use the `stream` integration in certain configurations, adding `stream` to `after_dependencies` of `camera`'s manifest, will ensure that `stream` is loaded before `camera` if it is configured and that any dependencies of `stream` are installed and can be imported by `camera`. If `stream` is not configured, `camera` will still load.
+此选项用于指定可能被集成使用但不是必需的依赖项。当存在 `after_dependencies` 时，集成的设置将等待在 `after_dependencies` 中列出的集成（这些集成可通过 YAML 或配置条目进行配置）先进行设置。它还将确保 `after_dependencies` 的要求已安装，以便安全导入集成中的方法，无论 `after_dependencies` 中列出的集成是否已配置。例如，如果 `camera` 集成在某些配置中可能使用 `stream` 集成，将 `stream` 添加到 `camera` 清单的 `after_dependencies` 中将确保在配置时首先加载 `stream`，并且该 `stream` 的任何依赖项都已安装并可以被 `camera` 导入。如果 `stream` 未配置，`camera` 仍会加载。
 
-Built-in integrations shall only specify other built-in integrations in `after_dependencies`. Custom integrations may specify both built-in and custom integrations in `after_dependencies`.
+内置集成仅应在 `after_dependencies` 中指定其他内置集成。自定义集成可以在 `after_dependencies` 中同时指定内置和自定义集成。
 
-## Code owners
+## 代码所有者
 
-GitHub usernames or team names of people that are responsible for this integration. You should add at least your GitHub username here, as well as anyone who helped you to write code that is being included.
+负责此集成的 GitHub 用户名或团队名称。您应该至少在这里添加您的 GitHub 用户名，以及任何帮助您编写包含代码的人。
 
-## Config flow
+## 配置流
 
-Specify the `config_flow` key if your integration has a config flow to create a config entry. When specified, the file `config_flow.py` needs to exist in your integration.
+如果您的集成具有创建配置条目的配置流，请指定 `config_flow` 键。指定后，必须在您的集成中存在 `config_flow.py` 文件。
 
 ```json
 {
@@ -116,9 +108,9 @@ Specify the `config_flow` key if your integration has a config flow to create a 
 }
 ```
 
-### Single config entry only
+### 仅单个配置条目
 
-Specify the `single_config_entry` key if your integration supports only one config entry. When specified, it will not allow the user to add more than one config entry for this integration.
+如果您的集成仅支持一个配置条目，请指定 `single_config_entry` 键。指定后，它将不允许用户为此集成添加超过一个的配置条目。
 
 ```json
 {
@@ -126,24 +118,24 @@ Specify the `single_config_entry` key if your integration supports only one conf
 }
 ```
 
-## Requirements
+## 要求
 
-Requirements are Python libraries or modules that you would normally install using `pip` for your component. Home Assistant will try to install the requirements into the `deps` subdirectory of the Home Assistant [configuration directory](https://www.home-assistant.io/docs/configuration/) if you are not using a `venv` or in something like `path/to/venv/lib/python3.6/site-packages` if you are running in a virtual environment. This will make sure that all requirements are present at startup. If steps fail, like missing packages for the compilation of a module or other install errors, the component will fail to load.
+要求是您通常使用 `pip` 为您的组件安装的 Python 库或模块。Home Assistant 将尝试将要求安装到 Home Assistant [配置目录](https://www.home-assistant.io/docs/configuration/) 的 `deps` 子目录中，如果您未使用 `venv`，或者在像 `path/to/venv/lib/python3.6/site-packages` 的位置运行虚拟环境。这将确保所有要求在启动时可用。如果步骤失败，例如缺少模块编译的包或其他安装错误，该组件将无法加载。
 
-Requirements is an array of strings. Each entry is a `pip` compatible string. For example, the media player Cast platform depends on the Python package PyChromecast v3.2.0: `["pychromecast==3.2.0"]`.
+要求是一个字符串数组。每个条目都是一个与 `pip` 兼容的字符串。例如，媒体播放器 Cast 平台依赖于 Python 包 PyChromecast v3.2.0： `["pychromecast==3.2.0"]`。
 
-### Custom requirements during development & testing
+### 在开发和测试期间的自定义要求
 
-During the development of a component, it can be useful to test against different versions of a requirement. This can be done in two steps, using `pychromecast` as an example:
+在组件开发期间，测试不同版本的要求可能是有用的。这可以通过两个步骤完成，使用 `pychromecast` 作为示例：
 
 ```shell
 pip install pychromecast==3.2.0 --target ~/.homeassistant/deps
 hass --skip-pip-packages pychromecast
 ```
 
-This will use the specified version, and prevent Home Assistant from trying to override it with what is specified in `requirements`. To prevent any package from being automatically overridden without specifying dependencies, you can launch Home Assistant with the global `--skip-pip` flag.
+这将使用指定的版本，并防止 Home Assistant 尝试使用 `requirements` 中指定的内容覆盖它。要防止任何未指定依赖项的包被自动覆盖，您可以通过全局 `--skip-pip` 标志启动 Home Assistant。
 
-If you need to make changes to a requirement to support your component, it's also possible to install a development version of the requirement using `pip install -e`:
+如果您需要对要求进行更改以支持您的组件，也可以使用 `pip install -e` 安装要求的开发版本：
 
 ```shell
 git clone https://github.com/balloob/pychromecast.git
@@ -151,16 +143,16 @@ pip install -e ./pychromecast
 hass --skip-pip-packages pychromecast
 ```
 
-It is also possible to use a public git repository to install a requirement.  This can be useful, for example, to test changes to a requirement dependency before it's been published to PyPI. Syntax:
+还可以使用公共 Git 仓库来安装要求。这样做可能很有用，例如，在其发布到 PyPI 之前测试对要求依赖的更改。语法：
 
 ```json
 {
   "requirements": ["<library>@git+https://github.com/<user>/<project>.git@<git ref>"]
 }
 ```
-`<git ref>` can be any git reference: branch, tag, commit hash, ... . See [PIP documentation about git support](https://pip.pypa.io/en/stable/topics/vcs-support/#git).
+`<git ref>` 可以是任何 git 引用：分支、标签、提交哈希等。有关 Git 支持的 [PIP 文档](https://pip.pypa.io/en/stable/topics/vcs-support/#git)。
 
-The following example will install the `except_connect` branch of the `pycoolmaster` library directly from GitHub:
+以下示例将直接从 GitHub 安装 `pycoolmaster` 库的 `except_connect` 分支：
 
 ```json
 {
@@ -168,23 +160,23 @@ The following example will install the `except_connect` branch of the `pycoolmas
 }
 ```
 
-### Custom integration requirements
+### 自定义集成要求
 
-Custom integrations should only include requirements that are not required by the Core [requirements.txt](https://github.com/home-assistant/core/blob/dev/requirements.txt).
+自定义集成应仅包括核心 [requirements.txt](https://github.com/home-assistant/core/blob/dev/requirements.txt) 不需要的要求。
 
-## Loggers
+## 日志记录器
 
-The `loggers` field is a list of names that the integration's requirements use for their [getLogger](https://docs.python.org/3/library/logging.html?highlight=logging#logging.getLogger) calls.
+`loggers` 字段是集成的要求用于其 [getLogger](https://docs.python.org/3/library/logging.html?highlight=logging#logging.getLogger) 调用的名称列表。
 
-## Bluetooth
+## 蓝牙
 
-If your integration supports discovery via bluetooth, you can add a matcher to your manifest. If the user has the `bluetooth` integration loaded, it will load the `bluetooth` step of your integration's config flow when it is discovered. We support listening for Bluetooth discovery by matching on `connectable` `local_name`, `service_uuid`, `service_data_uuid`, `manufacturer_id`, and `manufacturer_data_start`. The `manufacturer_data_start` field expects a list of bytes encoded as integer values from 0-255. The manifest value is a list of matcher dictionaries. Your integration is discovered if all items of any of the specified matchers are found in the Bluetooth data. It's up to your config flow to filter out duplicates.
+如果您的集成支持通过蓝牙进行发现，您可以在清单中添加匹配器。如果用户加载了 `bluetooth` 集成，它将在发现时加载您集成的配置流的 `bluetooth` 步骤。我们支持通过匹配 `connectable`、`local_name`、`service_uuid`、`service_data_uuid`、`manufacturer_id` 和 `manufacturer_data_start` 来监听蓝牙发现。`manufacturer_data_start` 字段期望是一个字节列表，编码为 0-255 的整数值。清单值是匹配器字典的列表。如果在蓝牙数据中找到任何指定匹配器的所有项，则发现您的集成。由您的配置流去过滤重复项。
 
-Matches for `local_name` may not contain any patterns in the first three (3) characters.
+`local_name` 的匹配不能包含前面三个 (3) 字符中的任何模式。
 
-If the device only needs advertisement data, setting `connectable` to `false` will opt-in to receive discovery from Bluetooth controllers that do not have support for making connections.
+如果设备仅需要广告数据，则将 `connectable` 设置为 `false` 将选择接收来自没有连接支持的蓝牙控制器的发现。
 
-The following example will match Nespresso Prodigio machines:
+以下示例将匹配 Nespresso Prodigio 机器：
 
 ```json
 {
@@ -196,7 +188,7 @@ The following example will match Nespresso Prodigio machines:
 }
 ```
 
-The following example will match service data with a 128 bit uuid used for SwitchBot bot and curtain devices:
+以下示例将匹配用于 SwitchBot 机器人和窗帘设备的 128 位 uuid 的服务数据：
 
 ```json
 {
@@ -208,7 +200,7 @@ The following example will match service data with a 128 bit uuid used for Switc
 }
 ```
 
-If you want to match service data with a 16 bit uuid, you will have to convert it to a 128 bit uuid first, by replacing the 3rd and 4th byte in `00000000-0000-1000-8000-00805f9b34fb` with the 16 bit uuid. For example, for Switchbot sensor devices, the 16 bit uuid is `0xfd3d`, the corresponding 128 bit uuid becomes `0000fd3d-0000-1000-8000-00805f9b34fb`. The following example will therefore match service data with a 16 bit uuid used for SwitchBot sensor devices:
+如果您想要匹配具有 16 位 uuid 的服务数据，则首先需要将其转换为 128 位 uuid，通过将 `00000000-0000-1000-8000-00805f9b34fb` 中的第三个和第四个字节替换为 16 位 uuid。例如，对于 Switchbot 传感器设备，16 位 uuid 为 `0xfd3d`，对应的 128 位 uuid 为 `0000fd3d-0000-1000-8000-00805f9b34fb`。以下示例因此将匹配用于 SwitchBot 传感器设备的 16 位 uuid 的服务数据：
 
 ```json
 {
@@ -220,8 +212,7 @@ If you want to match service data with a 16 bit uuid, you will have to convert i
 }
 ```
 
-The following example will match HomeKit devices:
-
+以下示例将匹配 HomeKit 设备：
 
 ```json
 {
@@ -234,12 +225,11 @@ The following example will match HomeKit devices:
 }
 ```
 
-
 ## Zeroconf
 
-If your integration supports discovery via [Zeroconf](https://en.wikipedia.org/wiki/Zero-configuration_networking), you can add the type to your manifest. If the user has the `zeroconf` integration loaded, it will load the `zeroconf` step of your integration's config flow when it is discovered.
+如果您的集成支持通过 [Zeroconf](https://en.wikipedia.org/wiki/Zero-configuration_networking) 进行发现，您可以在清单中添加该类型。如果用户加载了 `zeroconf` 集成，它将在发现时加载您集成的配置流的 `zeroconf` 步骤。
 
-Zeroconf is a list so you can specify multiple types to match on.
+Zeroconf 是一个列表，因此您可以指定多个类型进行匹配。
 
 ```json
 {
@@ -247,7 +237,7 @@ Zeroconf is a list so you can specify multiple types to match on.
 }
 ```
 
-Certain zeroconf types are very generic (i.e., `_printer._tcp.local.`, `_axis-video._tcp.local.` or `_http._tcp.local`). In such cases you should include a Name (`name`), or Properties (`properties`) filter:
+某些 zeroconf 类型非常通用（例如，`_printer._tcp.local.`、`_axis-video._tcp.local.` 或 `_http._tcp.local.`)。在这种情况下，您应该包含名称（`name`）或属性（`properties`）过滤器：
 
 ```json
 {
@@ -259,13 +249,13 @@ Certain zeroconf types are very generic (i.e., `_printer._tcp.local.`, `_axis-vi
 }
 ```
 
-Note that all values in the `properties` filters must be lowercase, and may contain a fnmatch type wildcard.
+请注意，`properties` 过滤器中的所有值必须为小写，并且可以包含 fnmatch 类型的通配符。
 
 ## SSDP
 
-If your integration supports discovery via [SSDP](https://en.wikipedia.org/wiki/Simple_Service_Discovery_Protocol), you can add the type to your manifest. If the user has the `ssdp` integration loaded, it will load the `ssdp` step of your integration's config flow when it is discovered. We support SSDP discovery by the SSDP ST, USN, EXT, and Server headers (header names in lowercase), as well as data in [UPnP device description](https://openconnectivity.org/developer/specifications/upnp-resources/upnp/basic-device-v1-0/). The manifest value is a list of matcher dictionaries, your integration is discovered if all items of any of the specified matchers are found in the SSDP/UPnP data. It's up to your config flow to filter out duplicates.
+如果您的集成支持通过 [SSDP](https://en.wikipedia.org/wiki/Simple_Service_Discovery_Protocol) 进行发现，您可以在清单中添加该类型。如果用户加载了 `ssdp` 集成，它将在发现时加载您集成的配置流的 `ssdp` 步骤。我们支持通过 SSDP ST、USN、EXT 和 Server 头（以小写形式显示的头名称）发现 SSDP，以及数据在 [UPnP 设备描述](https://openconnectivity.org/developer/specifications/upnp-resources/upnp/basic-device-v1-0/) 中。清单值是匹配器字典的列表，如果在 SSDP/UPnP 数据中找到任何指定匹配器的所有项，则发现您的集成。由您的配置流去过滤重复项。
 
-The following example has one matcher consisting of three items, all of which must match for discovery to happen by this config.
+以下示例有一个匹配器，由三个项组成，所有项必须匹配，该配置才能进行发现。
 
 ```json
 {
@@ -281,9 +271,9 @@ The following example has one matcher consisting of three items, all of which mu
 
 ## HomeKit
 
-If your integration supports discovery via HomeKit, you can add the supported model names to your manifest. If the user has the `zeroconf` integration loaded, it will load the `homekit` step of your integration's config flow when it is discovered.
+如果您的集成支持通过 HomeKit 进行发现，您可以在清单中添加受支持的型号名称。如果用户加载了 `zeroconf` 集成，它将在发现时加载您集成的配置流的 `homekit` 步骤。
 
-HomeKit discovery works by testing if the discovered modelname starts with any of the model names specified in the manifest.json.
+HomeKit 发现的工作原理是测试发现的型号名称是否以清单.json 中指定的任何型号名称开头。
 
 ```json
 {
@@ -295,15 +285,15 @@ HomeKit discovery works by testing if the discovered modelname starts with any o
 }
 ```
 
-Discovery via HomeKit does not mean that you have to talk the HomeKit protocol to communicate with your device. You can communicate with the device however you see fit.
+通过 HomeKit 进行的发现并不意味着您必须使用 HomeKit 协议与设备进行通信。您可以使用任何您认为合适的方式与设备进行通信。
 
-When a discovery info is routed to your integration because of this entry in your manifest, the discovery info is no longer routed to integrations that listen to the HomeKit zeroconf type.
+当发现信息因清单中的此条目而路由到您的集成时，该发现信息不再被路由到侦听 HomeKit zeroconf 类型的集成。
 
 ## MQTT
 
-If your integration supports discovery via MQTT, you can add the topics used for discovery. If the user has the `mqtt` integration loaded, it will load the `mqtt` step of your integration's config flow when it is discovered.
+如果您的集成支持通过 MQTT 进行发现，您可以添加用于发现的主题。如果用户加载了 `mqtt` 集成，它将在发现时加载您集成的配置流的 `mqtt` 步骤。
 
-MQTT discovery works by subscribing to MQTT topics specified in the manifest.json.
+MQTT 发现的工作原理是订阅清单.json 中指定的 MQTT 主题。
 
 ```json
 {
@@ -313,30 +303,26 @@ MQTT discovery works by subscribing to MQTT topics specified in the manifest.jso
 }
 ```
 
-If your integration requires `mqtt`, make sure it is added to the [dependencies](#dependencies).
+如果您的集成需要 `mqtt`，请确保它已添加到 [dependencies](#dependencies)。
 
-Integrations depending on MQTT should wait using `await mqtt.async_wait_for_mqtt_client(hass)` for the MQTT client to become available before they can subscribe. The `async_wait_for_mqtt_client` method will block and return `True` till the MQTT client is available.
+依赖于 MQTT 的集成应等待使用 `await mqtt.async_wait_for_mqtt_client(hass)` 等待 MQTT 客户端可用，然后才能订阅。`async_wait_for_mqtt_client` 方法将阻塞并返回 `True`，直到 MQTT 客户端可用。
 
 ## DHCP
 
-If your integration supports discovery via DHCP, you can add the type to your manifest. If the user has the `dhcp` integration loaded, it will load the `dhcp` step of your integration's config flow when it is discovered. We support passively listening for DHCP discovery by the `hostname` and [OUI](https://en.wikipedia.org/wiki/Organizationally_unique_identifier), or matching device registry mac address when `registered_devices` is set to `true`. The manifest value is a list of matcher dictionaries, your integration is discovered if all items of any of the specified matchers are found in the DHCP data. [Unix filename pattern matching](https://docs.python.org/3/library/fnmatch.html) is used for matching. It's up to your config flow to filter out duplicates.
+如果您的集成支持通过 DHCP 进行发现，您可以在清单中添加该类型。如果用户加载了 `dhcp` 集成，它将在发现时加载您集成的配置流的 `dhcp` 步骤。我们通过 `hostname` 和 [OUI](https://en.wikipedia.org/wiki/Organizationally_unique_identifier) 被动地监听 DHCP 发现，或者在设置 `registered_devices` 为 `true` 时匹配设备注册表的 mac 地址。清单值是匹配器字典的列表，如果在 DHCP 数据中找到任何指定匹配器的所有项，则发现您的集成。使用 [Unix 文件名模式匹配](https://docs.python.org/3/library/fnmatch.html) 进行匹配。由您的配置流去过滤重复项。
 
-If an integration wants to receive discovery flows to update the IP Address of a device when it comes
-online, but a `hostname` or `oui` match would be too broad, and it has registered in the device registry with mac address using the `CONNECTION_NETWORK_MAC`,
-it should add a DHCP entry with `registered_devices` set to `true`.
+如果一个集成想要接收发现流以在设备上线时更新其 IP 地址，但匹配的 `hostname` 或 `oui` 可能过于广泛，并且它在设备注册表中用 mac 地址注册，使用 `CONNECTION_NETWORK_MAC`，则应该添加 `registered_devices` 设置为 `true` 的 DHCP 条目。
 
-If the integration supports `zeroconf` or `ssdp`, these should be preferred over `dhcp` as it generally offers a better
-user experience.
+如果集成支持 `zeroconf` 或 `ssdp`，则应优先于 `dhcp`，因为它通常提供更好的用户体验。
 
-The following example has two matchers consisting of two items. All of the items in any of the matchers must match for discovery to happen by this config.
+以下示例有两个匹配器，每个匹配器包含两个项。任何匹配器中的所有项都必须匹配该配置才能进行发现。
 
-For example:
+例如：
 
--  If the `hostname` was `Rachio-XYZ` and the `macaddress` was `00:9D:6B:55:12:AA`, the discovery would happen (1st matcher).
--  If the `hostname` was `Dachio-XYZ` or `Pachio-XYZ`, and the `macaddress` was `00:9D:6B:55:12:AA`, the discovery would happen (3rd matcher).
--  If the `hostname` was `Rachio-XYZ` and the `macaddress` was `00:00:00:55:12:AA`, the discovery would not happen (no matching MAC).
--  If the `hostname` was `NotRachio-XYZ` and the `macaddress` was `00:9D:6B:55:12:AA`, the discovery would not happen (no matching hostname).
-
+-  如果 `hostname` 为 `Rachio-XYZ` 且 `macaddress` 为 `00:9D:6B:55:12:AA`，则会发生发现（第一个匹配器）。
+-  如果 `hostname` 为 `Dachio-XYZ` 或 `Pachio-XYZ`，且 `macaddress` 为 `00:9D:6B:55:12:AA`，则会发生发现（第三个匹配器）。
+-  如果 `hostname` 为 `Rachio-XYZ` 且 `macaddress` 为 `00:00:00:55:12:AA`，则不会发生发现（无匹配的 MAC）。
+-  如果 `hostname` 为 `NotRachio-XYZ` 且 `macaddress` 为 `00:9D:6B:55:12:AA`，则不会发生发现（无匹配的 hostname）。
 
 ```json
 {
@@ -353,7 +339,7 @@ For example:
 }
 ```
 
-Example with setting `registered_devices` to `true`:
+设置 `registered_devices` 为 `true` 的示例：
 
 ```json
 {
@@ -370,20 +356,20 @@ Example with setting `registered_devices` to `true`:
 
 ## USB
 
-If your integration supports discovery via usb, you can add the type to your manifest. If the user has the `usb` integration loaded, it will load the `usb` step of your integration's config flow when it is discovered. We support discovery by VID (Vendor ID), PID (Device ID), Serial Number, Manufacturer, and Description by extracting these values from the USB descriptor. For help identifiying these values see [How To Identify A Device](https://wiki.debian.org/HowToIdentifyADevice/USB). The manifest value is a list of matcher dictionaries. Your integration is discovered if all items of any of the specified matchers are found in the USB data. It's up to your config flow to filter out duplicates.
+如果您的集成支持通过 USB 进行发现，您可以在清单中添加该类型。如果用户加载了 `usb` 集成，它将在发现时加载您集成的配置流的 `usb` 步骤。我们支持通过 VID（供应商 ID）、PID（设备 ID）、序列号、制造商和描述通过提取这些值从 USB 描述符进行发现。有关识别这些值的帮助，请参阅 [如何识别设备](https://wiki.debian.org/HowToIdentifyADevice/USB)。清单值是匹配器字典的列表，如果在 USB 数据中找到任何指定匹配器的所有项，则发现您的集成。由您的配置流去过滤重复项。
 
 :::warning
-Some VID and PID combinations are used by many unrelated devices. For example VID `10C4` and PID `EA60` matches any Silicon Labs CP2102 USB-Serial bridge chip. When matching these type of devices, it is important to match on `description` or another identifer to avoid an unexpected discovery.
+某些 VID 和 PID 组合被许多无关设备使用。例如 VID `10C4` 和 PID `EA60` 匹配任何 Silicon Labs CP2102 USB-Serial 桥接芯片。当匹配这些类型的设备时，匹配 `description` 或其他标识符以避免意外发现是非常重要的。
 :::
 
-The following example has two matchers consisting of two items. All of the items in any of the two matchers must match for discovery to happen by this config.
+以下示例包含两个匹配器，每个匹配器由两个项组成。匹配发现需要在任何两个匹配器中的所有项都匹配。
 
-For example:
+例如：
 
--  If the `vid` was `AAAA` and the `pid` was `AAAA`, the discovery would happen.
--  If the `vid` was `AAAA` and the `pid` was `FFFF`, the discovery would not happen.
--  If the `vid` was `CCCC` and the `pid` was `AAAA`, the discovery would not happen.
--  If the `vid` was `1234`, the `pid` was `ABCD`, the `serial_number` was `12345678`, the `manufacturer` was `Midway USB`, and the `description` was `Version 12 Zigbee Stick`, the discovery would happen.
+-  如果 `vid` 为 `AAAA`，`pid` 为 `AAAA`，则会发生发现。
+-  如果 `vid` 为 `AAAA`，`pid` 为 `FFFF`，则不会发生发现。
+-  如果 `vid` 为 `CCCC`，`pid` 为 `AAAA`，则不会发生发现。
+-  如果 `vid` 为 `1234`，`pid` 为 `ABCD`，`serial_number` 为 `12345678`，`manufacturer` 为 `Midway USB`，且 `description` 为 `版本 12 Zigbee Stick`，则会发生发现。
 
 ```json
 {
@@ -407,11 +393,11 @@ For example:
 }
 ```
 
-## Integration quality scale
+## 集成质量评分
 
-The [Integration Quality Scale](/docs/core/integration-quality-scale) scores an integration on the code quality and user experience. Each level of the quality scale consists of a list of requirements. If an integration matches all requirements, it's considered to have reached that level.
+[集成质量评分](/docs/core/integration-quality-scale) 根据代码质量和用户体验对集成进行评分。质量评分的每个级别由一系列要求组成。如果集成满足所有要求，则认为已达到该级别。
 
-New integrations are required to fulfill at least the bronze tier so be sure to look at the [Integration Quality Scale](/docs/core/integration-quality-scale) list of requirements. It helps to improve the code and user experience tremendously.
+新的集成需要至少满足青铜级，因此请务必查看 [集成质量评分](/docs/core/integration-quality-scale) 的要求列表。这有助于极大改善代码和用户体验。
 
 ```json
 {
@@ -419,41 +405,40 @@ New integrations are required to fulfill at least the bronze tier so be sure to 
 }
 ```
 
-## IoT class
+## IoT 类
 
-The [IoT class][iot_class] describes how an integration connects with, e.g., a device or service. For more information
-about IoT Classes, read the blog about ["Classifying the Internet of Things"][iot_class].
+[IOT 类][iot_class] 描述集成如何与设备或服务连接。有关 IoT 类的更多信息，请阅读 [“分类物联网”][iot_class] 的博客。
 
-The following IoT classes are accepted in the manifest:
+清单中接受以下 IoT 类：
 
-- `assumed_state`: We are unable to get the state of the device. Best we can do is to assume the state based on our last command.
-- `cloud_polling`: The integration of this device happens via the cloud and requires an active internet connection. Polling the state means that an update might be noticed later.
-- `cloud_push`: Integration of this device happens via the cloud and requires an active internet connection. Home Assistant will be notified as soon as a new state is available.
-- `local_polling`: Offers direct communication with device. Polling the state means that an update might be noticed later.
-- `local_push`: Offers direct communication with device. Home Assistant will be notified as soon as a new state is available.
-- `calculated`: The integration does not handle communication on its own, but provides a calculated result.
+- `assumed_state`：我们无法获取设备的状态。我们能做的就是基于我们上一个命令来假定状态。
+- `cloud_polling`：此设备的集成通过云实现，并需要主动的互联网连接。轮询状态意味着更新可能会稍后被注意到。
+- `cloud_push`：此设备的集成通过云实现，并需要主动的互联网连接。一旦新状态可用，Home Assistant 会收到通知。
+- `local_polling`：提供与设备的直接通信。轮询状态意味着更新可能会稍后被注意到。
+- `local_push`：提供与设备的直接通信。一旦新状态可用，Home Assistant 会收到通知。
+- `calculated`：集成不自行处理通信，但提供计算结果。
 
 [iot_class]: https://www.home-assistant.io/blog/2016/02/12/classifying-the-internet-of-things/#classifiers
 
-## Virtual integration
+## 虚拟集成
 
-Some products are supported by integrations that are not named after the product. For example, Yale Home locks are integrated via the August integration, and the IKEA SYMFONISK product line can be used with the Sonos integration.
+某些产品由不以产品命名的集成支持。例如，Yale Home 锁通过 August 集成进行集成，而 IKEA SYMFONISK 产品线可以与 Sonos 集成一起使用。
 
-There are also cases where a product line only supports a standard IoT standards like Zigbee or Z-Wave. For example, the U-tec ultraloq works via Z-Wave and has no specific dedicated integration. 
+还有一些情况下，产品线仅支持标准 IoT 标准，例如 Zigbee 或 Z-Wave。例如，U-tec ultraloq 通过 Z-Wave 工作，并没有专门的集成。
 
-For end-users, it can be confusing to find how to integrate those products with Home Asssistant. To help with these above cases, Home Assistant has "Virtual integrations". These integrations are not real integrations but are used to help users find the right integration for their device.
+对于最终用户，找到如何将这些产品与 Home Assistant 集成的方法可能会令人困惑。为了帮助处理上述情况，Home Assistant 引入了“虚拟集成”。这些集成不是真正的集成，而是用于帮助用户找到适合其设备的集成。
 
-A virtual integration is an integration that just has a single manifest file, without any additional code. There are two types of virtual integrations: A virtual integration supported by another integration and one that uses an existing IoT standard.
+虚拟集成是只具有单个清单文件的集成，而没有任何附加代码。虚拟集成有两种类型：一种是由其他集成支持的虚拟集成，另一种是使用现有的 IoT 标准的虚拟集成。
 
 :::info
-Virtual integrations can only be provided by Home Assistant Core and not by custom integrations.
+虚拟集成只能由 Home Assistant 核心提供，而不能由自定义集成提供。
 :::
 
-### Supported by
+### 由…支持
 
-The "Supported by" virtual integration is an integration that points to another integration to provide its implementation. For example, Yale Home locks are integrated via the August (`august`) integration.
+“由…支持”虚拟集成是指指向另一个集成以提供其实现的集成。例如，Yale Home 锁通过 August （`august`）集成进行集成。
 
-Example manifest:
+示例清单：
 
 ```json
 {
@@ -464,21 +449,20 @@ Example manifest:
 }
 ```
 
-The `domain` and `name` are the same as with any other integration, but the `integration_type` is set to `virtual`. 
-The logo for the domain of this virtual integration must be added to our [brands repository](https://github.com/home-assistant/brands/), so in this case, a Yale Home branding is used.
+`domain` 和 `name` 与任何其他集成相同，但 `integration_type` 被设置为 `virtual`。此虚拟集成的域的徽标必须添加到我们的 [品牌库](https://github.com/home-assistant/brands/)，因此在这种情况下，使用了 Yale Home 品牌。
 
-The `supported_by` is the domain of the integration providing the implementation for this product. In the example above, the Yale Home lock is supported by the August integration and points to its domain `august`.
+`supported_by` 是提供该产品实现的集成的域。在上面的示例中，Yale Home 锁由 August 集成支持，并指向其域 `august`。
 
-Result:
+结果：
 
-- Yale Home is listed on our user documentation website under integrations with an automatically generated stub page that directs the user to the integration to use.
-- Yale Home is listed in Home Assistant when clicking "add integration". When selected, we explain to the user that this product is integrated using a different integration, then the user continues to the Xioami Miio config flow.
+- Yale Home 在我们的用户文档网站上列在集成下，自动生成的存根页面将用户引导到要使用的集成。
+- Yale Home 在 Home Assistant 中列出，当点击“添加集成”时。当被选择时，我们会向用户说明该产品是通过另一个集成进行集成的，然后用户继续进行小米米家配置流。
 
-### IoT standards
+### IoT 标准
 
-The "IoT Standards" virtual integration is an integration that uses an existing IoT standard to provide connectivity with the device. For example, the U-tec ultraloq works via Z-Wave and has no specific dedicated integration.
+“IoT 标准”虚拟集成是使用现有 IoT 标准为设备提供连接性的集成。例如，U-tec ultraloq 通过 Z-Wave 工作，并没有专门的集成。
 
-Example manifest:
+示例清单：
 
 ```json
 {
@@ -487,22 +471,19 @@ Example manifest:
   "integration_type": "virtual",
   "iot_standards": ["zwave"],
 }
-
 ```
 
-The `domain` and `name` are the same as with any other integration, but the `integration_type` is set to `virtual`. 
-The logo for the domain of this virtual integration should be added to our [brands repository](https://github.com/home-assistant/brands/).
+`domain` 和 `name` 与任何其他集成相同，但 `integration_type` 被设置为 `virtual`。此虚拟集成的域的徽标应添加到我们的 [品牌库](https://github.com/home-assistant/brands/)。
 
-The `iot_standards` is the standard this product uses for connectivity. In the example above, the U-tech ultraloq products use Z-Wave to integrate with Home Assistant.
+`iot_standards` 是该产品用于连接的标准。在上面的示例中，U-tec ultraloq 产品使用 Z-Wave 与 Home Assistant 集成。
 
-Result:
+结果：
 
-- U-tech ultraloq is listed on our user documentation website under integrations with an automatically generated stub page that directs the user to the integration to use.
-- U-tech ultraloq is listed in Home Assistant when clicking "add integration". When selected, we guide the user in adding this Z-Wave device (and in case Z-Wave isn't set up yet, into setting up Z-Wave first).
+- U-tec ultraloq 在我们的用户文档网站上列在集成下，自动生成的存根页面将用户引导到要使用的集成。
+- U-tec ultraloq 在 Home Assistant 中列出，当点击“添加集成”时。当被选择时，我们会指导用户添加此 Z-Wave 设备（如果尚未设置 Z-Wave，则引导进入 Z-Wave 的设置）。
 
 :::info
-Brands also [support setting IoT standards](/docs/creating_integration_brand/#iot-standards).
+品牌还 [支持设置 IoT 标准](/docs/creating_integration_brand/#iot-standards)。
 
-It is preferred to set IoT standards on the brand level, and only use a virtual
-integration in case it would impose confusion for the end user.
+在品牌级别设置 IoT 标准是优先选择的，仅在可能会给最终用户带来困惑的情况下使用虚拟集成。
 :::

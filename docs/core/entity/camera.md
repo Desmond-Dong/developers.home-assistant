@@ -1,105 +1,104 @@
 ---
-title: Camera entity
-sidebar_label: Camera
+title: 摄像头实体
+sidebar_label: 摄像头
 ---
 
-A camera entity can display images, and optionally a video stream. Derive a platform entity from [`homeassistant.components.camera.Camera`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/camera/__init__.py).
+摄像头实体可以显示图像，并可选地提供视频流。从 [`homeassistant.components.camera.Camera`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/camera/__init__.py) 派生一个平台实体。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应始终仅从内存中返回信息，而不进行 I/O（如网络请求）。实施 `update()` 或 `async_update()` 以获取数据。
 :::
 
-| Name                     | Type                                | Default | Description                                                                                         |
-| ------------------------ | ------------------------------------| ------- | --------------------------------------------------------------------------------------------------- |
-| brand                    | <code>str &#124; None</code>        | `None`  | The brand (manufacturer) of the camera.                                                             |
-| frame_interval           | `float`                             | 0.5     | The interval between frames of the stream.                                                          |
-| is_on                    | `bool`                              | `True`  | Indication of whether the camera is on.                                                             |
-| is_recording             | `bool`                              | `False` | Indication of whether the camera is recording. Used to determine `state`.                           |
-| is_streaming             | `bool`                              | `False` | Indication of whether the camera is streaming. Used to determine `state`.                           |
-| model                    | <code>str &#124; None</code>        | `None`  | The model of the camera.                                                                            |
-| motion_detection_enabled | `bool`                              | `False` | Indication of whether the camera has motion detection enabled.                                      |
-| use_stream_for_stills    | `bool`                              | `False` | Determines whether or not to use the `Stream` integration to generate still images                  |
+| 名称                      | 类型                                | 默认值  | 描述                                                                                              |
+| ------------------------- | ----------------------------------- | ------- | ------------------------------------------------------------------------------------------------- |
+| brand                     | <code>str &#124; None</code>       | `None`  | 摄像头的品牌（制造商）。                                                                          |
+| frame_interval            | `float`                            | 0.5     | 流中帧之间的间隔。                                                                                |
+| is_on                     | `bool`                             | `True`  | 摄像头是否开启的指示。                                                                            |
+| is_recording              | `bool`                             | `False` | 摄像头是否正在录制的指示。用于确定 `state`。                                                     |
+| is_streaming              | `bool`                             | `False` | 摄像头是否正在流传输的指示。用于确定 `state`。                                                  |
+| model                     | <code>str &#124; None</code>       | `None`  | 摄像头的型号。                                                                                    |
+| motion_detection_enabled   | `bool`                             | `False` | 摄像头是否启用了运动检测的指示。                                                                  |
+| use_stream_for_stills     | `bool`                             | `False` | 确定是否使用 `Stream` 集成来生成静态图像。                                                      |
 
-### States
+### 状态
 
-The state is defined by setting the properties above. The resulting state uses the `CameraState` enum to return one of the below members.
+状态通过设置上述属性来定义。结果状态使用 `CameraState` 枚举返回以下成员之一。
 
-| Value       | Description                             |
-|-------------|-----------------------------------------|
-| `RECORDING` | The camera is currently recording.      |
-| `STREAMING` | The camera is currently streaming.      |
-| `IDLE`      | The camera is currently idle.           |
+| 值           | 描述                                      |
+|--------------|------------------------------------------|
+| `RECORDING`  | 摄像头当前正在录制。                      |
+| `STREAMING`  | 摄像头当前正在流传输。                    |
+| `IDLE`       | 摄像头当前处于空闲状态。                  |
 
 
-## Supported features
+## 支持的功能
 
-Supported features are defined by using values in the `CameraEntityFeature` enum
-and are combined using the bitwise or (`|`) operator.
+支持的功能通过使用 `CameraEntityFeature` 枚举中的值来定义，并使用按位或（`|`）运算符组合。
 
-| Value    | Description                                  |
-| -------- | -------------------------------------------- |
-| `ON_OFF` | The device supports `turn_on` and `turn_off` |
-| `STREAM` | The device supports streaming                |
+| 值        | 描述                                            |
+|-----------|-------------------------------------------------|
+| `ON_OFF`  | 设备支持 `turn_on` 和 `turn_off`               |
+| `STREAM`  | 设备支持流传输                                  |
 
-## Methods
+## 方法
 
-### Camera image
+### 摄像头图像
 
-When the width and height are passed, scaling should be done on a best-effort basis. The UI will fall back to scaling at the display layer if scaling cannot be done by the camera.
+当传入宽度和高度时，缩放应以最佳努力为原则进行。如果摄像头无法进行缩放，用户界面将回退到显示层的缩放。
 
-- Return the smallest image that meets the minimum width and minimum height.
+- 返回满足最小宽度和最小高度的最小图像。
 
-- When scaling the image, aspect ratio must be preserved. If the aspect ratio is not the same as the requsted height or width, it is expected that the width and/or height of the returned image will be larger than requested.
+- 在缩放图像时，必须保持宽高比。如果宽高比与请求的高度或宽度不相同，返回的图像的宽度和/或高度预计将大于请求的值。
 
-- Pass on the width and height if the underlying camera is capable of scaling the image.
+- 如果底层摄像头能够缩放图像，则传递宽度和高度。
 
-- If the integration cannot scale the image and returns a jpeg image, it will automatically be scaled by the camera integration when requested.
+- 如果集成无法缩放图像并返回 jpeg 图像，则在请求时，摄像头集成将自动缩放。
 
 ```python
 class MyCamera(Camera):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def camera_image(
         self, width: int | None = None, height: int | None = None
     ) -> bytes | None:
-        """Return bytes of camera image."""
+        """返回摄像头图像的字节流。"""
         raise NotImplementedError()
 
     async def async_camera_image(
         self, width: int | None = None, height: int | None = None
     ) -> bytes | None:
-        """Return bytes of camera image."""
+        """返回摄像头图像的字节流。"""
 
 ```
 
-### Stream source
+### 流源
 
-The stream source should return a url that is usable by ffmpeg (e.g. an RTSP url). Requires `CameraEntityFeature.STREAM`.
+流源应返回一个可供 ffmpeg 使用的 URL（例如 RTSP URL）。需要 `CameraEntityFeature.STREAM`。
 
-A camera entity with a stream source by default uses `StreamType.HLS` to tell the frontend to use an HLS feed with the `stream` component. This stream source will also be used with `stream` for recording.
+具有流源的摄像头实体默认使用 `StreamType.HLS` 来告诉前端使用带有 `stream` 组件的 HLS 源。此流源也将在录制时与 `stream` 一起使用。
 
 ```python
 class MyCamera(Camera):
 
     async def stream_source(self) -> str | None:
-        """Return the source of the stream."""
+        """返回流的源。"""
 
 ```
 
-A common way for a camera entity to render a camera still image is to pass the stream source to `async_get_image` in the `ffmpeg` component.
+摄像头实体渲染静态图像的常见方法是将流源传递给 `ffmpeg` 组件中的 `async_get_image`。
 
-### WebRTC streams
+### WebRTC 流
 
-WebRTC enabled cameras can be used by facilitating a direct connection with the home assistant frontend. This usage requires `CameraEntityFeature.STREAM` and the integration must implement the two following methods to support native WebRTC:
-- `async_handle_async_webrtc_offer`: To initialize a WebRTC stream. Any messages/errors coming in async should be forwared to the frontend with the `send_message` callback.
-- `async_on_webrtc_candidate`: The frontend will call it with any candidate coming in after the offer is sent.
-The following method can optionally be implemented:
-- `close_webrtc_session` (Optional): The frontend will call it when the stream is closed. Can be used to clean up things.
+启用 WebRTC 的摄像头可以通过与 Home Assistant 前端建立直接连接来使用。此用法需要 `CameraEntityFeature.STREAM`，并且集成必须实现以下两种方法以支持原生 WebRTC：
+- `async_handle_async_webrtc_offer`：用于初始化 WebRTC 流。所有来自异步的消息/错误应通过 `send_message` 回调转发给前端。
+- `async_on_webrtc_candidate`：前端将在发送提议后调用其传入的任何候选者。
+以下方法可以选择实现：
+- `close_webrtc_session`（可选）：前端在流关闭时将调用此方法。可以用于清理。
 
-WebRTC streams do not use the `stream` component and do not support recording.
-By implementing the WebRTC methods, the frontend assumes that the camera supports only WebRTC and therefore will not fallbac to HLS.
+WebRTC 流不使用 `stream` 组件，也不支持录制。
+通过实现 WebRTC 方法，前端假设摄像头仅支持 WebRTC，因此不会回退到 HLS。
 
 ```python
 class MyCamera(Camera):
@@ -107,77 +106,76 @@ class MyCamera(Camera):
     async def async_handle_async_webrtc_offer(
         self, offer_sdp: str, session_id: str, send_message: WebRTCSendMessage
     ) -> None:
-        """Handle the async WebRTC offer.
+        """处理异步 WebRTC 提议。
 
-        Async means that it could take some time to process the offer and responses/message
-        will be sent with the send_message callback.
-        This method is used by cameras with CameraEntityFeature.STREAM
-        An integration overriding this method must also implement async_on_webrtc_candidate.
+        异步意味着处理提议和响应/消息可能需要一些时间
+        并将通过 send_message 回调发送。
+        此方法由具有 CameraEntityFeature.STREAM 的摄像头使用。
+        重写此方法的集成必须还实现 async_on_webrtc_candidate。
 
-        Integrations can override with a native WebRTC implementation.
+        集成可以用原生 WebRTC 实现来重写。
         """
 
     async def async_on_webrtc_candidate(self, session_id: str, candidate: RTCIceCandidate) -> None:
-        """Handle a WebRTC candidate."""
+        """处理 WebRTC 候选者。"""
 
     @callback
     def close_webrtc_session(self, session_id: str) -> None:
-        """Close a WebRTC session."""
+        """关闭 WebRTC 会话。"""
 ```
 
-### WebRTC Providers
+### WebRTC 提供者
 
-An integration may provide a WebRTC stream from an existing camera's stream source using the libraries in `homeassistant.components.camera.webrtc`. An
-integration may implement `CameraWebRTCProvider` and register it with `async_register_webrtc_provider`.
+集成可以使用 `homeassistant.components.camera.webrtc` 中的库，提供现有摄像头的 WebRTC 流源。
+集成可以实现 `CameraWebRTCProvider` 并通过 `async_register_webrtc_provider` 注册。
 
-### Turn on
+### 开启
 
 ```python
 class MyCamera(Camera):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def turn_on(self) -> None:
-        """Turn on camera."""
+        """开启摄像头。"""
 
     async def async_turn_on(self) -> None:
-        """Turn on camera."""
+        """开启摄像头。"""
 ```
 
-### Turn off
+### 关闭
 
 ```python
 class MyCamera(Camera):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def turn_off(self) -> None:
-        """Turn off camera."""
+        """关闭摄像头。"""
 
     async def async_turn_off(self) -> None:
-        """Turn off camera."""
+        """关闭摄像头。"""
 ```
 
-### Enable motion detection
+### 启用运动检测
 
 ```python
 class MyCamera(Camera):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def enable_motion_detection(self) -> None:
-        """Enable motion detection in the camera."""
+        """在摄像头中启用运动检测。"""
 
     async def async_enable_motion_detection(self) -> None:
-        """Enable motion detection in the camera."""
+        """在摄像头中启用运动检测。"""
 ```
 
-### Disable motion detection
+### 禁用运动检测
 
 ```python
 class MyCamera(Camera):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def disable_motion_detection(self) -> None:
-        """Disable motion detection in camera."""
+        """在摄像头中禁用运动检测。"""
 
     async def async_disable_motion_detection(self) -> None:
-        """Disable motion detection in camera."""
-```
+        """在摄像头中禁用运动检测。"""

@@ -1,39 +1,39 @@
 ---
-title: "Custom strategies"
+title: "自定义策略"
 ---
 
-_Introduced in Home Assistant 2021.5._
+_在 Home Assistant 2021.5 中引入。_
 
-Strategies are JavaScript functions that generate dashboard configurations. When a user has not created a dashboard configuration yet, an auto-generated dashboard is shown. That configuration is generated using a built-in strategy.
+策略是生成仪表板配置的 JavaScript 函数。当用户尚未创建仪表板配置时，会显示一个自动生成的仪表板。该配置是使用内置策略生成的。
 
-It's possible for developers to create their own strategies to generate dashboards. Strategies can use all of Home Assistant's data and the user's dashboard configuration to create something new.
+开发人员可以创建自己的策略来生成仪表板。策略可以使用所有 Home Assistant 的数据和用户的仪表板配置来创建新内容。
 
-A strategy can be applied to the whole configuration or to a specific view.
+策略可以应用于整个配置或特定视图。
 
-Strategies are defined as a custom element in a JavaScript file, and included [via dashboard resources](./registering-resources.md). Home Assistant will call static functions on the class instead of rendering it as a custom element.
+策略在 JavaScript 文件中定义为自定义元素，并通过 [仪表板资源](./registering-resources.md) 包含。Home Assistant 将调用类中的静态函数，而不是将其渲染为自定义元素。
 
-## Dashboard strategies
+## 仪表板策略
 
-A dashboard strategy is responsible for generating a full dashboard configuration. This can either be from scratch, or based on an existing dashboard configuration that is passed in.
+仪表板策略负责生成完整的仪表板配置。这可以是从头开始，或基于传入的现有仪表板配置。
 
-Two parameters are passed to the strategy:
+两个参数传递给策略：
 
-| Key | Description
+| 键 | 描述
 | -- | --
-| `config` | Dashboard strategy configuration.
-| `hass` | The Home Assistant object.
+| `config` | 仪表板策略配置。
+| `hass` | Home Assistant 对象。
 
 ```ts
 class StrategyDemo {
   static async generate(config, hass) {
     return {
-      title: "Generated Dashboard",
+      title: "生成的仪表板",
       views: [
         {
           "cards": [
             {
               "type": "markdown",
-              "content": `Generated at ${(new Date).toLocaleString()}`
+              "content": `生成于 ${(new Date).toLocaleString()}`
             }
           ]
         }
@@ -45,23 +45,23 @@ class StrategyDemo {
 customElements.define("ll-strategy-my-demo", StrategyDemo);
 ```
 
-Use the following dashboard configuration to use this strategy:
+使用以下仪表板配置来使用该策略：
 
 ```yaml
 strategy:
   type: custom:my-demo
 ```
 
-## View strategies
+## 视图策略
 
-A view strategy is responsible for generating the configuration of a specific dashboard view. The strategy is invoked when the user opens the specific view.
+视图策略负责生成特定仪表板视图的配置。当用户打开特定视图时，调用策略。
 
-Two parameters are passed to the strategy:
+两个参数传递给策略：
 
-| Key | Description
+| 键 | 描述
 | -- | --
-| `config` | View strategy configuration.
-| `hass` | The Home Assistant object.
+| `config` | 视图策略配置。
+| `hass` | Home Assistant 对象。
 
 ```ts
 class StrategyDemo {
@@ -70,7 +70,7 @@ class StrategyDemo {
       "cards": [
         {
           "type": "markdown",
-          "content": `Generated at ${(new Date).toLocaleString()}`
+          "content": `生成于 ${(new Date).toLocaleString()}`
         }
       ]
     };
@@ -80,7 +80,7 @@ class StrategyDemo {
 customElements.define("ll-strategy-my-demo", StrategyDemo);
 ```
 
-Use the following dashboard configuration to use this strategy:
+使用以下仪表板配置来使用该策略：
 
 ```yaml
 views:
@@ -88,23 +88,23 @@ views:
     type: custom:my-demo
 ```
 
-## Full example
+## 完整示例
 
-It's recommended for a dashboard strategy to leave as much work to be done to the view strategies. That way the dashboard will show up for the user as fast as possible. This can be done by having the dashboard generate a configuration with views that rely on its own strategy.
+建议仪表板策略将尽可能多的工作留给视图策略。这样仪表板将尽快显示给用户。这可以通过让仪表板生成依赖于其自身策略的视图配置来完成。
 
-Below example will create a view per area, with each view showing all entities in that area in a grid.
+以下示例将为每个区域创建一个视图，每个视图在网格中显示该区域的所有实体。
 
 ```ts
 class StrategyDashboardDemo {
   static async generate(config, hass) {
-    // Query all data we need. We will make it available to views by storing it in strategy options.
+    // 查询我们需要的所有数据。通过将其存储在策略选项中，我们将使其对视图可用。
     const [areas, devices, entities] = await Promise.all([
       hass.callWS({ type: "config/area_registry/list" }),
       hass.callWS({ type: "config/device_registry/list" }),
       hass.callWS({ type: "config/entity_registry/list" }),
     ]);
 
-    // Each view is based on a strategy so we delay rendering until it's opened
+    // 每个视图都是基于策略，因此我们延迟渲染，直到打开它
     return {
       views: areas.map((area) => ({
         strategy: {
@@ -126,7 +126,7 @@ class StrategyViewDemo {
 
     const areaDevices = new Set();
 
-    // Find all devices linked to this area
+    // 查找与该区域链接的所有设备
     for (const device of devices) {
       if (device.area_id === area.area_id) {
         areaDevices.add(device.id);
@@ -135,8 +135,8 @@ class StrategyViewDemo {
 
     const cards = [];
 
-    // Find all entities directly linked to this area
-    // or linked to a device linked to this area.
+    // 查找所有直接链接到该区域的实体
+    // 或链接到与该区域链接的设备的实体。
     for (const entity of entities) {
       if (
         entity.area_id
@@ -165,9 +165,8 @@ customElements.define("ll-strategy-dashboard-my-demo", StrategyDashboardDemo);
 customElements.define("ll-strategy-view-my-demo", StrategyViewDemo);
 ```
 
-Use the following dashboard configuration to use this strategy:
+使用以下仪表板配置来使用该策略：
 
 ```yaml
 strategy:
   type: custom:my-demo
-```

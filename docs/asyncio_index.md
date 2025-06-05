@@ -1,19 +1,19 @@
 ---
-title: "Asynchronous programming"
-sidebar_label: Introduction
+title: "异步编程"
+sidebar_label: 介绍
 ---
 
-On September 29, 2016 we released [Home Assistant 0.29][0.29] as part of our bi-weekly release schedule. This release introduced a complete overhaul of the core spearheaded by [Ben Bangert][ben].
+在2016年9月29日，我们发布了[Home Assistant 0.29][0.29]，作为我们每两周发布计划的一部分。此次发布引入了由[Ben Bangert][ben]主导的核心全面改革。
 
-The old core was set up like a “traditional” threaded application. Each resource that was not thread safe (ie. the state of entities) would be protected by a lock. This caused a lot of waiting and potential inconsistency because a task could now end up waiting halfway through its job until some resource got freed.
+旧的核心结构类似于“传统”的线程应用程序。每个不线程安全的资源（即实体的状态）都通过锁进行保护。这导致了大量的等待和潜在的不一致，因为一个任务可能会在其工作途中等到某个资源被释放。
 
-Our new core is based on Python’s built-in **asyncio** module. Instead of having all threads have access to the core API objects, access is now limited to a special thread called the *event loop*. All components will now schedule themselves as a task to be executed by the event loop. This gives us the guarantee that only a single task is executed at the same time, meaning we no longer need any locks.
+我们的新核心基于Python内置的**asyncio**模块。访问核心API对象的权限从所有线程限制为一个特殊线程，称为*事件循环*。所有组件现在都会将自己安排为一个任务，由事件循环执行。这向我们保证，只有一个任务在同一时间执行，这意味着我们不再需要任何锁。
 
-The only problem with running everything inside the event loop is when a task does blocking I/O; something most third-party Python libraries do. For example, while requesting new information from a device, the core will stop running until we get a response from the device. To handle this, a task is able to suspend itself until the response is available, after which it will be enqueued in the event loop to process the result.
+在事件循环内部运行所有内容的唯一问题是当一个任务进行阻塞I/O时；这是大多数第三方Python库的行为。例如，在请求设备的新信息时，核心会停止运行，直到我们从设备那里得到响应。为了处理这种情况，任务能够暂时挂起自己，直到响应可用，之后它将被加入事件循环以处理结果。
 
-For a task to be able to suspend itself, all code that it calls must support this capability. In practice, this would mean that each device integration will need a full rewrite of the library that offers the integration! As this is something that cannot be achieved, ever, a 100% backwards compatible API has been added so that no platform will require updating.
+为了让任务能够挂起自己，它调用的所有代码必须支持此功能。在实践中，这意味着每个设备集成都需要对提供集成的库进行全面重写！由于这是一项无法实现的事情，因此添加了一个100%向后兼容的API，以便没有平台需要更新。
 
-The backwards compatible API schedules a task in a different thread and blocks that thread until the task has been processed by the event loop.
+向后兼容的API在不同的线程中调度任务，并在任务被事件循环处理之前阻塞该线程。
 
 [0.29]: https://www.home-assistant.io/blog/2016/09/29/async-sleepiq-emoncms-stocks/
 [ben]: https://github.com/bbangert/

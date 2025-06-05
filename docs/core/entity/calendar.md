@@ -1,68 +1,55 @@
 ---
-title: Calendar entity
-sidebar_label: Calendar
+title: 日历实体
+sidebar_label: 日历
 ---
 
-A calendar entity is an entity that represents a set of events with a start
-and end date and/or time, helpful for automations. A calendar entity is derived from the [`homeassistant.components.calendar.CalendarEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/calendar/__init__.py).
+日历实体是表示一组具有开始和结束日期和/或时间的事件的实体，有助于自动化。日历实体派生自 [`homeassistant.components.calendar.CalendarEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/calendar/__init__.py)。
 
-Calendar integrations should be compatible with rfc5545 and may optionally support event creation following patterns established in rfc5546. Integrations that support recurring events are responsible for handling expansion of recurring events, such as in a service or API that returns the expanded set of events in the series as separate individual events.
+日历集成应兼容 rfc5545，并可以选择支持按照 rfc5546 中建立的模式创建事件。支持重复事件的集成负责处理重复事件的扩展，例如在返回扩展系列中的事件作为单独事件的服务或 API 中。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应始终仅从内存中返回信息，而不进行 I/O（如网络请求）。实现 `update()` 或 `async_update()` 来获取数据。
 :::
 
-| Name  | Type          | Default               | Description                                             |
-| ----- | ------------- | --------------------- | ------------------------------------------------------- |
-| event | <code>CalendarEvent &#124; None</code> | **Required** | The current or next upcoming `CalendarEvent` or `None`. |
+| 名称  | 类型          | 默认               | 描述                                             |
+| ----- | ------------- | ------------------- | ------------------------------------------------- |
+| event | <code>CalendarEvent &#124; None</code> | **必填** | 当前或下一个即将到来的 `CalendarEvent` 或 `None`。 |
 
-### States
+### 状态
 
-A `CalendarEntity` state is similar to a binary sensor, reflecting whether or not there
-is an active event:
+`CalendarEntity` 的状态类似于二进制传感器，反映是否有活动事件：
 
-| Constant    | Description                                 |
-| ----------- | ------------------------------------------- |
-| `STATE_ON`  | The calendar has an active event.           |
-| `STATE_OFF` | The calendar does not have an active event. |
+| 常量        | 描述                                 |
+| ----------- | ----------------------------------- |
+| `STATE_ON`  | 日历有一个活动事件。                   |
+| `STATE_OFF` | 日历没有活动事件。                     |
 
 
-A calendar entity has an `event` property that returns either the current
-or next upcoming `CalendarEvent` which is used to determine the state. A calendar
-entity implementation is responsible for determining the next upcoming event,
-including correctly ordering events and interpreting all day events in the Home 
-Assistant timezone. An entity should call `homeassistant.util.dt.now` to get the
-current time which has a `tzinfo` value set to the HomeAssistant timezone or examine
-`homeassistant.components.util.dt.DEFAULT_TIMEZONE`
+日历实体具有一个 `event` 属性，返回当前或下一个即将到来的 `CalendarEvent`，用于确定状态。日历实体实现负责确定下一个即将发生的事件，包括正确排序事件并解释在 Home Assistant 时区中的全天事件。实体应调用 `homeassistant.util.dt.now` 来获取当前时间，该时间具有设置为 HomeAssistant 时区的 `tzinfo` 值，或检查 `homeassistant.components.util.dt.DEFAULT_TIMEZONE`
 
-## Supported features
+## 支持的特性
 
-Supported features are defined by using values in the `CalendarEntityFeature` enum
-and are combined using the bitwise or (`|`) operator.
+支持的特性通过使用 `CalendarEntityFeature` 枚举中的值定义，并通过按位或（`|`）运算符合并。
 
-| Value               | Description                                                        |
-| ------------------- | ------------------------------------------------------------------ |
-| `CREATE_EVENT`      | Entity implements the methods to allow creation of events.  |
-| `DELETE_EVENT`      | Entity implements the methods to allow deletion of events.  |
-| `UPDATE_EVENT`      | Entity implements the methods to allow update of events.  |
+| 值                   | 描述                                                        |
+| -------------------- | ---------------------------------------------------------- |
+| `CREATE_EVENT`       | 实体实现方法以允许创建事件。                                     |
+| `DELETE_EVENT`       | 实体实现方法以允许删除事件。                                     |
+| `UPDATE_EVENT`       | 实体实现方法以允许更新事件。                                     |
 
-## Methods
+## 方法
 
-### Get events
+### 获取事件
 
-A calendar entity can return events that occur during a particular time range. Some notes for implementors:
+日历实体可以返回在特定时间范围内发生的事件。实现者的一些注意事项：
 
-- The `start_date` is the lower bound and applied to the event's `end` (exclusive). This has a `tzinfo` of the local Home Assistant timezone.
-- The `end_date` is the upper bound and applied to the event's `start` (exclusive). This has the same `tzinfo` as `start_date`.
-- Recurring events should be flattened and returned as individual `CalendarEvent`.
+- `start_date` 是下限，适用于事件的 `end`（不包括）。它具有 Home Assistant 本地时区的 `tzinfo`。
+- `end_date` 是上限，适用于事件的 `start`（不包括）。它具有与 `start_date` 相同的 `tzinfo`。
+- 重复事件应扁平化并作为单独的 `CalendarEvent` 返回。
 
-An calendar entity is responsible for returning the events in order including correctly
-ordering all day events. An all day event should be ordered to start at midnight in
-the Home Assistant timezone (e.g. from the start/end time argument `tzinfo`, 
-or using `homeassistant.util.dt.start_of_local_day`). Note that all day events should still
-set a `datetime.date` in the `CalendarEvent` and not a date with a time.
+日历实体负责按顺序返回事件，包括正确排序全天事件。全天事件应按在 Home Assistant 时区的午夜开始排序（例如，从开始/结束时间参数 `tzinfo`，或使用 `homeassistant.util.dt.start_of_local_day`）。请注意，全天事件仍应在 `CalendarEvent` 中设置 `datetime.date` 而不是带时间的日期。
 
 ```python
 import datetime
@@ -77,12 +64,12 @@ class MyCalendar(CalendarEntity):
         start_date: datetime.datetime,
         end_date: datetime.datetime,
     ) -> list[CalendarEvent]:
-        """Return calendar events within a datetime range."""
+        """返回在时间范围内的日历事件。"""
 ```
 
-### Create events
+### 创建事件
 
-A calendar entity may support creating events by specifying the `CREATE_EVENT` supported feature. Integrations that support mutation must handle rfc5545 fields and best practices such as preserving any new unknown fields that are set and recurring events.
+日历实体可以通过指定支持特性 `CREATE_EVENT` 来支持创建事件。支持变更的集成必须处理 rfc5545 字段和最佳实践，例如保留设置的任何新的未知字段和重复事件。
 
 ```python
 from homeassistant.components.calendar import CalendarEntity
@@ -90,18 +77,18 @@ from homeassistant.components.calendar import CalendarEntity
 class MyCalendar(CalendarEntity):
 
     async def async_create_event(self, **kwargs: Any) -> None:
-        """Add a new event to calendar."""
+        """向日历添加新事件。"""
 ```
 
-### Delete events
+### 删除事件
 
-A calendar entity may support deleting events by specifying the `DELETE_EVENT` supported feature. Integrations that support mutation must support rfc5545 recurring events.
+日历实体可以通过指定支持特性 `DELETE_EVENT` 来支持删除事件。支持变更的集成必须支持 rfc5545 重复事件。
 
-There are three ways that recurring events may be deleted:
+重复事件可以通过三种方式删除：
 
-- Specifying only the `uid` will delete the entire series
-- Specifying the `uid` and `recurrence_id` will delete the specific event instance in the series
-- Specifying `uid`, `recurrence_id`, and a `recurrence_range` value may delete a range of events starting at `recurrence_id`. Currently rfc5545 allows the [range](https://www.rfc-editor.org/rfc/rfc5545#section-3.2.13) value of `THISANDFUTURE`.
+- 仅指定 `uid` 将删除整个系列
+- 指定 `uid` 和 `recurrence_id` 将删除系列中的特定事件实例
+- 指定 `uid`、`recurrence_id` 和 `recurrence_range` 值可能会删除从 `recurrence_id` 开始的一系列事件。目前，rfc5545 允许 [范围](https://www.rfc-editor.org/rfc/rfc5545#section-3.2.13) 值为 `THISANDFUTURE`。
 
 ```python
 from homeassistant.components.calendar import CalendarEntity
@@ -115,17 +102,17 @@ class MyCalendar(CalendarEntity):
         recurrence_id: str | None = None,
         recurrence_range: str | None = None,
     ) -> None:
-        """Delete an event on the calendar."""
+        """删除日历上的事件。"""
 ```
 
-### Update events
+### 更新事件
 
-A calendar entity may support updating events by specifying the `UPDATE_EVENT` supported feature. Integrations that support mutation must support rfc5545 recurring events.
+日历实体可以通过指定支持特性 `UPDATE_EVENT` 来支持更新事件。支持变更的集成必须支持 rfc5545 重复事件。
 
-There are three ways that recurring events may be updated:
-- Specifying only the `uid` will update the entire series
-- Specifying the `uid` and `recurrence_id` will update the specific event instance in the series
-- Specifying `uid`, `recurrence_id`, and a `recurrence_range` value may update a range of events starting at `recurrence_id`. Currently rfc5545 allows the [range](https://www.rfc-editor.org/rfc/rfc5545#section-3.2.13) value of `THISANDFUTURE`.
+重复事件可以通过三种方式更新：
+- 仅指定 `uid` 将更新整个系列
+- 指定 `uid` 和 `recurrence_id` 将更新系列中的特定事件实例
+- 指定 `uid`、`recurrence_id` 和 `recurrence_range` 值可能会更新从 `recurrence_id` 开始的一系列事件。目前，rfc5545 允许 [范围](https://www.rfc-editor.org/rfc/rfc5545#section-3.2.13) 值为 `THISANDFUTURE`。
 
 ```python
 from homeassistant.components.calendar import CalendarEntity
@@ -140,21 +127,21 @@ class MyCalendar(CalendarEntity):
         recurrence_id: str | None = None,
         recurrence_range: str | None = None,
     ) -> None:
-        """Update an event on the calendar."""
+        """更新日历上的事件。"""
 ```
 
 
 ## CalendarEvent
 
-A `CalendarEvent` represents an individual event on a calendar.
+`CalendarEvent` 表示日历上的单个事件。
 
-| Name        | Type             | Default      | Description                                                                                                                                     |
-| ----------- | ---------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| start       | datetime or date | **Required** | The start (inclusive) of the event. Must be before `end`. Both `start` and `end` must be the same type. As a datetime, must have a timezone.    |
-| end         | datetime or date | **Required** | The end (exclusive) of the event. Must be after `start`. As a datetime, must have a timezone that is the same as start.                         |
-| summary     | string           | **Required** | A title or summary of the event.                                                                                                                |
-| location    | string           | `None`       | A geographic location of the event.                                                                                                             |
-| description | string           | `None`       | A detailed description of the event.                                                                                                            |
-| uid | string | `None` | A unique identifier for the event (required for mutations) |
-| recurrence_id | string | `None` | An optional identifier for a specific instance of a recurring event (required for mutations of recurring events) |
-| rrule |  string | `None` | A recurrence rule string e.g. `FREQ=DAILY` |
+| 名称          | 类型               | 默认值        | 描述                                                                                                                                           |
+| ------------- | ------------------ | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| start         | datetime 或 date   | **必填**      | 事件的开始（包括）。必须在 `end`之前。`start` 和 `end` 必须是相同类型。作为日期时间，必须具有时区。                                               |
+| end           | datetime 或 date   | **必填**      | 事件的结束（不包括）。必须在 `start`之后。作为日期时间，必须具有与 `start` 相同的时区。                                                       |
+| summary       | string             | **必填**      | 事件的标题或摘要。                                                                                                                             |
+| location      | string             | `None`         | 事件的地理位置。                                                                                                                               |
+| description   | string             | `None`         | 事件的详细描述。                                                                                                                                 |
+| uid           | string             | `None`         | 事件的唯一标识符（变更所需）                                                                                                                    |
+| recurrence_id | string             | `None`         | 重复事件特定实例的可选标识符（变更所需）                                                                                                     |
+| rrule         |  string            | `None`         | 重复规则字符串，例如 `FREQ=DAILY`                                                                                                           |

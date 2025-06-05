@@ -1,168 +1,157 @@
 ---
-title: "Integration quality scale"
+title: "集成质量评分"
 ---
 import RuleOverview from './_includes/rule_overview.jsx'
 
-The integration quality scale is a framework for Home Assistant to grade integrations based on user experience, features, code quality and developer experience.
-To grade this, the project has come up with a set of tiers, which all have their own meaning.
+集成质量评分是Home Assistant用于根据用户体验、功能、代码质量和开发者体验对集成进行评分的框架。为了评分，该项目提出了一套等级，每个等级都有其特定的含义。
 
-## Scaled tiers
-There are 4 scaled tiers, bronze, silver, gold, and platinum.
-To reach a tier, the integration must fulfill all rules of that tier and the tiers below.
+## 分级等级
+有四个分级等级，青铜、白银、黄金和铂金。要达到某个等级，集成必须满足该等级及以下等级的所有规则。
 
-These tiers are defined as follows.
+这些等级的定义如下。
 
-### 🥉 Bronze
-The bronze tier is the baseline standard and requirement for all new integrations. It meets the minimum requirements in code quality, functionality, and user experience. It complies with the fundamental expectations and provides a reliable foundation for users to interact with their devices and services.
+### 🥉 青铜
+青铜等级是所有新集成的基础标准和要求。它满足代码质量、功能和用户体验的最低要求。它符合基本期望，并为用户与其设备和服务的交互提供了可靠的基础。
 
-The documentation provides guidelines for setting up the integration directly from the Home Assistant user interface.
+文档提供了从Home Assistant用户界面直接设置集成的指南。
 
-From a technical perspective, this integration has been reviewed to comply with all baseline standards, which we require for all new integrations, including automated tests for setting up the integration.
+从技术角度来看，该集成经过审核，以符合我们对所有新集成所要求的所有基础标准，包括设置集成的自动化测试。
 
-The bronze tier has the following characteristics:
-- Can be easily set up through the UI.
-- The source code adheres to basic coding standards and development guidelines.
-- Automated tests that guard this integration can be configured correctly.
-- Offers basic end-user documentation that is enough to get users started step-by-step easily.
+青铜等级具有以下特点：
+- 可以通过UI轻松设置。
+- 源代码符合基本编码标准和开发指南。
+- 保护该集成的自动化测试可以正确配置。
+- 提供基本的终端用户文档，足以让用户轻松地逐步开始使用。
 
-### 🥈 Silver
-The silver tier builds upon the “Bronze” level by improving the reliability and robustness of integrations, ensuring a solid runtime experience. It ensures an integration handles errors properly, such as when authentication to a device or service fails, handles offline devices, and other errors.
+### 🥈 白银
+白银等级在“青铜“水平的基础上，通过提高集成的可靠性和稳定性来确保良好的运行体验。它确保集成能够正确处理错误，例如设备或服务的身份验证失败，处理离线设备及其他错误。
 
-The documentation for these integrations provides information on what is available in Home Assistant when this integration is used, as well as troubleshooting information when issues occur.
+这些集成的文档提供了在使用该集成时Home Assistant中可用的信息，以及出现问题时的故障排除信息。
 
-This integration has one or more active code owners who help maintain it to ensure the experience on this level lasts now and in the future.
+该集成拥有一个或多个活跃的代码所有者，他们帮助维护该集成，以确保这一水平的体验在现在和未来都能持续。
 
-The silver tier has the following characteristics:
-- Provides everything “Bronze” has.
-- Provides a stable user experience under various conditions.
-- Has one or more active code owners who help maintain the integration.
-- Correctly and automatically recover from connection errors or offline devices, without filling log files and without unnecessary messages.
-- Automatically triggers re-authentication if authentication with the device or service fails.
-- Offers detailed documentation of what the integration provides and instructions for troubleshooting issues.
+白银等级具有以下特点：
+- 提供“青铜”所拥有的一切。
+- 在各种条件下提供稳定的用户体验。
+- 拥有一个或多个活跃的代码所有者，帮助维护集成。
+- 能够正确且自动地从连接错误或离线设备中恢复，而不会填充日志文件并且不产生不必要的消息。
+- 如果与设备或服务的身份验证失败，自动触发重新身份验证。
+- 提供详细的文档，说明集成提供的内容和故障排除指令。
 
-### 🥇 Gold
-The gold standard in integration user experience, providing extensive and comprehensive support for the integrated devices & services. A gold-tier integration aims to be user-friendly, fully featured, and accessible to a wider audience.
+### 🥇 黄金
+集成用户体验的黄金标准，提供对集成设备和服务的广泛和全面的支持。一个黄金级别的集成旨在实现用户友好、功能齐全，并面向更广泛的受众。
 
-When possible, devices are automatically discovered for an easy and seamless setup, and their firmware/software can be directly updated from Home Assistant.
+在可能的情况下，设备会被自动发现，以实现简单无缝的设置，并且其固件/软件可以直接从Home Assistant中更新。
 
-All provided devices and entities are named logically and fully translatable, and they have been properly categorized and enabled for long-term statistical use.
+所有提供的设备和实体都具有合逻辑的命名，并且可以完全翻译，并且它们已被妥善分类并启用以供长期统计使用。
 
-The documentation for these integrations is extensive, and primarily aimed toward end-users and understandable by non-technical consumers. Besides providing general information on the integration, the documentation provides possible example use cases, a list of compatible devices, a list of described entities the integration provides, and extensive descriptions and usage examples of available actions provided by the integration. The use of example automations, dashboards, available Blueprints, and links to additional external resources, is highly encouraged as well.
+这些集成的文档内容广泛，主要面向终端用户，并且易于非技术消费者理解。除了提供有关集成的一般信息外，文档还提供可能的示例用例、兼容设备列表、集成提供的描述实体列表以及可用动作的详细描述和使用示例。强烈建议使用示例自动化、仪表板、可用蓝图和外部资源的链接。
 
-The integration provides means for debugging issues, including downloading diagnostic information and documenting troubleshooting instructions. If needed, the integration can be reconfigured via the UI.
+该集成提供了调试问题的方法，包括下载诊断信息和记录故障排除指令。如果需要，可以通过UI重新配置该集成。
 
-From a technical perspective, the integration needs to have full automated test coverage of its codebase to ensure the set integration quality is maintained now and in the future.
+从技术角度来看，集成需要对其代码库进行全面的自动化测试覆盖，以确保设置的集成质量现在和将来都能得到维护。
 
-All integrations that have devices in the Works with Home Assistant program are at least required to have this tier.
+所有在“与Home Assistant协作”计划中具有设备的集成都至少需要达到这个等级。
 
-The gold tier has the following characteristics:
-- Provides everything “Silver” has.
-- Has the best end-user experience an integration can offer; streamlined and intuitive.
-- Can be automatically discovered, simplifying the integration setup.
-- Integration can be reconfigured and adjusted.
-- Supports translations.
-- Extensive documentation, aimed at non-technical users.
-- It supports updating the software/firmware of devices through Home Assistant when possible.
-- The integration has automated tests covering the entire integration.
-- Required level for integrations providing devices in the Works with Home Assistant program.
+黄金等级具有以下特点：
+- 提供“白银”所拥有的一切。
+- 提供集成可以提供的最佳终端用户体验；简化且直观。
+- 可以被自动发现，从而简化集成设置。
+- 集成可以重新配置和调整。
+- 支持翻译。
+- 广泛的文档，面向非技术用户。
+- 支持在可能的情况下通过Home Assistant更新设备的软件/固件。
+- 集成具有覆盖整个集成的自动化测试。
+- 为在“与Home Assistant协作”计划中提供设备的集成所需的级别。
 
-### 🏆 Platinum
-Platinum is the highest tier an integration can reach, the epitome of quality within Home Assistant. It not only provides the best user experience but also achieves technical excellence by adhering to the highest standards, supreme code quality, and well-optimized performance and efficiency.
+### 🏆 铂金
+铂金是集成可以达到的最高级别，是Home Assistant中质量的典范。它不仅提供最佳用户体验，还通过遵循最高标准、卓越的代码质量以及高度优化的性能和效率而实现技术卓越。
 
-The platinum tier has the following characteristics:
-- Provides everything “Gold” has.
-- All source code follows all coding and Home Assistant integration standards and best practices and is fully typed with type annotations and clear code comments for better code clarity and maintenance.
-- A fully asynchronous integration code base ensures efficient operation.
-- Implements efficient data handling, reducing network and CPU usage.
+铂金等级具有以下特点：
+- 提供“黄金”所拥有的一切。
+- 所有源代码遵循所有编码标准和Home Assistant集成标准及最佳实践，并全都使用类型注释和清晰的代码注释，以提高代码的可读性和可维护性。
+- 完全异步的集成代码库确保操作效率。
+- 实现高效的数据处理，减少网络和CPU使用。
 
-
-### Keeping track of the implemented rules
-Integrations that are working towards a higher tier or have a tier, must add a `quality_scale.yaml` file to their integration.
-The purpose of this file is to keep track of the progress of the rules that have been implemented and to keep track of exempted rules and the reason for the exemption.
-An example of this file looks like this:
+### 跟踪实施规则
+正在朝着更高等级或已经有等级的集成必须在其集成中添加一个 `quality_scale.yaml` 文件。该文件的目的是跟踪已实施规则的进展，并跟踪被豁免的规则及豁免原因。该文件的示例如下：
 
 ```yaml
 rules:
   config_flow: done
   docs_high_level_description:
     status: exempt
-    comment: This integration does not connect to any device or service.
+    comment: 该集成不连接任何设备或服务。
 ```
 
-### Adjusting the tier of an integration
-Home Assistant encourages our contributors to get their integrations to the highest possible tier, to provide an excellent coding experience for our contributors and the best experience for our users.
+### 调整集成的等级
+Home Assistant鼓励我们的贡献者使其集成达到尽可能高的等级，以为我们的贡献者提供优秀的编码体验，为我们的用户提供最佳体验。
 
-When an integration reaches the minimum requirements for a certain tier, a contributor can open a pull request to adjust the scale for the integration.
-This request needs to be accompanied by the full checklist for each rule of scale (including all rules of lower tiers), demonstrating that it has met those requirements.
-The checklist can be found [here](/docs/core/integration-quality-scale/checklist).
+当一个集成达到某个等级的最低要求时，贡献者可以打开一个拉取请求以调整该集成的等级。此请求需要附带每个等级规则的完整清单（包括所有较低等级的规则），以证明其已满足这些要求。清单可以在 [这里](/docs/core/integration-quality-scale/checklist) 找到。
 
-Once the Home Assistant core team reviews and approves it, the integration will display the new tier as of the next major release of Home Assistant.
+一旦Home Assistant核心团队审查并批准，这个集成将在下一个主要版本的Home Assistant中显示新的等级。
 
-Besides upgrading an integration to a higher tier on the scale, it is also possible for an integration to be downgraded to a lower tier.
-This can, for example, happen when there is no longer an active integration code owner.
-In this specific example, the integration will be downgraded to “Bronze”, even if it otherwise fully complies with the “Platinum” tier.
+除了将集成升级到等级的更高层次外，集成也可以降级到较低等级。这可能会发生，例如，当不再有活跃的集成代码所有者。以这个特定示例来看，集成将降级到“青铜”，即使它在其他条件下完全符合“铂金”等级。
 
-### Adjustments to rules contained in each tier
-The world of IoT and all technologies used by Home Assistant are changing at a fast pace; not just in terms of what Home Assistant can support or do, but also in terms of the software on which Home Assistant is built. Home Assistant is pioneering the technology in the industry at a fast pace.
+### 对每个等级中的规则的调整
+物联网的世界以及Home Assistant所使用的所有技术都在快速变化；不仅在Home Assistant能够支持或完成的内容方面，也在构建Home Assistant的软件方面。Home Assistant在行业中以快速的步伐引领技术。
 
-This also means that new insights and newly developed and adopted best practices will occur over time, resulting in new additions and improvements to the individual integration quality scale rules.
+这也意味着，随着时间的推移，会出现新的见解以及新开发和采用的最佳实践，从而导致对各个集成质量评分规则的新补充和改进。
 
-If a tier is adjusted, all integrations in that tier need to be re-evaluated and adjusted accordingly.
+如果某个等级进行了调整，必须对该等级中的所有集成进行重新评估并相应调整。
 
 :::info
-One exception to this is integrations that have devices that are part of the Works with Home Assistant program. Those integrations will be flagged as grandfathered into their existing tier.
+对此的一个例外是拥有在“与Home Assistant协作”计划中有设备的集成。这些集成将被标记为继承其现有等级。
 :::
 
+## 特殊等级
+还有四个特殊等级，用于那些在分级等级列表中没有位置的集成。这是因为它们是核心的内部部分，它们根本不在核心中，或者它们不满足与分级等级评级的最低要求。
 
-## Special tiers
-There are also 4 special tiers that are used to integration that don't have a place on the scaled tier list.
-This is because they are either an internal part of core, they are not in core at all, or they don't meet the minimum requirements to be graded against the scaled tiers.
+特殊等级的定义如下。
 
-The special tiers are defined as follows.
+### ❓ 无评分
+这些集成可以通过Home Assistant用户界面进行设置。“无评分”的标志并不意味着它们不好或有缺陷，而是指它们未根据质量评分进行评估，或需要一些维护以满足现在被认为的最低“青铜”标准。
 
-### ❓ No score
-These integrations can be set up through the Home Assistant user interface. The “No score” designation doesn’t imply that they are bad or buggy, instead, it indicates that they haven’t been assessed according to the quality scale or that they need some maintenance to reach the now-considered minimum “Bronze” standard.
+“无评分”等级不能分配给新的集成，因为它们在引入时需要至少达到“青铜”水平。Home Assistant项目鼓励社区帮助更新这些没有评分的集成，以满足至少“青铜”级别的要求。
 
-The “No score” tier cannot be assigned to new integrations, as they are required to have at least a “Bronze” level when introduced. The Home Assistant project encourages the community to help update these integrations without a score to meet at least the “Bronze” level requirements.
+特点：
+- 尚未评分或缺少足够的评分信息。
+- 可以通过UI进行设置，但可能需要增强以改善体验。
+- 可能正常运作，但尚未经过当前标准的验证。
+- 文档通常仅提供基本设置步骤。
 
-Characteristics:
-- Not yet scored or lacks sufficient information for scoring.
-- Can be set up via the UI, but may need enhancements for a better experience.
-- May function correctly, but hasn’t been verified against current standards.
-- Documentation most often provides only basic setup steps.
+### 🏠 内部
+此等级分配给Home Assistant内部使用的集成。这些集成为Home Assistant核心程序或其他集成提供基本组件和构建模块。
 
-### 🏠 Internal
-This tier is assigned to integrations used internally by Home Assistant. These integrations provide basic components and building blocks for Home Assistant's core program or for other integrations to build on top of it.
+内部集成由Home Assistant项目维护，并受到严格的架构设计程序的约束。
 
-Internal integrations are maintained by the Home Assistant project and subjected to strict architectural design procedures.
+特点：
+- Home Assistant核心程序的内部内置构建模块。
+- 为其他集成提供可使用和构建的模块。
+- 由Home Assistant项目维护。
 
-Characteristics:
-- Internal, built-in building blocks of the Home Assistant core program.
-- Provides building blocks for other integrations to use and build on top of.
-- Maintained by the Home Assistant project.
+### 💾 传统
+传统集成是指多年来一直是Home Assistant的一部分的较旧集成，可能自其成立以来便存在。它们只能通过YAML文件配置，通常缺乏活跃的维护者（代码所有者）。这些集成的设置过程可能很复杂，并且在使用功能和特性上不符合当前/现代终端用户的期望。
 
-### 💾 Legacy
-Legacy integrations are older integrations that have been part of Home Assistant for many years, possibly since its inception. They can only be configured through YAML files and often lack active maintainers (code owners). These integrations might be complex to set up and do not adhere to current/modern end-user expectations in their use and features.
+Home Assistant项目鼓励社区帮助将这些集成迁移到UI上，并更新以满足现代标准，使这些集成对所有人可访问。
 
-The Home Assistant project encourages the community to help migrate these integrations to the UI and update them to meet modern standards, making these integrations accessible to everyone.
+特点：
+- 复杂的设置过程；仅通过YAML配置，无法通过基于UI的设置。
+- 可能缺乏活跃的代码所有权和维护。
+- 可能缺失最近的更新或错误修复。
+- 文档可能仍然面向开发者。
 
-Characteristics:
-- Complex setup process; only configurable via YAML, without UI-based setup.
-- May lack active code ownership and maintenance.
-- Could be missing recent updates or bug fixes.
-- Documentation may still be aimed at developers.
+### 📦 自定义
+自定义集成是由社区开发和分发的，为Home Assistant提供额外的功能和对设备及服务的支持。这些集成不包括在官方的Home Assistant发布中，并且可以手动安装或通过第三方工具如HACS（Home Assistant社区商店）安装。
 
-### 📦 Custom
-Custom integrations are developed and distributed by the community, and offer additional functionalities and support for devices and services to Home Assistant. These integrations are not included in the official Home Assistant releases and can be installed manually or via third-party tools like HACS (Home Assistant Community Store).
+Home Assistant项目不审核、安全审计、维护或支持第三方自定义集成。用户在安装前被鼓励谨慎并审查自定义集成的源代码和社区反馈。
 
-The Home Assistant project does not review, security audit, maintain, or support third-party custom integrations. Users are encouraged to exercise caution and review the custom integration’s source and community feedback before installation.
+我们鼓励和邀请开发者将他们的自定义集成贡献给Home Assistant项目，通过使其与集成质量等级相一致并提交以供纳入。
 
-Developers are encouraged and invited to contribute their custom integration to the Home Assistant project by aligning them with the integration quality scale and submitting them for inclusion.
-
-Characteristics:
-- Not included in the official Home Assistant releases.
-- Manually installable or installable via community tools, like HACS.
-- Maintained by individual developers or community members.
-- User experience may vary widely.
-- Functionality, security, and stability can vary widely.
-- Documentation may be limited.
+特点：
+- 不包括在官方的Home Assistant发布中。
+- 可以手动安装或通过社区工具（如HACS）安装。
+- 由个别开发者或社区成员维护。
+- 用户体验可能会存在较大差异。
+- 功能、安全性和稳定性可能差异巨大。
+- 文档可能有限。

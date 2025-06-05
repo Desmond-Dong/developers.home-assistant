@@ -1,25 +1,25 @@
 ---
-title: "Repair issues and repair flows are used when user intervention is needed"
+title: "维修问题和维修流程在需要用户干预时使用"
 ---
 
-## Reasoning
+## 理由
 
-Repair issues and repair flows are a very user-friendly manner to let the user know something is wrong and that they can do something about it.
-Repair issues are just a way to let the user know that they can fix it themselves, while repair flows can fix it for them.
+维修问题和维修流程是一种非常用户友好的方式，让用户知道出现了问题，并且他们可以采取行动解决。
+维修问题仅仅是让用户知道他们可以自己修复，而维修流程则可以为他们进行修复。
 
-Repair issues and repair flows should be actionable and informative about the problem.
-Thus, we should not raise repair issues for just letting users know that something is wrong, which they can't fix themselves.
+维修问题和维修流程应该是可操作的，并且提供有关问题的信息。
+因此，我们不应该仅仅因为让用户知道出现了问题而提出维修问题，特别是那些他们无法自行修复的问题。
 
-## Example implementation
+## 示例实现
 
-In the example below we have an integration for a locally hosted service.
-On boot, we check if we support the version of the service that is running.
-If we do not, we raise a repair issue where we let the user know that they should update their service before they can use the integration again.
+在下面的示例中，我们有一个本地托管服务的集成。
+在启动时，我们检查是否支持正在运行的服务版本。
+如果不支持，我们会提出一个维修问题，提醒用户在再次使用集成之前需要更新他们的服务。
 
 `__init__.py`
 ```python {6-14} showLineNumbers
 async def async_setup_entry(hass: HomeAssistant, entry: MyConfigEntry) -> None:
-    """Set up the integration from a config entry."""
+    """根据配置条目设置集成。"""
     client = MyClient(entry.data[CONF_HOST])
     version = await client.get_version()
     if version < MINIMUM_VERSION:
@@ -33,16 +33,16 @@ async def async_setup_entry(hass: HomeAssistant, entry: MyConfigEntry) -> None:
             translation_key="outdated_version",
         )
         raise ConfigEntryError(
-            "Version of MyService is %s, which is lower than minimum version %s",
+            "MyService 的版本为 %s，低于最低版本 %s",
             version,
             MINIMUM_VERSION,
         )
 ```
 
-## Additional resources
+## 额外资源
 
-For more information about repair issues and repair flows, see the [repairs](/docs/core/platform/repairs) documentation.
+有关维修问题和维修流程的更多信息，请参阅 [维修](/docs/core/platform/repairs) 文档。
 
-## Exceptions
+## 例外
 
-There are no exceptions to this rule.
+对此规则没有例外。

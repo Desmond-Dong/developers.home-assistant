@@ -1,167 +1,165 @@
 ---
-title: Alarm control panel entity
-sidebar_label: Alarm control panel
+title: 警报控制面板实体
+sidebar_label: 警报控制面板
 ---
 
-An alarm control panel entity controls an alarm.  Derive a platform entity from [`homeassistant.components.alarm_control_panel.AlarmControlPanelEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/alarm_control_panel/__init__.py).
+警报控制面板实体控制一个警报。 从 [`homeassistant.components.alarm_control_panel.AlarmControlPanelEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/alarm_control_panel/__init__.py) 派生平台实体。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应始终只返回来自内存的信息，而不进行 I/O（如网络请求）。 实现 `update()` 或 `async_update()` 来获取数据。
 :::
 
-| Name | Type | Default | Description
+| 名称 | 类型 | 默认值 | 描述
 | ---- | ---- | ------- | -----------
-| alarm_state | <code>AlarmControlPanelState &#124; None</code> | **Required** | One of the alarm values listed in the **states**.
-| code_arm_required | bool | `True` | Whether the code is required for arm actions.
-| code_format | <code>CodeFormat &#124; None</code> | `None` | One of the states listed in the **code formats** section.
-| changed_by | <code>str &#124; None</code> | `None` | Last change triggered by.
+| alarm_state | <code>AlarmControlPanelState &#124; None</code> | **必需** | 在 **states** 中列出的警报值之一。
+| code_arm_required | bool | `True` | 是否需要代码进行臂膀操作。
+| code_format | <code>CodeFormat &#124; None</code> | `None` | 在 **代码格式** 部分列出的状态之一。
+| changed_by | <code>str &#124; None</code> | `None` | 最后触发的变更。
 
-### States
+### 状态
 
-Setting the state should return an enum from `AlarmControlPanelState` in the `alarm_state` property.
+设置状态应返回 `alarm_state` 属性中的 `AlarmControlPanelState` 的枚举值。
 
-| Value | Description
+| 值 | 描述
 | ----- | -----------
-| `DISARMED` | The alarm is disarmed (`off`).
-| `ARMED_HOME` | The alarm is armed in home mode.
-| `ARMED_AWAY` | The alarm is armed in away mode.
-| `ARMED_NIGHT` | The alarm is armed in night mode.
-| `ARMED_VACATION` | The alarm is armed in vacation mode.
-| `ARMED_CUSTOM_BYPASS` |  The alarm is armed in bypass mode.
-| `PENDING` | The alarm is pending (towards `triggered`).
-| `ARMING` | The alarm is arming.
-| `DISARMING` | The alarm is disarming.
-| `TRIGGERED` | The alarm is triggered.
+| `DISARMED` | 警报已解除(`off`)。
+| `ARMED_HOME` | 警报处于家庭模式。
+| `ARMED_AWAY` | 警报处于离开模式。
+| `ARMED_NIGHT` | 警报处于夜间模式。
+| `ARMED_VACATION` | 警报处于假期模式。
+| `ARMED_CUSTOM_BYPASS` | 警报处于旁路模式。
+| `PENDING` | 警报待定（指向 `triggered`）。
+| `ARMING` | 正在设置警报。
+| `DISARMING` | 正在解除警报。
+| `TRIGGERED` | 警报已触发。
 
-## Supported features
+## 支持的功能
 
-Supported features are defined by using values in the `AlarmControlPanelEntityFeature` enum
-and are combined using the bitwise or (`|`) operator.
+支持的功能通过使用 `AlarmControlPanelEntityFeature` 枚举中的值定义，并通过按位或（`|`）运算符组合。
 
-| Constant | Description |
+| 常量 | 描述 |
 |----------|--------------------------------------|
-| `AlarmControlPanelEntityFeature.ARM_AWAY` | The alarm supports arming in away mode.
-| `AlarmControlPanelEntityFeature.ARM_CUSTOM_BYPASS` | The alarm supports arming with a bypass.
-| `AlarmControlPanelEntityFeature.ARM_HOME` | The alarm supports arming in home mode.
-| `AlarmControlPanelEntityFeature.ARM_NIGHT` | The alarm supports arming in night mode.
-| `AlarmControlPanelEntityFeature.ARM_VACATION` | The alarm supports arming in vacation mode.
-| `AlarmControlPanelEntityFeature.TRIGGER` | The alarm can be triggered remotely.
+| `AlarmControlPanelEntityFeature.ARM_AWAY` | 警报支持在离开模式下设置。
+| `AlarmControlPanelEntityFeature.ARM_CUSTOM_BYPASS` | 警报支持进行旁路设置。
+| `AlarmControlPanelEntityFeature.ARM_HOME` | 警报支持在家庭模式下设置。
+| `AlarmControlPanelEntityFeature.ARM_NIGHT` | 警报支持在夜间模式下设置。
+| `AlarmControlPanelEntityFeature.ARM_VACATION` | 警报支持在假期模式下设置。
+| `AlarmControlPanelEntityFeature.TRIGGER` | 警报可以被远程触发。
 
-### Code formats
+### 代码格式
 
-Supported code formats are defined by using values in the `CodeFormat` enum.
+支持的代码格式通过使用 `CodeFormat` 枚举中的值定义。
 
-| Value | Description
+| 值 | 描述
 | ----- | -----------
-| `None` | No code required.
-| `CodeFormat.NUMBER` | Code is a number (Shows ten-key pad on frontend).
-| `CodeFormat.TEXT` | Code is a string.
+| `None` | 无需代码。
+| `CodeFormat.NUMBER` | 代码为数字（在前端显示数字键盘）。
+| `CodeFormat.TEXT` | 代码为字符串。
 
-## Methods
+## 方法
 
-### Alarm Disarm
+### 警报解除
 
-Send disarm command.
+发送解除警报命令。
 
 ```python
 class MyAlarm(AlarmControlPanelEntity):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def alarm_disarm(self, code: str | None = None) -> None:
-        """Send disarm command."""
+        """发送解除警报命令。"""
 
     async def async_alarm_disarm(self, code: str | None = None) -> None:
-        """Send disarm command."""
+        """发送解除警报命令。"""
 ```
 
-### Alarm arm home
+### 警报设在家
 
-Send arm home command.
+发送在家设置命令。
 
 ```python
 class MyAlarm(AlarmControlPanelEntity):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def alarm_arm_home(self, code: str | None = None) -> None:
-        """Send arm home command."""
+        """发送在家设置命令。"""
 
     async def async_alarm_arm_home(self, code: str | None = None) -> None:
-        """Send arm home command."""
+        """发送在家设置命令。"""
 ```
 
-### Alarm arm away
+### 警报设在外
 
-Send arm away command.
+发送在外设置命令。
 
 ```python
 class MyAlarm(AlarmControlPanelEntity):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def alarm_arm_away(self, code: str | None = None) -> None:
-        """Send arm away command."""
+        """发送在外设置命令。"""
 
     async def async_alarm_arm_away(self, code: str | None = None) -> None:
-        """Send arm away command."""
+        """发送在外设置命令。"""
 ```
 
-### Alarm arm night
+### 警报设在夜间
 
-Send arm night command.
+发送在夜间设置命令。
 
 ```python
 class MyAlarm(AlarmControlPanelEntity):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def alarm_arm_night(self, code: str | None = None) -> None:
-        """Send arm night command."""
+        """发送在夜间设置命令。"""
 
     async def async_alarm_arm_night(self, code: str | None = None) -> None:
-        """Send arm night command."""
+        """发送在夜间设置命令。"""
 ```
 
-### Alarm arm vacation
+### 警报设在假期
 
-Send arm vacation command.
+发送在假期设置命令。
 
 ```python
 class MyAlarm(AlarmControlPanelEntity):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def alarm_arm_vacation(self, code: str | None = None) -> None:
-        """Send arm vacation command."""
+        """发送在假期设置命令。"""
 
     async def async_alarm_arm_vacation(self, code: str | None = None) -> None:
-        """Send arm vacation command."""
+        """发送在假期设置命令。"""
 ```
 
-### Alarm trigger
+### 警报触发
 
-Send alarm trigger command.
+发送警报触发命令。
 
 ```python
 class MyAlarm(AlarmControlPanelEntity):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def alarm_trigger(self, code: str | None = None) -> None:
-        """Send alarm trigger command."""
+        """发送警报触发命令。"""
 
     async def async_alarm_trigger(self, code: str | None = None) -> None:
-        """Send alarm trigger command."""
+        """发送警报触发命令。"""
 ```
 
-### Alarm custom bypass
+### 警报自定义旁路
 
-Send arm custom bypass command.
+发送臂膀自定义旁路命令。
 
 ```python
 class MyAlarm(AlarmControlPanelEntity):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def alarm_arm_custom_bypass(self, code: str | None = None) -> None:
-        """Send arm custom bypass command."""
+        """发送臂膀自定义旁路命令。"""
 
     async def async_alarm_arm_custom_bypass(self, code: str | None = None) -> None:
-        """Send arm custom bypass command."""
-```
+        """发送臂膀自定义旁路命令。"""

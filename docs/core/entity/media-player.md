@@ -1,103 +1,102 @@
 ---
-title: Media player entity
-sidebar_label: Media player
+title: 媒体播放器实体
+sidebar_label: 媒体播放器
 ---
 
-:::info Incomplete
-This entry is incomplete. Contribution welcome.
+:::info 不完整
+此条目不完整。欢迎贡献。
 :::
-A media player entity controls a media player.  Derive a platform entity from [`homeassistant.components.media_player.MediaPlayerEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/media_player/__init__.py).
+媒体播放器实体控制媒体播放器。从 [`homeassistant.components.media_player.MediaPlayerEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/media_player/__init__.py) 派生一个平台实体。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应该始终只从内存中返回信息，不进行 I/O（如网络请求）。实现 `update()` 或 `async_update()` 来获取数据。
 :::
 
-| Name                            | Type                                            | Default | Description
+| 名称                            | 类型                                            | 默认值 | 描述
 | ------------------------------- | ----------------------------------------------- | ------- | -----------
-| app_id                          | <code>str &#124; None</code>                    | `None`  | ID of the current running app.
-| app_name                        | <code>str &#124; None</code>                    | `None`  | Name of the current running app.
-| device_class                    | <code>MediaPlayerDeviceClass &#124; None</code> | `None`  | Type of media player.
-| group_members                   | <code>list[str] &#124; None</code>              | `None`  | A dynamic list of player entities which are currently grouped together for synchronous playback. If the platform has a concept of defining a group leader, the leader should be the first element in that list.
-| is_volume_muted                 | <code>bool &#124; None</code>                   | `None`  | `True` if if volume is currently muted.
-| media_album_artist              | <code>str &#124; None</code>                    | `None`  | Album artist of current playing media, music track only.
-| media_album_name                | <code>str &#124; None</code>                    | `None`  | Album name of current playing media, music track only.
-| media_artist                    | <code>str &#124; None</code>                    | `None`  | Artist of current playing media, music track only.
-| media_channel                   | <code>str &#124; None</code>                    | `None`  | Channel currently playing.
-| media_content_id                | <code>str &#124; None</code>                    | `None`  | Content ID of current playing media.
-| media_content_type              | <code>MediaType &#124; str &#124; None</code>   | `None`  | Content type of current playing media.
-| media_duration                  | <code>int &#124; None</code>                    | `None`  | Duration of current playing media in seconds.
-| media_episode                   | <code>str &#124; None</code>                    | `None`  | Episode of current playing media, TV show only.
-| media_image_hash                | <code>str &#124; None</code>                    | `None`  | Hash of media image, defaults to SHA256 of `media_image_url` if `media_image_url` is not `None`.
-| media_image_remotely_accessible | <code>bool &#124; None</code>                   | `False` | `True` if property `media_image_url` is accessible outside of the home network.
-| media_image_url                 | <code>str &#124; None</code>                    | `None`  | Image URL of current playing media.
-| media_playlist                  | <code>str &#124; None</code>                    | `None`  | Title of Playlist currently playing.
-| media_position                  | <code>int &#124; None</code>                    | `None`  | Position of current playing media in seconds.
-| media_position_updated_at       | <code>datetime &#124; None</code>               | `None`  | Timestamp of when `_attr_media_position` was last updated. The timestamp should be set by calling `homeassistant.util.dt.utcnow()`.
-| media_season                    | <code>str &#124; None</code>                    | `None`  | Season of current playing media, TV show only.
-| media_series_title              | <code>str &#124; None</code>                    | `None`  | Title of series of current playing media, TV show only.
-| media_title                     | <code>str &#124; None</code>                    | `None`  | Title of current playing media.
-| media_track                     | <code>int &#124; None</code>                    | `None`  | Track number of current playing media, music track only.
-| repeat                          | <code>RepeatMode &#124; str &#124; None</code>  | `None`  | Current repeat mode.
-| shuffle                         | <code>bool &#124; None</code>                   | `None`  | `True` if shuffle is enabled.
-| sound_mode                      | <code>str &#124; None</code>                    | `None`  | The current sound mode of the media player.
-| sound_mode_list                 | <code>list[str] &#124; None</code>              | `None`  | Dynamic list of available sound modes.
-| source                          | <code>str &#124; None</code>                    | `None`  | The currently selected input source for the media player.
-| source_list                     | <code>list[str] &#124; None</code>              | `None`  | The list of possible input sources for the media player. (This list should contain human readable names, suitable for frontend display).
-| state                           | <code>MediaPlayerState &#124; None</code>       | `None`  | State of the media player.
-| volume_level                    | <code>float &#124; None</code>                  | `None`  | Volume level of the media player in the range (0..1).
-| volume_step                     | <code>float &#124; None</code>                  | 0.1     | Volume step to use for the `volume_up` and `volume_down` service actions.
+| app_id                          | <code>str &#124; None</code>                    | `None`  | 当前运行应用的ID。
+| app_name                        | <code>str &#124; None</code>                    | `None`  | 当前运行应用的名称。
+| device_class                    | <code>MediaPlayerDeviceClass &#124; None</code> | `None`  | 媒体播放器的类型。
+| group_members                   | <code>list[str] &#124; None</code>              | `None`  | 当前为同步播放而一起分组的播放器实体的动态列表。如果平台有定义组长的概念，组长应为该列表中的第一个元素。
+| is_volume_muted                 | <code>bool &#124; None</code>                   | `None`  | 如果音量当前被静音则为 `True`。
+| media_album_artist              | <code>str &#124; None</code>                    | `None`  | 当前播放媒体的专辑艺术家，仅限音乐曲目。
+| media_album_name                | <code>str &#124; None</code>                    | `None`  | 当前播放媒体的专辑名称，仅限音乐曲目。
+| media_artist                    | <code>str &#124; None</code>                    | `None`  | 当前播放媒体的艺术家，仅限音乐曲目。
+| media_channel                   | <code>str &#124; None</code>                    | `None`  | 当前播放的频道。
+| media_content_id                | <code>str &#124; None</code>                    | `None`  | 当前播放媒体的内容ID。
+| media_content_type              | <code>MediaType &#124; str &#124; None</code>   | `None`  | 当前播放媒体的内容类型。
+| media_duration                  | <code>int &#124; None</code>                    | `None`  | 当前播放媒体的持续时间（秒）。
+| media_episode                   | <code>str &#124; None</code>                    | `None`  | 当前播放媒体的剧集，仅限电视节目。
+| media_image_hash                | <code>str &#124; None</code>                    | `None`  | 媒体图片的哈希，如果 `media_image_url` 为 `None`，则默认为 `media_image_url` 的 SHA256。
+| media_image_remotely_accessible | <code>bool &#124; None</code>                   | `False` | 如果属性 `media_image_url` 可以在家庭网络外部访问则为 `True`。
+| media_image_url                 | <code>str &#124; None</code>                    | `None`  | 当前播放媒体的图片URL。
+| media_playlist                  | <code>str &#124; None</code>                    | `None`  | 当前播放的播放列表的标题。
+| media_position                  | <code>int &#124; None</code>                    | `None`  | 当前播放媒体的位置（秒）。
+| media_position_updated_at       | <code>datetime &#124; None</code>               | `None`  | `_attr_media_position` 最后更新时间的时间戳。时间戳应该通过调用 `homeassistant.util.dt.utcnow()` 设置。
+| media_season                    | <code>str &#124; None</code>                    | `None`  | 当前播放媒体的季节，仅限电视节目。
+| media_series_title              | <code>str &#124; None</code>                    | `None`  | 当前播放媒体系列的标题，仅限电视节目。
+| media_title                     | <code>str &#124; None</code>                    | `None`  | 当前播放媒体的标题。
+| media_track                     | <code>int &#124; None</code>                    | `None`  | 当前播放媒体的曲目编号，仅限音乐曲目。
+| repeat                          | <code>RepeatMode &#124; str &#124; None</code>  | `None`  | 当前重复模式。
+| shuffle                         | <code>bool &#124; None</code>                   | `None`  | 如果启用随机播放则为 `True`。
+| sound_mode                      | <code>str &#124; None</code>                    | `None`  | 媒体播放器的当前声音模式。
+| sound_mode_list                 | <code>list[str] &#124; None</code>              | `None`  | 可用声音模式的动态列表。
+| source                          | <code>str &#124; None</code>                    | `None`  | 媒体播放器当前选择的输入源。
+| source_list                     | <code>list[str] &#124; None</code>              | `None`  | 媒体播放器可能的输入源列表。（此列表应包含适合前端显示的人类可读名称）。
+| state                           | <code>MediaPlayerState &#124; None</code>       | `None`  | 媒体播放器的状态。
+| volume_level                    | <code>float &#124; None</code>                  | `None`  | 媒体播放器的音量级别范围为 (0..1)。
+| volume_step                     | <code>float &#124; None</code>                  | 0.1     | 用于 `volume_up` 和 `volume_down` 服务操作的音量步长。
 
-## Supported features
+## 支持的功能
 
-Supported features are defined by using values in the `MediaPlayerEntityFeature` enum
-and are combined using the bitwise or (`|`) operator.
+支持的功能通过使用 `MediaPlayerEntityFeature` 枚举中的值定义，并使用按位或（`|`）运算符组合。
 
-| Value               | Description                                                        |
-| ------------------- | ------------------------------------------------------------------ |
-| `BROWSE_MEDIA`      | Entity allows browsing media.                                      |
-| `CLEAR_PLAYLIST`    | Entity allows clearing the active playlist.                        |
-| `GROUPING`          | Entity can be grouped with other players for synchronous playback. |
-| `MEDIA_ANNOUNCE`    | Entity supports the `play_media` action's announce parameter.      |
-| `MEDIA_ENQUEUE`     | Entity supports the `play_media` action's enqueue parameter.       |
-| `NEXT_TRACK`        | Entity allows skipping to the next media track.                    |
-| `PAUSE`             | Entity allows pausing the playback of media.                       |
-| `PLAY`              | Entity allows playing/resuming playback of media.                  |
-| `PLAY_MEDIA`        | Entity allows playing media sources.                               |
-| `PREVIOUS_TRACK`    | Entity allows returning back to a previous media track.            |
-| `REPEAT_SET`        | Entity allows setting repeat.                                      |
-| `SEARCH_MEDIA`      | Entity allows searching for media.                                 |
-| `SEEK`              | Entity allows seeking position during playback of media.           |
-| `SELECT_SOUND_MODE` | Entity allows selecting a sound mode.                              |
-| `SELECT_SOURCE`     | Entity allows selecting a source/input.                            |
-| `SHUFFLE_SET`       | Entity allows shuffling the active playlist.                       |
-| `STOP`              | Entity allows stopping the playback of media.                      |
-| `TURN_OFF`          | Entity is able to be turned off.                                   |
-| `TURN_ON`           | Entity is able to be turned on.                                    |
-| `VOLUME_MUTE`       | Entity volume can be muted.                                        |
-| `VOLUME_SET`        | Entity volume can be set to specific levels.                       |
-| `VOLUME_STEP`       | Entity volume can be adjusted up and down.                         |
+| 值                   | 描述                                                       |
+| ------------------- | ---------------------------------------------------------- |
+| `BROWSE_MEDIA`      | 实体允许浏览媒体。                                       |
+| `CLEAR_PLAYLIST`    | 实体允许清空活动播放列表。                               |
+| `GROUPING`          | 实体可以与其他播放器分组以进行同步播放。                |
+| `MEDIA_ANNOUNCE`    | 实体支持 `play_media` 动作的 announce 参数。              |
+| `MEDIA_ENQUEUE`     | 实体支持 `play_media` 动作的 enqueue 参数。               |
+| `NEXT_TRACK`        | 实体允许跳到下一个媒体曲目。                             |
+| `PAUSE`             | 实体允许暂停媒体播放。                                   |
+| `PLAY`              | 实体允许播放/恢复媒体播放。                              |
+| `PLAY_MEDIA`        | 实体允许播放媒体源。                                    |
+| `PREVIOUS_TRACK`    | 实体允许返回到以前的媒体曲目。                           |
+| `REPEAT_SET`        | 实体允许设置重复。                                       |
+| `SEARCH_MEDIA`      | 实体允许搜索媒体。                                       |
+| `SEEK`              | 实体允许在媒体播放期间寻找位置。                        |
+| `SELECT_SOUND_MODE` | 实体允许选择声音模式。                                   |
+| `SELECT_SOURCE`     | 实体允许选择源/输入。                                    |
+| `SHUFFLE_SET`       | 实体允许随机播放活动播放列表。                         |
+| `STOP`              | 实体允许停止媒体播放。                                   |
+| `TURN_OFF`          | 实体能够关闭。                                           |
+| `TURN_ON`           | 实体能够开启。                                           |
+| `VOLUME_MUTE`       | 实体音量可以被静音。                                     |
+| `VOLUME_SET`        | 实体音量可以设置为特定级别。                             |
+| `VOLUME_STEP`       | 实体音量可以向上和向下调节。                             |
 
-## States
+## 状态
 
-The state of a media player is defined by using values in the `MediaPlayerState` enum, and can take the following possible values.
+媒体播放器的状态通过使用 `MediaPlayerState` 枚举中的值定义，可以取以下可能的值。
 
-| Value       | Description                                                                                                         |
-|-------------|---------------------------------------------------------------------------------------------------------------------|
-| `OFF`       | Entity is turned off and is not accepting commands until turned on.                                                 |
-| `ON`        | Entity is turned on, but no details on its state is currently known.                                               |
-| `IDLE`      | Entity is turned on and accepting commands, but currently not playing any media. Possibly at some idle home screen. |
-| `PLAYING`   | Entity is currently playing media.                                                                                  |
-| `PAUSED`    | Entity has an active media and is currently paused                                                                |
-| `STANDBY`   | Entity is in a low power state, accepting commands.                              |
-| `BUFFERING` | Entity is preparing to start playback of some media                                                                 |
+| 值           | 描述                                                                                                           |
+|--------------|-----------------------------------------------------------------------------------------------------------------|
+| `OFF`       | 实体关闭，不接受命令，直到被打开。                                                                            |
+| `ON`        | 实体开启，但当前状态的细节未知。                                                                             |
+| `IDLE`      | 实体开启并接受命令，但目前没有播放任何媒体。可能处于某种空闲的主屏幕状态。                                   |
+| `PLAYING`   | 实体当前正在播放媒体。                                                                                       |
+| `PAUSED`    | 实体有一个活动媒体且当前处于暂停状态。                                                                        |
+| `STANDBY`   | 实体处于低功耗状态，接受命令。                                                                               |
+| `BUFFERING` | 实体准备开始播放某些媒体。                                                                                   |
 
-## Methods
+## 方法
 
-### Play media
+### 播放媒体
 
-Tells the media player to play media. Implement it using the following:
+告诉媒体播放器播放媒体。使用以下代码实现：
 
 ```python
 class MyMediaPlayer(MediaPlayerEntity):
@@ -109,7 +108,7 @@ class MyMediaPlayer(MediaPlayerEntity):
         enqueue: MediaPlayerEnqueue | None = None,
         announce: bool | None = None, **kwargs: Any
     ) -> None:
-        """Play a piece of media."""
+        """播放一段媒体。"""
 
     async def async_play_media(
         self,
@@ -118,22 +117,22 @@ class MyMediaPlayer(MediaPlayerEntity):
         enqueue: MediaPlayerEnqueue | None = None,
         announce: bool | None = None, **kwargs: Any
     ) -> None:
-        """Play a piece of media."""
+        """播放一段媒体。"""
 
 ```
 
-The `enqueue` attribute is a string enum `MediaPlayerEnqueue`:
+`enqueue` 属性是一个字符串枚举 `MediaPlayerEnqueue`：
 
- - `add`: add given media item to end of the queue
- - `next`: play the given media item next, keep queue
- - `play`: play the given media item now, keep queue
- - `replace`: play the given media item now, clear queue
+ - `add`: 将给定媒体项添加到队列末尾
+ - `next`: 下一个播放给定媒体项，保持队列
+ - `play`: 立即播放给定媒体项，保持队列
+ - `replace`: 立即播放给定媒体项，清空队列
 
-When the `announce` boolean attribute is set to `true`, the media player should try to pause the current music, announce the media to the user and then resume the music.
+当 `announce` 布尔属性设置为 `true` 时，媒体播放器应尝试暂停当前音乐，向用户宣布媒体，然后恢复音乐。
 
-### Browse media
+### 浏览媒体
 
-If the media player supports browsing media, it should implement the following method:
+如果媒体播放器支持浏览媒体，则应实现以下方法：
 
 ```python
 class MyMediaPlayer(MediaPlayerEntity):
@@ -141,7 +140,7 @@ class MyMediaPlayer(MediaPlayerEntity):
     async def async_browse_media(
         self, media_content_type: str | None = None, media_content_id: str | None = None
     ) -> BrowseMedia:
-        """Implement the websocket media browsing helper."""
+        """实现 websocket 媒体浏览助手。"""
         return await media_source.async_browse_media(
             self.hass,
             media_content_id,
@@ -149,9 +148,7 @@ class MyMediaPlayer(MediaPlayerEntity):
         )
 ```
 
-If the media player also allows playing media from URLs, you can also add support for browsing
-Home Assistant media sources. These sources can be provided by any integration. Examples provide
-text-to-speech and local media.
+如果媒体播放器也允许从 URL 播放媒体，则您还可以添加对浏览 Home Assistant 媒体源的支持。这些源可以由任何集成提供。示例提供文本到语音和本地媒体。
 
 ```python
 from homeassistant.components import media_source
@@ -164,13 +161,12 @@ class MyMediaPlayer(MediaPlayerEntity):
     async def async_browse_media(
         self, media_content_type: str | None = None, media_content_id: str | None = None
     ) -> BrowseMedia:
-        """Implement the websocket media browsing helper."""
-        # If your media player has no own media sources to browse, route all browse commands
-        # to the media source integration.
+        """实现 websocket 媒体浏览助手。"""
+        # 如果您的媒体播放器没有自己的媒体源供浏览，路由所有浏览命令到媒体源集成。
         return await media_source.async_browse_media(
             self.hass,
             media_content_id,
-            # This allows filtering content. In this case it will only show audio sources.
+            # 这允许过滤内容。在这种情况下，它将只显示音频源。
             content_filter=lambda item: item.media_content_type.startswith("audio/"),
         )
 
@@ -181,21 +177,21 @@ class MyMediaPlayer(MediaPlayerEntity):
         enqueue: MediaPlayerEnqueue | None = None,
         announce: bool | None = None, **kwargs: Any
     ) -> None:
-        """Play a piece of media."""
+        """播放一段媒体。"""
         if media_source.is_media_source_id(media_id):
             media_type = MediaType.MUSIC
             play_item = await media_source.async_resolve_media(self.hass, media_id, self.entity_id)
-            # play_item returns a relative URL if it has to be resolved on the Home Assistant host
-            # This call will turn it into a full URL
+            # play_item 返回相对 URL，如果需要在 Home Assistant 主机上解析。
+            # 此调用将其转换为完整 URL
             media_id = async_process_play_media_url(self.hass, play_item.url)
 
-        # Replace this with calling your media player play media function.
+        # 用调用您的媒体播放器播放媒体功能替换此内容。
         await self._media_player.play_url(media_id)
 ```
 
-### Search media
+### 搜索媒体
 
-If the media player supports searching media, it should implement the following method:
+如果媒体播放器支持搜索媒体，则应实现以下方法：
 
 ```python
 class MyMediaPlayer(MediaPlayerEntity):
@@ -204,137 +200,136 @@ class MyMediaPlayer(MediaPlayerEntity):
         self,
         query: SearchMediaQuery,
     ) -> SearchMedia:
-        """Search the media player."""
-        # search for the requested media on your library client.
+        """搜索媒体播放器。"""
+        # 在您的库客户端上搜索请求的媒体。
         result = await my_client.search(query=query.search_query)
         return SearchMedia(result=result)
 ```
 
-The SearchMediaQuery is a dataclass with the following properties:
+SearchMediaQuery 是一个数据类，具有以下属性：
 
-| Attribute             | Type                                  | Default     | Description                        |
-|-----------------------|---------------------------------------|-------------|------------------------------------|
-| `search_query`        | `str`                                 | *required*  | The search string or query.        |
-| `media_content_type`  | `MediaType \| str \| None`            | `None`      | The content type to search inside. |
-| `media_content_id`    | `str \| None`                         | `None`      | The content ID to search inside.   |
-| `media_filter_classes`| `list[MediaClass] \| None`            | `None`      | List of media classes to filter.   |
+| 属性                 | 类型                                  | 默认值     | 描述                                 |
+|---------------------|---------------------------------------|-------------|--------------------------------------|
+| `search_query`      | `str`                                 | *必填*      | 搜索字符串或查询。                    |
+| `media_content_type`| `MediaType \| str \| None`            | `None`      | 要搜索的内容类型。                    |
+| `media_content_id`  | `str \| None`                         | `None`      | 要搜索的内容ID。                      |
+| `media_filter_classes`| `list[MediaClass] \| None`            | `None`      | 要过滤的媒体类别列表。                |
 
-### Select sound mode
+### 选择声音模式
 
-Optional. Switch the sound mode of the media player.
+可选。切换媒体播放器的声音模式。
 
 ```python
 class MyMediaPlayer(MediaPlayerEntity):
-    # Implement one of these methods.
+    # 实现以下方法之一。
 
     def select_sound_mode(self, sound_mode):
-        """Switch the sound mode of the entity."""
+        """切换实体的声音模式。"""
 
     def async_select_sound_mode(self, sound_mode):
-        """Switch the sound mode of the entity."""
+        """切换实体的声音模式。"""
 ```
 
-### Select source
+### 选择源
 
-Optional. Switch the selected input source for the media player.
+可选。切换媒体播放器的选定输入源。
 
 ```python
 class MyMediaPlayer(MediaPlayerEntity):
-    # Implement one of these methods.
+    # 实现以下方法之一。
 
     def select_source(self, source):
-        """Select input source."""
+        """选择输入源。"""
 
     def async_select_source(self, source):
-        """Select input source."""
+        """选择输入源。"""
 ```
 
-### Mediatype
+### 媒体类型
 
-Required. Returns one of the values from the MediaType enum that matches the mediatype
+必填。返回 MediaType 枚举中与媒体类型匹配的值。
 
-| CONST |
-|-------|
-|MediaType.MUSIC|
-|MediaType.TVSHOW|
-|MediaType.MOVIE|
-|MediaType.VIDEO|
-|MediaType.EPISODE|
-|MediaType.CHANNEL|
-|MediaType.PLAYLIST|
-|MediaType.IMAGE|
-|MediaType.URL|
-|MediaType.GAME|
-|MediaType.APP|
+| 常量                |
+|---------------------|
+| MediaType.MUSIC     |
+| MediaType.TVSHOW    |
+| MediaType.MOVIE     |
+| MediaType.VIDEO     |
+| MediaType.EPISODE   |
+| MediaType.CHANNEL    |
+| MediaType.PLAYLIST   |
+| MediaType.IMAGE      |
+| MediaType.URL        |
+| MediaType.GAME       |
+| MediaType.APP        |
 
 ```python
 class MyMediaPlayer(MediaPlayerEntity):
-    # Implement the following method.
+    # 实现以下方法。
 
     @property
     def media_content_type(self):
-    """Content type of current playing media."""
+        """当前播放媒体的内容类型。"""
 ```
 
 :::info
-Using the integration name as the `media_content_type` is also acceptable within the `play_media` service action if the integration provides handling which does not map to the defined constants.
+在 `play_media` 服务操作中使用集成名称作为 `media_content_type` 也是可以接受的，如果集成提供的处理与定义常量不对应。
 :::
 
-### Available device classes
+### 可用的设备类别
 
-Optional. What type of media device is this. It will possibly map to google device types.
+可选。此媒体设备的类型。可能映射到谷歌设备类型。
 
-| Value | Description
-| ----- | -----------
-| tv | Device is a television type device.
-| speaker | Device is speakers or stereo type device.
-| receiver | Device is audio video receiver type device taking audio and outputting to speakers and video to some display.
+| 值         | 描述
+|-----------|----------------|
+| tv        | 设备是电视类型设备。|
+| speaker   | 设备是扬声器或立体声类型设备。|
+| receiver   | 设备是音频视频接收器类型设备，接受音频并输出给扬声器和视频给某个显示器。|
 
-### Proxy album art for media browser
+### 媒体浏览器的代理专辑封面
 
-Optional. If your media player is only accessible from the internal network, it will need to proxy the album art via Home Assistant to be able to work while away from home or through a mobile app.
+可选。如果您的媒体播放器仅可从内部网络访问，则需要通过 Home Assistant 代理专辑封面，以便在离家或通过移动应用时也能工作。
 
-To proxy an image via Home Assistant, set the `thumbnail` property of a `BrowseMedia` item to a url generated by the `self.get_browse_image_url(media_content_type, media_content_id, media_image_id=None)` method. The browser will then fetch this url, which will result in a call to `async_get_browse_image(media_content_type, media_content_id, media_image_id=None)`.
+要通过 Home Assistant 代理图像，请将 `BrowseMedia` 项的 `thumbnail` 属性设置为通过 `self.get_browse_image_url(media_content_type, media_content_id, media_image_id=None)` 方法生成的 URL。浏览器将获取此 URL，这将导致调用 `async_get_browse_image(media_content_type, media_content_id, media_image_id=None)`。
 
 :::info
-Only use a proxy for the thumbnail if the web request originated from outside the network. You can test this with `is_local_request(hass)` imported from `homeassistant.helpers.network`.
+仅在网络外部发起web请求时使用代理作为缩略图。您可以通过 `homeassistant.helpers.network` 中导入的 `is_local_request(hass)` 测试这一点。
 :::
 
-In `async_get_browse_image`, use `self._async_fetch_image(url)` to fetch the image from the local network. Do not use `self._async_fetch_image_from_cache(url)` which should only be used to for the currently playing artwork.
+在 `async_get_browse_image` 中，使用 `self._async_fetch_image(url)` 从本地网络获取图像。不要使用 `self._async_fetch_image_from_cache(url)`，该方法应仅用于当前播放的艺术作品。
 
 :::info
-Do not pass an url as `media_image_id`. This can allow an attacker to fetch any data from the local network.
+不要将 URL 作为 `media_image_id` 传递。这可能允许攻击者从本地网络中获取任何数据。
 :::
 
 ```python
 class MyMediaPlayer(MediaPlayerEntity):
 
-    # Implement the following method.
+    # 实现以下方法。
     async def async_get_browse_image(self, media_content_type, media_content_id, media_image_id=None):
-    """Serve album art. Returns (content, content_type)."""
-    image_url = ...
-    return await self._async_fetch_image(image_url)
+        """提供专辑封面。返回 (content, content_type)。"""
+        image_url = ...
+        return await self._async_fetch_image(image_url)
 ```
 
-### Grouping player entities together
+### 将播放器实体组合在一起
 
-Optional. If your player has support for grouping player entities together for synchronous playback (indicated by `SUPPORT_GROUPING`) one join and one unjoin method needs to be defined.
+可选。如果您的播放器支持将播放器实体组合在一起进行同步播放（通过 `SUPPORT_GROUPING` 指示），则需要定义一个加入和一个退出的方法。
 
 ```python
 class MyMediaPlayer(MediaPlayerEntity):
-    # Implement one of these join methods:
+    # 实现以下某个加入方法：
 
     def join_players(self, group_members):
-        """Join `group_members` as a player group with the current player."""
+        """将 `group_members` 作为播放器组与当前播放器连接。"""
 
     async def async_join_players(self, group_members):
-        """Join `group_members` as a player group with the current player."""
+        """将 `group_members` 作为播放器组与当前播放器连接。"""
 
-    # Implement one of these unjoin methods:
+    # 实现以下某个退出方法：
 
     def unjoin_player(self):
-        """Remove this player from any group."""
+        """将此播放器从任何组中移除。"""
 
     async def async_unjoin_player(self):
-        """Remove this player from any group."""
-```
+        """将此播放器从任何组中移除。"""

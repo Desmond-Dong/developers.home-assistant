@@ -1,52 +1,52 @@
 ---
-title: "Multi-factor authentication modules"
+title: "多因素认证模块"
 ---
 
-Multi-factor Authentication Modules are used in conjunction with [Authentication Provider](auth_auth_provider.md) to provide a fully configurable authentication framework. Each MFA module may provide one multi-factor authentication function. User can enable multiple mfa modules, but can only select one module in login process.
+多因素认证模块与[认证提供者](auth_auth_provider.md)一起使用，以提供一个完全可配置的认证框架。每个 MFA 模块可以提供一个多因素认证功能。用户可以启用多个 MFA 模块，但在登录过程中只能选择一个模块。
 
-## Defining an mfa auth module
+## 定义一个 mfa 认证模块
 
 :::info
-We currently only support built-in mfa auth modules. Support for custom auth modules might arrive in the future.
+我们目前只支持内置的 mfa 认证模块。未来可能会支持自定义的认证模块。
 :::
 
-Multi-factor Auth modules are defined in `homeassistant/auth/mfa_modules/<name of module>.py`. The auth module will need to provide an implementation of the `MultiFactorAuthModule` class.
+多因素认证模块在 `homeassistant/auth/mfa_modules/<模块名>.py` 中定义。认证模块需要提供 `MultiFactorAuthModule` 类的实现。
 
-For an example of a fully implemented auth module, please see [insecure_example.py](https://github.com/home-assistant/core/blob/dev/homeassistant/auth/mfa_modules/insecure_example.py).
+有关完整实现的认证模块示例，请参见 [insecure_example.py](https://github.com/home-assistant/core/blob/dev/homeassistant/auth/mfa_modules/insecure_example.py)。
 
-Multi-factor Auth modules shall extend the following methods of `MultiFactorAuthModule` class.
+多因素认证模块应扩展 `MultiFactorAuthModule` 类的以下方法。
 
-| method | Required | Description
+| 方法 | 必须 | 描述
 | ------ | -------- | -----------
-| `@property def input_schema(self)` | Yes | Return a schema defined the user input form.
-| `async def async_setup_flow(self, user_id)` | Yes | Return a SetupFlow to handle the setup workflow.
-| `async def async_setup_user(self, user_id, setup_data)` | Yes | Set up user for use this auth module.
-| `async def async_depose_user(self, user_id)` | Yes | Remove user information from this auth module.
-| `async def async_is_user_setup(self, user_id)` | Yes | Return whether user is set up.
-| `async def async_validate(self, user_id, user_input)` | Yes | Given a user_id and user input, return validation result.
-| `async def async_initialize_login_mfa_step(self, user_id)` | No | Will be called once before display the mfa step of login flow. This is not initialization for the MFA module but the mfa step in login flow.
+| `@property def input_schema(self)` | 是 | 返回定义用户输入表单的模式。
+| `async def async_setup_flow(self, user_id)` | 是 | 返回一个 SetupFlow 来处理设置工作流。
+| `async def async_setup_user(self, user_id, setup_data)` | 是 | 为使用此认证模块设置用户。
+| `async def async_depose_user(self, user_id)` | 是 | 从此认证模块中删除用户信息。
+| `async def async_is_user_setup(self, user_id)` | 是 | 返回用户是否已设置。
+| `async def async_validate(self, user_id, user_input)` | 是 | 给定用户 ID 和用户输入，返回验证结果。
+| `async def async_initialize_login_mfa_step(self, user_id)` | 否 | 在显示登录流程的 MFA 步骤之前调用一次。这不是 MFA 模块的初始化，而是登录流程中的 MFA 步骤。
 
-## Setup flow
+## 设置流程
 
-Before user can use a multi-factor auth module, it has to be enabled or set up. All available modules will be listed in user profile page, user can enable the module he/she wants to use. A setup data entry flow will guide user finish the necessary steps.
+在用户可以使用多因素认证模块之前，必须启用或设置该模块。所有可用模块将在用户个人资料页面中列出，用户可以启用想要使用的模块。设置数据输入流程将指导用户完成必要的步骤。
 
-Each MFA module need to implement a setup flow handler extends from `mfa_modules.SetupFlow` (if only one simple setup step need, `SetupFlow` can be used as well). For example for Google Authenticator (TOTP, Time-based One Time Password) module, the flow will need to be:
+每个 MFA 模块需要实现一个扩展自 `mfa_modules.SetupFlow` 的设置流程处理程序（如果只需要一个简单的设置步骤，也可以使用 `SetupFlow`）。例如，对于 Google Authenticator（基于时间的一次性密码，TOTP）模块，流程需要：
 
-- Generate a secret and store it on instance of setup flow
-- Return `async_show_form` with a QR code in the description (injected as base64 via `description_placeholders`)
-- User scans code and enters a code to verify it scanned correctly and clock in synced
-- TOTP module saved the secret along with user_id, module is enabled for user
+- 生成一个秘密并将其存储在设置流程的实例中
+- 返回带有 QR 码的 `async_show_form`（通过 `description_placeholders` 注入为 base64）
+- 用户扫描代码并输入代码以验证扫描是否正确并且时钟是否同步
+- TOTP 模块将秘密与用户 ID 一起保存，该模块对用户启用
 
-## Workflow
+## 工作流程
 
 <img class='invertDark' src='/img/en/auth/mfa_workflow.png'
-  alt='Multi Factor Authentication Workflow' />
+  alt='多因素认证工作流程' />
 
 <!--
-Source: https://drive.google.com/file/d/12_nANmOYnOdqM56BND01nPjJmGXe-M9a/view
+来源: https://drive.google.com/file/d/12_nANmOYnOdqM56BND01nPjJmGXe-M9a/view
 -->
 
-## Configuration example
+## 配置示例
 
 ```yaml
 # configuration.xml
@@ -60,12 +60,12 @@ homeassistant:
       users: [{'user_id': 'a_32_bytes_length_user_id', 'pin': '123456'}]
 ```
 
-In this example, user will first select from `homeassistant` or `legacy_api_password` auth provider. For `homeassistant` auth provider, user will first input username/password, if that user enabled both `totp` and `insecure_example`, then user need select one auth module, then input Google Authenticator code or input pin code base on the selection.
+在此示例中，用户将首先从 `homeassistant` 或 `legacy_api_password` 认证提供者中进行选择。对于 `homeassistant` 认证提供者，用户首先输入用户名/密码，如果该用户启用了 `totp` 和 `insecure_example`，则用户需要选择一个认证模块，然后根据选择输入 Google Authenticator 代码或输入 PIN 代码。
 
 :::tip
-`insecure_example` is only for demo purpose, please do not use it in production.
+`insecure_example` 仅用于演示目的，请勿在生产环境中使用。
 :::
 
-## Validation session
+## 验证会话
 
-Not like auth provider, auth module use session to manage the validation. After auth provider validated, mfa module will create a validation session, include an expiration time and user_id from auth provider validate result. Multi-factor auth module will not only verify the user input, but also verify the session is not expired. The validation session data is stored in your configuration directory.
+与认证提供者不同，认证模块使用会话来管理验证。在认证提供者验证后，MFA 模块将创建一个验证会话，包括一个到期时间和来自认证提供者验证结果的用户 ID。多因素认证模块不仅会验证用户输入，还会验证会话是否未过期。验证会话数据存储在您的配置目录中。

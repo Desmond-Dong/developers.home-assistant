@@ -1,81 +1,81 @@
 ---
-title: Text-to-speech entity
-sidebar_label: Text-to-speech
+title: 文字转语音实体
+sidebar_label: 文字转语音
 ---
 
-A text-to-speech (TTS) entity enables Home Assistant to speak to you.
+一个文字转语音（TTS）实体使 Home Assistant 能够与您对话。
 
-A text-to-speech entity is derived from the  [`homeassistant.components.tts.TextToSpeechEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/tts/__init__.py).
+文字转语音实体源自 [`homeassistant.components.tts.TextToSpeechEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/tts/__init__.py)。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests).
+属性应始终仅从内存返回信息，而不进行 I/O（例如网络请求）。
 :::
 
-| Name | Type | Default | Description
+| 名称 | 类型 | 默认 | 描述
 | ---- | ---- | ------- | -----------
-| supported_languages | list[str] | **Required** | The supported languages of the TTS service.
-| default_language | str | **Required** | The default language of the TTS service.
-| supported_options | list[str] | None | The supported options like voice, emotions of the TTS service.
-| default_options | Mapping[str, Any] | None | The default options of the TTS service.
+| supported_languages | list[str] | **必需** | TTS 服务支持的语言。
+| default_language | str | **必需** | TTS 服务的默认语言。
+| supported_options | list[str] | None | TTS 服务支持的选项，例如声音、情感。
+| default_options | Mapping[str, Any] | None | TTS 服务的默认选项。
 
-## Methods
+## 方法
 
-### Get supported voices
+### 获取支持的声音
 
-This method is used to return a list of supported voices for a language of a TTS service.
+此方法用于返回 TTS 服务某种语言的支持声音列表。
 
 ```python
 class MyTextToSpeechEntity(TextToSpeechEntity):
-    """Represent a Text To Speech entity."""
+    """表示一个文字转语音实体。"""
 
     @callback
     def async_get_supported_voices(self, language: str) -> list[str] | None:
-        """Return a list of supported voices for a language."""
+        """返回某种语言的支持声音列表。"""
 ```
 
-### Generating TTS audio in 1-shot
+### 一次性生成 TTS 音频
 
-This method takes a message and language as input and returns the TTS audio. It can be implemented as either synchronous or asynchronous and is mandatory to implement.
+此方法接受一个消息和语言作为输入，并返回 TTS 音频。它可以实现为同步或异步，且必须实现。
 
 ```python
 class MyTextToSpeechEntity(TextToSpeechEntity):
-    """Represent a Text To Speech entity."""
+    """表示一个文字转语音实体。"""
 
     def get_tts_audio(
         self, message: str, language: str, options: dict[str, Any]
     ) -> TtsAudioType:
-        """Load tts audio file from the engine."""
+        """从引擎加载 TTS 音频文件。"""
 
     async def async_get_tts_audio(
         self, message: str, language: str, options: dict[str, Any]
     ) -> TtsAudioType:
-        """Load tts audio file from the engine."""
+        """从引擎加载 TTS 音频文件。"""
 ```
 
-### Generating TTS audio with message streaming in
+### 生成带有消息流的 TTS 音频
 
-Large language models generate text in chunks. The TTS service can be called with a stream of text messages, and the TTS service will return the audio in chunks.
+大型语言模型以块的形式生成文本。可以使用一系列文本消息调用 TTS 服务，TTS 服务将分块返回音频。
 
-This method is optional. When not implemented, the TTS service will call the 1-shot method with the final message.
+此方法是可选的。当未实现时，TTS 服务将使用最终消息调用一次性方法。
 
 ```python
 class MyTextToSpeechEntity(TextToSpeechEntity):
-    """Represent a Text To Speech entity."""
+    """表示一个文字转语音实体。"""
 
     async def async_stream_tts_audio(
         self, request: TTSAudioRequest
     ) -> TTSAudioResponse:
-        """Generate speech from an incoming message."""
+        """从传入消息生成语音。"""
 ```
 
-The definition of the `TTSAudioRequest` and `TTSAudioResponse` objects are as follows:
+`TTSAudioRequest` 和 `TTSAudioResponse` 对象的定义如下：
 
 ```python
 @dataclass
 class TTSAudioRequest:
-    """Request to get TTS audio."""
+    """获取 TTS 音频的请求。"""
 
     language: str
     options: dict[str, Any]
@@ -84,8 +84,7 @@ class TTSAudioRequest:
 
 @dataclass
 class TTSAudioResponse:
-    """Response containing TTS audio stream."""
+    """包含 TTS 音频流的响应。"""
 
     extension: str
     data_gen: AsyncGenerator[bytes]
-```

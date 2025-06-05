@@ -1,27 +1,27 @@
 ---
-title: "The documentation provides step-by-step installation instructions for the integration, including, if needed, prerequisites"
+title: "文档提供了集成的逐步安装说明，包括（如有需要）先决条件"
 ---
 
-## Reasoning
+## 理由
 
-We want users to have a smooth experience when setting up an integration.
-This means that the documentation should provide clear and concise instructions on how to install the integration.
-This includes any prerequisites that are needed to install the integration.
+我们希望用户在设置集成时能够顺利进行。
+这意味着文档应该提供清晰简洁的说明，指导如何安装该集成。
+这包括安装集成所需的任何先决条件。
 
-## Example implementation
+## 示例实现
 
 ```markdown showLineNumbers
-## Prerequisites
+## 先决条件
 
-1. Open the app store and install the **MyProduct** app.
-2. Create an account.
-3. Add a device to the app.
-4. Open the app and go to the **Settings** page.
-5. Select **Expose API**.
+1. 打开应用商店并安装 **MyProduct** 应用。
+2. 创建一个账户。
+3. 添加设备到应用中。
+4. 打开应用并进入 **设置** 页面。
+5. 选择 **暴露 API**。
 
 {% include integrations/config_flow.md %}
 ```
 
-## Exceptions
+## 例外
 
-There are no exceptions to this rule.
+这个规则没有例外。

@@ -1,14 +1,14 @@
 module.exports = {
-  title: "Home Assistant Developer Docs",
-  tagline: "All you need to start developing",
-  url: "https://developers.home-assistant.io",
-  baseUrl: "/",
+  title: "Home Assistant 开发者文档",
+  tagline: "开始开发所需的一切",
+  url: "https://www.hasscn.top",
+  baseUrl: "/developers/",
   favicon: "img/favicon.png",
   organizationName: "home-assistant",
   projectName: "developers.home-assistant",
   themeConfig: {
     navbar: {
-      title: "Developers",
+      title: "开发者",
       logo: {
         alt: "Home Assistant",
         src: "img/logo.svg",
@@ -20,24 +20,24 @@ module.exports = {
           position: "left",
           items: [
             {
-              label: "Overview",
+              label: "概览",
               to: "docs/architecture_index",
             },
             {
-              label: "Core",
+              label: "核心",
               to: "docs/development_index",
             },
-            { to: "docs/frontend", label: "Frontend" },
-            { to: "docs/supervisor", label: "Supervisor" },
-            { to: "docs/add-ons", label: "Add-ons" },
-            { to: "docs/operating-system", label: "Operating System" },
-            { to: "docs/voice/overview", label: "Voice" },
-            { to: "docs/translations", label: "Translations" },
-            { to: "docs/android", label: "Android" },
+            { to: "docs/frontend", label: "前端" },
+            { to: "docs/supervisor", label: "监督者" },
+            { to: "docs/add-ons", label: "附加组件" },
+            { to: "docs/operating-system", label: "操作系统" },
+            { to: "docs/voice/overview", label: "语音" },
+            { to: "docs/translations", label: "翻译" },
+            { to: "docs/android", label: "安卓" },
           ],
         },
-        { to: "docs/misc", label: "Misc", position: "left" },
-        { to: "blog", label: "Blog", position: "left" },
+        { to: "docs/misc", label: "杂项", position: "left" },
+
       ],
     },
     footer: {
@@ -45,79 +45,58 @@ module.exports = {
         alt: "Home Assistant",
         src: "img/logo-white.svg",
         height: "30px",
-        href: "https://www.home-assistant.io",
+        href: "https://www.hasscn.top",
       },
       style: "dark",
       links: [
         {
-          title: "More Home Assistant",
+          title: "更多 Home Assistant",
           items: [
             {
-              label: "Homepage",
-              href: "https://www.home-assistant.io",
+              label: "主页",
+              href: "https://www.hasscn.top",
             },
             {
-              label: "Data Science Portal",
+              label: "数据科学门户",
               href: "https://data.home-assistant.io",
             },
             {
-              label: "Alerts",
+              label: "警报",
               href: "https://alerts.home-assistant.io",
             },
             {
-              label: "System Status",
+              label: "系统状态",
               href: "https://status.home-assistant.io/",
             },
           ],
         },
         {
-          title: "Social",
+          title: "社交",
           items: [
-            {
-              label: "Blog",
-              to: "blog",
-            },
             {
               label: "GitHub",
               href: "https://github.com/home-assistant",
             },
-            {
-              label: "Twitter",
-              href: "https://twitter.com/hass_devs",
-            },
-            {
-              label: "Discord chat",
-              href: "https://www.home-assistant.io/join-chat",
-            },
+
+
           ],
         },
         {
-          title: "Other",
+          title: "其他",
           items: [
             {
-              label: "Privacy",
+              label: "隐私",
               href: "https://www.home-assistant.io/privacy/",
             },
             {
-              label: "Security",
+              label: "安全",
               href: "https://www.home-assistant.io/security/",
             },
           ],
         },
-        {
-          title: "Thanks",
-          items: [
-            {
-              html: `
-              <a href="https://www.netlify.com" target="_blank" rel="noreferrer noopener" aria-label="Deploys by Netlify">
-                <img src="https://www.netlify.com/v3/img/components/netlify-color-accent.svg" alt="Deploys by Netlify" />
-              </a>
-              `,
-            },
-          ],
-        },
+
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Home Assistant. Built with Docusaurus.`,
+      copyright: `版权所有 © ${new Date().getFullYear()} Home Assistant。由 Docusaurus 构建。`,
     },
     image: "img/default-social.png",
     mermaid: {
@@ -147,9 +126,6 @@ module.exports = {
           feedOptions: {
             type: "all",
           },
-        },
-        googleAnalytics: {
-          trackingID: "UA-57927901-3",
         },
       },
     ],

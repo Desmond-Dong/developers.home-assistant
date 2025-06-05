@@ -1,5 +1,5 @@
 ---
-title: Miscellaneous
+title: 杂项
 ---
 
-Catch all category. Topics are not related to one another.
+所有类别。主题之间没有关联。

@@ -1,45 +1,45 @@
 ---
-title: "Entities have a unique ID"
+title: "实体具有唯一的ID"
 related_rules:
   - unique-config-entry
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+## 理由
 
-In the past, entities weren't persisted.
-Home Assistant didn't track which entities it knew from the past and which it did not.
-To allow customizations to entities, like renaming the entity or changing the unit of measurement, Home Assistant needed a way to keep track of each individual entity across restarts.
+在过去，实体并没有被持久化。
+Home Assistant 并没有跟踪它已知的实体与未知实体。
+为了允许对实体进行自定义，比如重命名实体或更改计量单位，Home Assistant 需要一种方法来跟踪每个个体实体在重启过程中的状态。
 
-To solve this, Home Assistant introduced the entity registry.
-The entity registry is a central place where Home Assistant keeps track of all entities it knows about.
-Each entity in the entity registry has a unique ID, which is unique per integration domain and per platform domain.
+为了解决这个问题，Home Assistant 引入了实体注册表。
+实体注册表是 Home Assistant 跟踪所有已知实体的中心位置。
+实体注册表中的每个实体都有一个唯一的ID，该ID在每个集成域和每个平台域中都是唯一的。
 
-If an entity doesn't have a unique ID, the user has less control over the entity.
-Thus, making sure that entities have a unique ID improves the user experience.
+如果一个实体没有唯一的ID，用户对该实体的控制会减少。
+因此，确保实体具有唯一的ID可以改善用户体验。
 
-## Example implementation
+## 示例实现
 
-In this example there is a temperature sensor that sets its unique ID using the shorthand notation.
+在这个示例中，有一个温度传感器使用简写符号设置其唯一ID。
 
 `sensor.py`:
 ```python {6} showLineNumbers
 class MySensor(SensorEntity):
-    """Representation of a sensor."""
+    """传感器的表示。"""
 
     def __init__(self, device_id: str) -> None:
-        """Initialize the sensor."""
+        """初始化传感器。"""
         self._attr_unique_id = f"{device_id}_temperature"
 ```
 
-## Additional resources
+## 额外资源
 
-More information about the requirements for a unique identifier can be found in the [documentation](/docs/entity_registry_index#unique-id-requirements).
+关于唯一标识符要求的更多信息可以在[文档](/docs/entity_registry_index#unique-id-requirements)中找到。
 
-## Exceptions
+## 例外情况
 
-There are no exceptions to this rule.
+对此规则没有例外情况。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

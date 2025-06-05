@@ -1,39 +1,38 @@
 ---
-title: "Voice in Home Assistant"
-sidebar_label: Overview
+title: "Home Assistant 中的语音"
+sidebar_label: 概述
 ---
 
-Building a voice assistant is a complex task. It requires a lot of different technologies to work together. This page will give you an overview of the different parts inside Home Assistant and how they will work together.
-
+构建一个语音助手是一项复杂的任务。它需要许多不同的技术协同工作。此页面将为您提供 Home Assistant 内部不同部分的概述，以及它们如何协同工作。
 
 ```mermaid
 graph TD;
-    U((User))
-    STT[Speech-to-Text]
-    VA[Assist Pipeline]
-    C[Conversation]
-    I[Intent]
-    TTS[Text-to-Speech]
-    U -->|1\. Speech + Metadata| VA;
-    VA -->|2\. Speech| STT
-    STT -->|3\. Sentence| VA
-    VA -->|4\. Sentence + Metadata| C
-    C -->|5\. Intent| I
-    I -->|6\. Intent Response| C;
-    C -->|7\. Intent Response| VA;
-    VA -->|8\. Intent Response| TTS
-    TTS -->|9\. Response Audio| VA
-    VA -->|10\. Response Audio| U
+    U((用户))
+    STT[语音转文本]
+    VA[助手管道]
+    C[对话]
+    I[意图]
+    TTS[文本转语音]
+    U -->|1\. 语音 + 元数据| VA;
+    VA -->|2\. 语音| STT
+    STT -->|3\. 句子| VA
+    VA -->|4\. 句子 + 元数据| C
+    C -->|5\. 意图| I
+    I -->|6\. 意图响应| C;
+    C -->|7\. 意图响应| VA;
+    VA -->|8\. 意图响应| TTS
+    TTS -->|9\. 响应音频| VA
+    VA -->|10\. 响应音频| U
 ```
 
- - The **Assist Pipeline** integration is responsible for turning the user's speech into text, get it processed, and turn the response into speech.
- - The **Conversation** integration is responsible for processing user's text. The built-in conversation agent does this by matching it to an intent. Integrations can provide [custom conversation agents](../core/entity/conversation).
- - The **Intent** integration is responsible for executing the intent and returning a response.
-- The **Text-to-Speech** integration is responsible for turning text into speech. Integrations can provide [custom text-to-speech agents](../core/entity/tts).
-- The **Speech-to-Text** integration is responsible for turning speech into text. Integrations can provide [custom speech-to-text agents](../core/entity/stt).
+- **助手管道** 集成负责将用户的语音转换为文本，进行处理，然后将响应转换为语音。
+- **对话** 集成负责处理用户的文本。内置的对话代理通过与意图匹配来完成此操作。集成可以提供 [自定义对话代理](../core/entity/conversation)。
+- **意图** 集成负责执行意图并返回响应。
+- **文本转语音** 集成负责将文本转换为语音。集成可以提供 [自定义文本转语音代理](../core/entity/tts)。
+- **语音转文本** 集成负责将语音转换为文本。集成可以提供 [自定义语音转文本代理](../core/entity/stt)。
 
-## Capturing the user's speech
+## 捕获用户的语音
 
-The thing that the above diagram does not describe is how the user's speech is captured. There will be many ways to do this.
+上面的图表没有描述的是如何捕获用户的语音。这将有许多方式来实现。
 
-The ultimate goal is to make **Voice Satellites**. These are devices that can be placed anywhere in the house. Once it detects the hot word, it will capture the user's speech, send it to Home Assistant, and play the response back to the user.
+最终目标是制作 **语音卫星**。这些设备可以放置在房子的任何地方。一旦检测到热词，它将捕获用户的语音，发送至 Home Assistant，并将响应播放回用户。

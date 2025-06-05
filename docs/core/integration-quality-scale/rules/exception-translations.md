@@ -1,29 +1,29 @@
 ---
-title: "Exception messages are translatable"
+title: "异常信息是可翻译的"
 related_rules:
   - entity-translations
   - action-exceptions
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+## 推理
 
-Sometimes something goes wrong and we want to show an error message to the user.
-Since Home Assistant is used by people all over the world, it is important that these error messages are translatable.
-This increases the usability of Home Assistant for people who do not use the application in English.
+有时候会出现问题，我们希望向用户显示错误信息。  
+由于Home Assistant被全球各地的人使用，确保这些错误信息是可翻译的非常重要。  
+这提高了Home Assistant对不使用英语的用户的可用性。
 
-Home Assistant has builtin support for translating messages coming from the `HomeAssistantError` exception.
+Home Assistant内置了对来自`HomeAssistantError`异常的消息翻译的支持。
 
-## Example implementation
+## 示例实现
 
-In this example, we show a function registered as a Home Assistant service action.
-The integration domain and the key to the translation are passed along when raising the exception.
-The exception should inherit `HomeAssistantError` to support translations.
-The error message is then defined in the integration `strings.json` file.
+在这个示例中，我们展示了一个注册为Home Assistant服务动作的函数。  
+集成领域和翻译的关键在引发异常时传递。  
+异常应该继承`HomeAssistantError`以支持翻译。  
+错误信息随后在集成的`strings.json`文件中定义。
 
 ```python {6-9,13-16} showLineNumbers
 async def async_set_schedule(call: ServiceCall) -> ServiceResponse:
-    """Set the schedule for a day."""
+    """设置一天的日程安排。"""
     start_date = call.data[ATTR_START_DATE]
     end_date = call.data[ATTR_END_DATE]
     if end_date < start_date:
@@ -45,23 +45,23 @@ async def async_set_schedule(call: ServiceCall) -> ServiceResponse:
 {
     "exceptions": {
         "end_date_before_start_date": {
-            "message": "The end date cannot be before the start date."
+            "message": "结束日期不能早于开始日期。"
         },
         "cannot_connect_to_schedule": {
-            "message": "Cannot connect to the schedule."
+            "message": "无法连接到日程安排。"
         }
     }
 }
 ```
 
-## Additional resources
+## 附加资源
 
-For more info on raising exceptions, check the [documentation](/docs/core/platform/raising_exceptions).
+有关引发异常的更多信息，请查看[文档](/docs/core/platform/raising_exceptions)。
 
-## Exceptions
+## 异常
 
-There are no exceptions to this rule.
+对于此规则没有例外。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

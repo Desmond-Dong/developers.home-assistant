@@ -1,36 +1,36 @@
 ---
-title: "Contributing template sentences"
-sidebar_label: "Contributing sentences"
+title: "贡献模板句子"
+sidebar_label: "贡献句子"
 ---
 
-Template sentences need to be contributed to our [Intents repository on GitHub](https://github.com/home-assistant/intents). The sentences will be reviewed by [the language leaders](../language-leaders) and merged if they are correct. You can either contribute new sentences or improve existing ones.
+模板句子需要贡献到我们的 [GitHub Intents 仓库](https://github.com/home-assistant/intents)。句子将由 [语言负责人](../language-leaders) 进行审核，如果正确将进行合并。您可以贡献新的句子或改进现有的句子。
 
-The Intent repository is structured as follows:
+Intent 仓库的结构如下：
 
-- `sentences/<language>/` - Template sentences for each language - [learn more](template-sentence-syntax)
-- `tests/<language>/` - Tests for each language - [learn more](test-syntax)
+- `sentences/<language>/` - 每种语言的模板句子 - [了解更多](template-sentence-syntax)
+- `tests/<language>/` - 每种语言的测试 - [了解更多](test-syntax)
 
-We prefer a lot of small contributions over a few large ones. Contributions that contain a lot of changes are hard to review. That's why we want each contribution limited to a single language and single domain.
+我们更喜欢大量小的贡献，而不是少量大的贡献。包含大量更改的贡献很难审核。这就是为什么我们希望每个贡献限制在单一语言和单一领域内。
 
-The filenames of sentences and tests are named like `<domain>_<intent>.yaml`. So if you are contributing to the cover domain, you would update the following files:
+句子和测试的文件名格式为 `<domain>_<intent>.yaml`。因此，如果您要为封面领域作贡献，您需要更新以下文件：
 
 - `sentences/<language>/cover_HassCoverOpen.yaml`
 - `sentences/<language>/cover_HassCoverClose.yaml`
 - `tests/<language>/cover_HassCoverOpen.yaml`
 - `tests/<language>/cover_HassCoverClose.yaml`
 
-## How to contribute
+## 如何贡献
 
-All contributions are done via Pull Requests on GitHub. Our recommended way is to use GitHub CodeSpaces. [Follow this tutorial to get started.](https://github.com/home-assistant/intents/blob/main/docs/codespace/README.md)
+所有贡献通过 GitHub 上的 Pull Requests 完成。我们推荐的方式是使用 GitHub CodeSpaces。 [按照此教程开始。](https://github.com/home-assistant/intents/blob/main/docs/codespace/README.md)
 
-Our repository has a lot of checks that you can use to make sure that your contributed sentences are valid. You can run them locally from VS Code using `terminal -> run task`.
+我们的仓库有很多检查，您可以用来确保您贡献的句子是有效的。您可以通过 VS Code 的 `terminal -> run task` 在本地运行它们。
 
-The checks will also run automatically when you create a Pull Request. Contributions cannot be accepted if the checks fail.
+当您创建 Pull Request 时，这些检查也会自动运行。如果检查失败，则无法接受贡献。
 
-## Adding a new language
+## 添加新语言
 
-New languages should be based on the output of `python3 -m script.intentfest add_language <language code> <language name>`, which generates an empty language directory with all the files needed for a new language.
+新语言应基于 `python3 -m script.intentfest add_language <language code> <language name>` 的输出，该命令生成一个包含新语言所需所有文件的空语言目录。
 
-Limit the first contribution to translations of the error sentences in `_common.yaml` and adding sentences and tests for the `homeassistant` domain.
+将第一次贡献限制为翻译 `_common.yaml` 中的错误句子以及为 `homeassistant` 领域添加句子和测试。
 
-If you are unable to run the add_language script locally, ask in Discord to have a maintainer run it for you.
+如果您无法在本地运行 add_language 脚本，请在 Discord 中请求维护者为您运行。

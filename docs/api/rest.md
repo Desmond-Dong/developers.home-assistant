@@ -3,18 +3,18 @@ title: "REST API"
 ---
 import ApiEndpoint from '@site/static/js/api_endpoint.jsx'
 
-Home Assistant provides a RESTful API on the same port as the web frontend (default port is port 8123).
+Home Assistant提供了一个RESTful API，使用与Web前端相同的端口（默认端口是8123）。
 
-If you are not using the [`frontend`](https://www.home-assistant.io/integrations/frontend/) in your setup then you need to add the [`api` integration](https://www.home-assistant.io/integrations/api/) to your `configuration.yaml` file.
+如果您在设置中不使用[`frontend`](https://www.home-assistant.io/integrations/frontend/)，则需要在您的`configuration.yaml`文件中添加[`api`集成](https://www.home-assistant.io/integrations/api/)。
 
-- `http://IP_ADDRESS:8123/` is an interface to control Home Assistant.
-- `http://IP_ADDRESS:8123/api/` is a RESTful API.
+- `http://IP_ADDRESS:8123/` 是一个控制Home Assistant的接口。
+- `http://IP_ADDRESS:8123/api/` 是一个RESTful API。
 
-The API accepts and returns only JSON encoded objects.
+API仅接受和返回JSON编码的对象。
 
-All API calls have to be accompanied by the header `Authorization: Bearer TOKEN`, where `TOKEN` is replaced by your unique access token. You obtain a token ("Long-Lived Access Token") by logging into the frontend using a web browser, and going to [your profile](https://www.home-assistant.io/docs/authentication/#your-account-profile) `http://IP_ADDRESS:8123/profile`. Be careful to copy the whole key.
+所有API调用必须伴随请求头`Authorization: Bearer TOKEN`，其中`TOKEN`替换为您的唯一访问令牌。您可以通过使用Web浏览器登录前端，并访问[您的个人资料](https://www.home-assistant.io/docs/authentication/#your-account-profile) `http://IP_ADDRESS:8123/profile` 来获取一个令牌（“长期访问令牌”）。请注意复制整个密钥。
 
-There are multiple ways to consume the Home Assistant Rest API. One is with `curl`:
+有多种方式可以使用Home Assistant REST API。一种是使用`curl`：
 
 ```shell
 curl \
@@ -23,7 +23,7 @@ curl \
   http://IP_ADDRESS:8123/ENDPOINT
 ```
 
-Another option is to use Python and the [Requests](https://requests.readthedocs.io/en/latest/) module.
+另一个选项是使用Python和[Requests](https://requests.readthedocs.io/en/latest/)模块。
 
 ```python
 from requests import get
@@ -38,7 +38,7 @@ response = get(url, headers=headers)
 print(response.text)
 ```
 
-Another option is to use the [RESTful Command integration](https://www.home-assistant.io/integrations/rest_command/) in a Home Assistant automation or script.
+另一个选项是在Home Assistant自动化或脚本中使用[RESTful Command集成](https://www.home-assistant.io/integrations/rest_command/)。
 
 ```yaml
 turn_light_on:
@@ -50,28 +50,28 @@ turn_light_on:
   payload: '{"state":"on"}'
 ```
 
-Successful calls will return status code 200 or 201. Other status codes that can return are:
+成功的调用将返回状态码200或201。其他可能返回的状态码包括：
 
-- 400 (Bad Request)
-- 401 (Unauthorized)
-- 404 (Not Found)
-- 405 (Method Not Allowed)
+- 400（错误请求）
+- 401（未经授权）
+- 404（未找到）
+- 405（方法不允许）
 
-### Actions
+### 操作
 
-The API supports the following actions:
+API支持以下操作：
 
 <ApiEndpoint path="/api/" method="get">
 
-Returns a message if the API is up and running.
+如果API正常运行，将返回一条消息。
 
 ```json
 {
-  "message": "API running."
+  "message": "API运行中。"
 }
 ```
 
-Sample `curl` command:
+示例`curl`命令：
 
 ```shell
 curl \
@@ -83,7 +83,7 @@ curl \
 
 <ApiEndpoint path="/api/config" method="get">
 
-Returns the current configuration as JSON.
+返回当前配置的JSON格式。
 
 ```json
 {
@@ -109,7 +109,7 @@ Returns the current configuration as JSON.
    "config_dir":"/home/ha/.homeassistant",
    "elevation":510,
    "latitude":45.8781529,
-   "location_name":"Home",
+   "location_name":"家",
    "longitude":8.458853651,
    "time_zone":"Europe/Zurich",
    "unit_system":{
@@ -126,7 +126,7 @@ Returns the current configuration as JSON.
 }
 ```
 
-Sample `curl` command:
+示例`curl`命令：
 
 ```shell
 curl \
@@ -138,7 +138,7 @@ curl \
 
 <ApiEndpoint path="/api/events" method="get">
 
-Returns an array of event objects. Each event object contains event name and listener count.
+返回事件对象数组。每个事件对象包含事件名称和监听器计数。
 
 ```json
 [
@@ -153,7 +153,7 @@ Returns an array of event objects. Each event object contains event name and lis
 ]
 ```
 
-Sample `curl` command:
+示例`curl`命令：
 
 ```shell
 curl \
@@ -165,7 +165,7 @@ curl \
 
 <ApiEndpoint path="/api/services" method="get">
 
-Returns an array of service objects. Each object contains the domain and which services it contains.
+返回服务对象数组。每个对象包含域以及所包含的服务。
 
 ```json
 [
@@ -185,7 +185,7 @@ Returns an array of service objects. Each object contains the domain and which s
 ]
 ```
 
-Sample `curl` command:
+示例`curl`命令：
 
 ```shell
 curl \
@@ -197,29 +197,29 @@ curl \
 
 <ApiEndpoint path="/api/history/period/<timestamp>" method="get">
 
-Returns an array of state changes in the past. Each object contains further details for the entities.
+返回过去状态变化的数组。每个对象包含实体的更多详细信息。
 
-The `<timestamp>` (`YYYY-MM-DDThh:mm:ssTZD`) is optional and defaults to 1 day before the time of the request. It determines the beginning of the period.
+`<timestamp>`（`YYYY-MM-DDThh:mm:ssTZD`）是可选的，默认为请求时间前1天。它确定了时间段的开始。
 
-The following parameters are **required**:
+以下参数是**必需的**：
 
-- `filter_entity_id=<entity_ids>` to filter on one or more entities - comma separated.
+- `filter_entity_id=<entity_ids>` 用于过滤一个或多个实体 - 以逗号分隔。
 
-You can pass the following optional GET parameters:
+您可以传递以下可选的GET参数：
 
-- `end_time=<timestamp>` to choose the end of the period in URL encoded format (defaults to 1 day).
-- `minimal_response` to only return `last_changed` and `state` for states other than the first and last state (much faster).
-- `no_attributes` to skip returning attributes from the database (much faster).
-- `significant_changes_only` to only return significant state changes.
+- `end_time=<timestamp>` 用于选择以URL编码格式指定的时间段结束时间（默认为1天）。
+- `minimal_response` 仅返回`last_changed`和状态，而不是第一个和最后一个状态的状态（速度更快）。
+- `no_attributes` 跳过从数据库返回属性（速度更快）。
+- `significant_changes_only` 仅返回显著的状态变化。
 
-Example without `minimal_response`
+不使用`minimal_response`的示例
 
 ```json
 [
     [
         {
             "attributes": {
-                "friendly_name": "Weather Temperature",
+                "friendly_name": "天气温度",
                 "unit_of_measurement": "\u00b0C"
             },
             "entity_id": "sensor.weather_temperature",
@@ -229,7 +229,7 @@ Example without `minimal_response`
         },
         {
             "attributes": {
-                "friendly_name": "Weather Temperature",
+                "friendly_name": "天气温度",
                 "unit_of_measurement": "\u00b0C"
             },
             "entity_id": "sensor.weather_temperature",
@@ -241,19 +241,19 @@ Example without `minimal_response`
 ]
 ```
 
-Example with `minimal_response`
+使用`minimal_response`的示例
 
 ```json
 [
     [
         {
             "attributes": {
-                "friendly_name": "Weather Temperature",
+                "friendly_name": "天气温度",
                 "unit_of_measurement": "\u00b0C"
             },
             "entity_id": "sensor.weather_temperature",
             "last_changed": "2016-02-06T22:15:00+00:00",
-            "last_updated": "2016-02-06T22:15:00+00:00",
+            "last_updated": "2016-02-06T22:50:30.529465+00:00",
             "state": "-3.9"
         },
         {
@@ -266,7 +266,7 @@ Example with `minimal_response`
         },
         {
             "attributes": {
-                "friendly_name": "Weather Temperature",
+                "friendly_name": "天气温度",
                 "unit_of_measurement": "\u00b0C"
             },
             "entity_id": "sensor.weather_temperature",
@@ -278,10 +278,10 @@ Example with `minimal_response`
 ]
 ```
 
-Sample `curl` commands:
+示例`curl`命令：
 
 ```shell
-# History of the entity 'sensor.temperature' of the past day (default)
+# 实体'sensor.temperature'过去一天的历史（默认）
 curl \
   -H "Authorization: Bearer TOKEN" \
   -H "Content-Type: application/json" \
@@ -289,7 +289,7 @@ curl \
 ```
 
 ```shell
-# Minimal history of the entity 'sensor.temperature' and 'sensor.kitchen_temperature' of the past day where the beginning date is set manually to 2023-09-04
+# 实体'sensor.temperature'和'sensor.kitchen_temperature'过去一天的最小历史，开始日期手动设置为2023-09-04
 curl \
   -H "Authorization: Bearer TOKEN" \
   -H "Content-Type: application/json" \
@@ -297,8 +297,8 @@ curl \
 ```
 
 ```shell
-# History of the entity 'sensor.temperature' during the period from 2021-09-04 to 2023-09-04
-# Using URL encoded timestamps
+# 实体'sensor.temperature'在2021-09-04到2023-09-04期间的历史
+# 使用URL编码时间戳
 curl \
   -H "Authorization: Bearer TOKEN" \
   -H "Content-Type: application/json" \
@@ -309,31 +309,31 @@ curl \
 
 <ApiEndpoint path="/api/logbook/<timestamp>" method="get">
 
-Returns an array of logbook entries.
+返回日志条目数组。
 
-The `<timestamp>` (`YYYY-MM-DDThh:mm:ssTZD`) is optional and defaults to 1 day before the time of the request. It determines the beginning of the period.
+`<timestamp>`（`YYYY-MM-DDThh:mm:ssTZD`）是可选的，默认为请求时间前1天。它确定了时间段的开始。
 
-You can pass the following optional GET parameters:
+您可以传递以下可选的GET参数：
 
-- `entity=<entity_id>` to filter on one entity.
-- `end_time=<timestamp>` to choose the end of period starting from the `<timestamp>` in URL encoded format.
+- `entity=<entity_id>` 用于过滤一个实体。
+- `end_time=<timestamp>` 用于选择从`<timestamp>`开始的时间段结束时间，以URL编码格式。
 
-Example
+示例
 ```json
 [
   {
 		"context_user_id": null,
 		"domain": "alarm_control_panel",
 		"entity_id": "alarm_control_panel.area_001",
-		"message": "changed to disarmed",
-		"name": "Security",
+		"message": "已更改为去武装",
+		"name": "安全",
 		"when": "2020-06-20T16:44:26.127295+00:00"
 	},
 	{
 		"context_user_id": null,
 		"domain": "homekit",
 		"entity_id": "alarm_control_panel.area_001",
-		"message": "send command alarm_arm_night for Security",
+		"message": "向安全发送命令alarm_arm_night",
 		"name": "HomeKit",
 		"when": "2020-06-21T02:59:05.759645+00:00"
 	},
@@ -341,14 +341,14 @@ Example
 		"context_user_id": null,
 		"domain": "alarm_control_panel",
 		"entity_id": "alarm_control_panel.area_001",
-		"message": "changed to armed_night",
-		"name": "Security",
+		"message": "已更改为armed_night",
+		"name": "安全",
 		"when": "2020-06-21T02:59:06.015463+00:00"
 	}
 ]
 ```
 
-Sample `curl` commands:
+示例`curl`命令：
 
 ```shell
 curl \
@@ -375,7 +375,7 @@ curl \
 
 <ApiEndpoint path="/api/states" method="get">
 
-Returns an array of state objects. Each state has the following attributes: `entity_id`, `state`, `last_changed` and `attributes`.
+返回状态对象数组。每个状态具有以下属性：`entity_id`、`state`、`last_changed`和`attributes`。
 
 ```json
 [
@@ -394,7 +394,7 @@ Returns an array of state objects. Each state has the following attributes: `ent
 ]
 ```
 
-Sample `curl` command:
+示例`curl`命令：
 
 ```shell
 curl \
@@ -406,14 +406,14 @@ curl \
 
 <ApiEndpoint path="/api/states/<entity_id>" method="get">
 
-Returns a state object for specified `entity_id`. Returns 404 if not found.
+返回指定`entity_id`的状态对象。未找到时返回404。
 
 ```json
 {
    "attributes":{
       "azimuth":336.34,
       "elevation":-17.67,
-      "friendly_name":"Sun",
+      "friendly_name":"太阳",
       "next_rising":"2016-05-31T03:39:14+00:00",
       "next_setting":"2016-05-31T19:16:42+00:00"
    },
@@ -424,7 +424,7 @@ Returns a state object for specified `entity_id`. Returns 404 if not found.
 }
 ```
 
-Sample `curl` command:
+示例`curl`命令：
 
 ```shell
 curl \
@@ -437,15 +437,15 @@ curl \
 
 <ApiEndpoint path="/api/error_log" method="get">
 
-Retrieve all errors logged during the current session of Home Assistant as a plaintext response.
+检索在当前Home Assistant会话中记录的所有错误，以纯文本响应。
 
 ```text
-15-12-20 11:02:50 homeassistant.components.recorder: Found unfinished sessions
-15-12-20 11:03:03 netdisco.ssdp: Error fetching description at http://192.168.1.1:8200/rootDesc.xml
-15-12-20 11:04:36 homeassistant.components.alexa: Received unknown intent HelpIntent
+15-12-20 11:02:50 homeassistant.components.recorder: 找到未完成的会话
+15-12-20 11:03:03 netdisco.ssdp: 在http://192.168.1.1:8200/rootDesc.xml获取描述时出错
+15-12-20 11:04:36 homeassistant.components.alexa: 收到未知意图HelpIntent
 ```
 
-Sample `curl` command:
+示例`curl`命令：
 
 ```shell
 curl \
@@ -458,9 +458,9 @@ curl \
 
 <ApiEndpoint path="/api/camera_proxy/<camera entity_id>" method="get">
 
-Returns the data (image) from the specified camera `entity_id`.
+返回指定相机`entity_id`的数据（图像）。
 
-Sample `curl` command:
+示例`curl`命令：
 
 ```shell
 curl \
@@ -475,22 +475,22 @@ curl \
 
 <ApiEndpoint path="/api/calendars" method="get">
 
-Returns the list of calendar entities.
+返回日历实体列表。
 
 ```json
 [
   {
     "entity_id": "calendar.holidays",
-    "name": "National Holidays",
+    "name": "国家假日",
   },
   {
     "entity_id": "calendar.personal",
-    "name": "Personal Calendar",
+    "name": "个人日历",
   }
 ]
 ```
 
-Sample `curl` command:
+示例`curl`命令：
 
 ```shell
 curl \
@@ -503,13 +503,13 @@ curl \
 
 <ApiEndpoint path="/api/calendars/<calendar entity_id>?start=<timestamp>&end=<timestamp>" method="get">
 
-Returns the list of [calendar events](/docs/core/entity/calendar/#calendarevent) for the specified calendar `entity_id` between the `start` and `end` times (exclusive).
+返回指定日历`entity_id`在`start`和`end`时间之间（不包括）的[日历事件](/docs/core/entity/calendar/#calendarevent)列表。
 
-The events in the response have a `start` and `end` that contain either `dateTime` or `date` for an all day event.
+响应中的事件具有`start`和`end`，包含`dateTime`或`date`用于全天事件。
 ```json
 [
   {
-    "summary": "Cinco de Mayo",
+    "summary": "五月五日",
     "start": {
       "date": "2022-05-05"
     },
@@ -518,20 +518,20 @@ The events in the response have a `start` and `end` that contain either `dateTim
     },
   },
   {
-    "summary": "Birthday Party",
+    "summary": "生日派对",
     "start": {
       "dateTime": "2022-05-06T20:00:00-07:00"
     },
     "end": {
       "dateTime": "2022-05-06T23:00:00-07:00"
     },
-    "description": "Don't forget to bring balloons",
-    "location": "Brian's House"
+    "description": "别忘了带气球",
+    "location": "布莱恩的家"
   }
 ]
 ```
 
-Sample `curl` command:
+示例`curl`命令：
 
 ```shell
 curl \
@@ -544,13 +544,13 @@ curl \
 
 <ApiEndpoint path="/api/states/<entity_id>" method="post">
 
-Updates or creates a state. You can create any state that you want, it does not have to be backed by an entity in Home Assistant.
+更新或创建状态。您可以创建任何您想要的状态，它不必由Home Assistant中的实体支持。
 
 :::info
-This endpoint sets the representation of a device within Home Assistant and will not communicate with the actual device. To communicate with the device, use the [POST /api/services/&lt;domain>/&lt;service>](#post-apiservicesltdomainltservice) endpoint.
+此端点设置Home Assistant中设备的表示，不会与实际设备通信。要与设备通信，请使用[POST /api/services/&lt;domain>/&lt;service>](#post-apiservicesltdomainltservice)端点。
 :::
 
-Expects a JSON object that has at least a state attribute:
+期望一个至少包含一个状态属性的JSON对象：
 
 ```json
 {
@@ -562,7 +562,7 @@ Expects a JSON object that has at least a state attribute:
 }
 ```
 
-The return code is 200 if the entity existed, 201 if the state of a new entity was set. A location header will be returned with the URL of the new resource. The response body will contain a JSON encoded State object.
+如果实体存在，返回代码为200，如果设置了新实体的状态，则返回201。将返回一个包含新资源URL的location头。响应体将包含JSON编码的状态对象。
 
 ```json
 {
@@ -577,7 +577,7 @@ The return code is 200 if the entity existed, 201 if the state of a new entity w
 }
 ```
 
-Sample `curl` command:
+示例`curl`命令：
 
 ```shell
 curl \
@@ -587,7 +587,7 @@ curl \
   http://localhost:8123/api/states/sensor.kitchen_temperature
 ```
 
-Sample `python` command using the [Requests](https://requests.readthedocs.io/en/master/) module:
+使用[Requests](https://requests.readthedocs.io/en/master/)模块的示例`python`命令：
 
 ```shell
 from requests import post
@@ -604,9 +604,9 @@ print(response.text)
 
 <ApiEndpoint path="/api/events/<event_type>" method="post">
 
-Fires an event with `event_type`. Please be mindful of the data structure as documented on our [Data Science portal](https://data.home-assistant.io/docs/events/#database-table).
+触发具有`event_type`的事件。请注意按照我们[数据科学门户](https://data.home-assistant.io/docs/events/#database-table)上文档定义的数据结构。
 
-You can pass an optional JSON object to be used as `event_data`.
+您可以传递一个可选的JSON对象作为`event_data`。
 
 ```json
 {
@@ -614,11 +614,11 @@ You can pass an optional JSON object to be used as `event_data`.
 }
 ```
 
-Returns a message if successful.
+如果成功，将返回一条消息。
 
 ```json
 {
-    "message": "Event download_file fired."
+    "message": "事件download_file已触发。"
 }
 ```
 
@@ -626,9 +626,9 @@ Returns a message if successful.
 
 <ApiEndpoint path="/api/services/<domain>/<service>" method="post">
 
-Calls a service within a specific domain. Will return when the service has been executed.
+在特定域内调用服务。将在服务执行后返回。
 
-You can pass an optional JSON object to be used as `service_data`.
+您可以传递一个可选的JSON对象作为`service_data`。
 
 ```json
 {
@@ -636,7 +636,7 @@ You can pass an optional JSON object to be used as `service_data`.
 }
 ```
 
-Returns a list of states that have changed while the service was being executed, and optionally response data, if supported by the service.
+返回在服务执行时发生变化的状态列表，并可选地返回响应数据（如果服务支持）。
 
 ```json
 [
@@ -656,10 +656,10 @@ Returns a list of states that have changed while the service was being executed,
 ```
 
 :::tip
-The result will include any states that changed while the service was being executed, even if their change was the result of something else happening in the system.
+结果将包括在服务执行期间发生变化的任何状态，即使它们的变化是由于系统中发生的其他事情。
 :::
 
-If the service you're calling supports returning response data, you can retrieve it by adding `?return_response` to the URL. Your response will then contain both the list of changed entities and the service response data.
+如果您调用的服务支持返回响应数据，您可以通过在URL中添加`?return_response`来检索它。您的响应将同时包含已更改的实体列表和服务响应数据。
 
 ```json
 {
@@ -701,14 +701,14 @@ If the service you're calling supports returning response data, you can retrieve
 ```
 
 :::note
-Some services return no data, others optionally return response data, and some always return response data.
+某些服务不返回数据，其他服务可选择性地返回响应数据，还有一些服务总是返回响应数据。
 
-If you don't use `return_response` when calling a service that must return data, the API will return a 400. Similarly, you will receive a 400 if you use `return_response` when calling a service that doesn't return any data.
+如果您在调用必须返回数据的服务时未使用`return_response`，API将返回400。同样，如果您在调用不返回任何数据的服务时使用`return_response`，您将收到400。
 :::
 
-Sample `curl` commands:
+示例`curl`命令：
 
-Turn the light on:
+打开灯：
 
 ```shell
 curl \
@@ -718,9 +718,9 @@ curl \
   http://localhost:8123/api/services/switch/turn_on
 ```
 
-Sample `python` command using the [Requests](https://requests.readthedocs.io/en/master/) module:
+使用[Requests](https://requests.readthedocs.io/en/master/)模块的示例`python`命令：
 
-Turn the light on:
+打开灯：
 
 ```shell
 from requests import post
@@ -733,7 +733,7 @@ response = post(url, headers=headers, json=data)
 print(response.text)
 ```
 
-Send an MQTT message:
+发送MQTT消息：
 
 ```shell
 curl \
@@ -743,7 +743,7 @@ curl \
   http://localhost:8123/api/services/mqtt/publish
 ```
 
-Retrieve daily weather forecast information:
+检索每日天气预报信息：
 
 ```shell
 curl \
@@ -757,50 +757,50 @@ curl \
 
 <ApiEndpoint path="/api/template" method="post">
 
-Render a Home Assistant template. [See template docs for more information.](https://www.home-assistant.io/docs/configuration/templating)
+渲染一个Home Assistant模板。[查看模板文档以获取更多信息。](https://www.home-assistant.io/docs/configuration/templating)
 
 ```json
 {
-    "template": "Paulus is at {{ states('device_tracker.paulus') }}!"
+    "template": "Paulus在{{ states('device_tracker.paulus') }}！"
 }
 ```
 
-Returns the rendered template in plain text.
+将以纯文本返回已渲染的模板。
 
 ```text
-Paulus is at work!
+Paulus在工作中！
 ```
 
-Sample `curl` command:
+示例`curl`命令：
 
 ```shell
 curl \
   -H "Authorization: Bearer TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"template": "It is {{ now() }}!"}' http://localhost:8123/api/template
+  -d '{"template": "现在是{{ now() }}！"}' http://localhost:8123/api/template
 ```
 
 </ApiEndpoint>
 
 <ApiEndpoint path="/api/config/core/check_config" method="post">
 
-Trigger a check of `configuration.yaml`. No additional data needs to be passed in with this request. Needs config integration enabled.
+触发对`configuration.yaml`的检查。此请求无需传递其他数据。需要启用配置集成。
 
-If the check is successful, the following will be returned:
+如果检查成功，将返回以下内容：
 
 ```json
 {
     "errors": null,
-    "result": "valid"
+    "result": "有效"
 }
 ```
 
-If the check fails, the errors attribute in the object will list what caused the check to fail. For example:
+如果检查失败，对象中的errors属性将列出导致检查失败的原因。例如：
 
 ```json
 {
-    "errors": "Integration not found: frontend:",
-    "result": "invalid"
+    "errors": "未找到集成：frontend：",
+    "result": "无效"
 }
 ```
 
@@ -808,11 +808,11 @@ If the check fails, the errors attribute in the object will list what caused the
 
 <ApiEndpoint path="/api/intent/handle" method="post">
 
-Handle an intent.
+处理一个意图。
 
-You must add `intent:` to your `configuration.yaml` to enable this endpoint.
+您必须在`configuration.yaml`中添加`intent:`以启用此端点。
 
-Sample `curl` command:
+示例`curl`命令：
 
 ```shell
 curl \
@@ -826,9 +826,9 @@ curl \
 
 <ApiEndpoint path="/api/states/<entity_id>" method="delete">
 
-Deletes an entity with the specified `entity_id`.
+删除指定`entity_id`的实体。
 
-Sample `curl` command:
+示例`curl`命令：
 
 ```shell
 curl \

@@ -1,5 +1,5 @@
 ---
-title: "Don't allow the same device or service to be able to be set up twice"
+title: "不允许同一设备或服务被设置两次"
 related_rules:
   - config-flow
   - test-before-configure
@@ -10,35 +10,35 @@ related_rules:
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+## 理由
 
-Since integrations are easy to set up with the UI, the user could accidentally set up the same device or service twice.
-This can lead to duplicated devices and entities with unique identifiers colliding, which has negative side effects.
-Any discovery flow must also ensure that a config entry is uniquely identifiable, as otherwise, it would discover devices already set up.
+由于集成通过用户界面设置很容易，用户可能会不小心将同一设备或服务设置两次。
+这可能导致重复的设备和实体具有唯一标识符冲突，从而产生负面影响。
+任何发现流程还必须确保配置条目是唯一可识别的，否则，它将发现已经设置的设备。
 
-To prevent this, we need to ensure that the user can only set up a device or service once.
+为了防止这种情况，我们需要确保用户只能设置一次设备或服务。
 
-## Example implementation
+## 示例实现
 
-There are 2 common ways an integration checks if it has already been set up.
-The first way is by assigning a `unique_id` to the configuration entry.
-The second way is by checking if pieces of the data in the configuration entry are unique.
+集成检查其是否已经被设置的常见方法有两种。
+第一种方法是通过将 `unique_id` 分配给配置条目。
+第二种方法是通过检查配置条目中数据片段是否唯一。
 
-The following examples show how to implement these checks in a config flow.
+以下示例展示了如何在配置流程中实现这些检查。
 
-### Unique identifier
+### 唯一标识符
 
-The first way is by assigning a `unique_id` to the configuration entry.
-This unique ID is unique per integration domain, so another integration can use the same unique ID without problems.
-Below is an example of a config flow that fetches the `unique_id` for the entered configuration with the client and checks if the `unique_id` already exists.
-If it does, the flow will abort and show an error message to the user.
+第一种方法是通过将 `unique_id` 分配给配置条目。
+此唯一 ID 在每个集成域中都是唯一的，因此另一个集成可以毫无问题地使用相同的唯一 ID。
+下面是一个配置流程的示例，它获取输入配置的 `unique_id` 并检查 `unique_id` 是否已经存在。
+如果存在，流程将中止并向用户显示错误消息。
 
 `config_flow.py`:
 ```python {16-17} showLineNumbers
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Handle a flow initialized by the user."""
+        """处理由用户初始化的流程。"""
         errors: dict[str, str] = {}
         if user_input:
             client = MyClient(user_input[CONF_HOST])
@@ -47,7 +47,7 @@ If it does, the flow will abort and show an error message to the user.
             except MyException:
                 errors["base"] = "cannot_connect"
             except Exception:  # noqa: BLE001
-                LOGGER.exception("Unexpected exception")
+                LOGGER.exception("意外异常")
                 errors["base"] = "unknown"
             else:
                 await self.async_set_unique_id(identifier)
@@ -63,18 +63,18 @@ If it does, the flow will abort and show an error message to the user.
         )
 ```
 
-### Unique data
+### 唯一数据
 
-The second way is by checking if pieces of the data in the configuration entry are unique.
-In the following example, the user fills in a host and a password.
-If a configuration entry already exists for the same host, the flow will abort and show an error message to the user.
+第二种方法是通过检查配置条目中数据片段是否唯一。
+在以下示例中，用户填写了主机和密码。
+如果已经存在相同主机的配置条目，则流程将中止并向用户显示错误消息。
 
 `config_flow.py`:
 ```python
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Handle a flow initialized by the user."""
+        """处理由用户初始化的流程。"""
         errors: dict[str, str] = {}
         if user_input:
             self._async_abort_entries_match({CONF_HOST: user_input[CONF_HOST]})
@@ -84,7 +84,7 @@ If a configuration entry already exists for the same host, the flow will abort a
             except MyException:
                 errors["base"] = "cannot_connect"
             except Exception:  # noqa: BLE001
-                LOGGER.exception("Unexpected exception")
+                LOGGER.exception("意外异常")
                 errors["base"] = "unknown"
             else:
                 return self.async_create_entry(
@@ -104,15 +104,15 @@ If a configuration entry already exists for the same host, the flow will abort a
 ```
 
 
-## Additional resources
+## 其他资源
 
-More information about config flows can be found in the [config flow documentation](/docs/config_entries_config_flow_handler).
-More information about the requirements for a unique identifier can be found in the [documentation](/docs/entity_registry_index#unique-id-requirements).
+有关配置流程的更多信息，请查看 [配置流程文档](/docs/config_entries_config_flow_handler)。
+有关唯一标识符要求的更多信息，请查看 [文档](/docs/entity_registry_index#unique-id-requirements)。
 
-## Exceptions
+## 例外情况
 
-There are no exceptions to this rule.
+此规则没有例外情况。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

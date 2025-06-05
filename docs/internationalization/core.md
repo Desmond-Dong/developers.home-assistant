@@ -1,192 +1,188 @@
 ---
-title: "Backend localization"
+title: "后端本地化"
 ---
 
-## Translation strings
+## 翻译字符串
 
-Platform translation strings are stored as JSON in the [core](https://github.com/home-assistant/core) repository. These files must be located adjacent to the component/platform they belong to. Components must have their own directory, and the file is simply named `strings.json` in that directory. This file will contain the different strings that will be translatable.
+平台翻译字符串以 JSON 格式存储在 [core](https://github.com/home-assistant/core) 仓库中。这些文件必须位于它们所属的组件/平台旁边。组件必须有自己的目录，文件名简单地命名为 `strings.json` 在该目录中。该文件将包含可翻译的不同字符串。
 
-The `strings.json` contains translations for different things that the integration offers that need to be translated.
+`strings.json` 包含了集成提供的需要翻译的不同内容的翻译。
 
-| Category            | Description                                       |
-| ------------------- | ------------------------------------------------- |
-| `title`             | Title of the integration.                         |
-| `common`            | Shared strings.                                   |
-| `config`            | Translations for the config flow.                 |
-| `device`            | Translations for devices.                         |
-| `device_automation` | Translations for device automations.              |
-| `entity`            | Translations for entities.                        |
-| `entity_component`  | Translations for entity components.               |
-| `exceptions`        | Translations for error messages.                  |
-| `issues`            | Translations for repairs issues.                  |
-| `options`           | Translations for the options flow.                |
-| `selectors`         | Selectors of the integration.                     |
-| `services`          | Service actions of the integration.               |
+| 类别                 | 描述                                            |
+| -------------------- | ----------------------------------------------- |
+| `title`              | 集成的标题。                                    |
+| `common`             | 共享字符串。                                    |
+| `config`             | 配置流程的翻译。                                |
+| `device`             | 设备的翻译。                                    |
+| `device_automation`  | 设备自动化的翻译。                              |
+| `entity`             | 实体的翻译。                                    |
+| `entity_component`   | 实体组件的翻译。                                |
+| `exceptions`         | 错误消息的翻译。                                |
+| `issues`             | 修复问题的翻译。                                |
+| `options`            | 选项流程的翻译。                                |
+| `selectors`          | 集成的选择器。                                  |
+| `services`           | 集成的服务操作。                                |
 
-### Title
+### 标题
 
-This category is just a string: the translation of the integration name. This key is optional and Home Assistant will fallback to the integration name if it is omitted. Only include this if it's not a product brand.
+该类别只是一个字符串：集成名称的翻译。此键是可选的，如果省略，则 Home Assistant 将回退到集成名称。仅在它不是产品品牌时包含此项。
 
-### Shared strings
+### 共享字符串
 
-Strings which are used more than once should be not be duplicated, instead references should be used to refer to the single definition. The reference can be any valid translation key. Optionally, shared strings can be placed in a `common` section.
+使用超过一次的字符串不应重复，而应使用引用来指代单一定义。引用可以是任何有效的翻译键。可选地，可以将共享字符串放置在 `common` 部分中。
 
 ```json
 {
   "common": {
-    "error_stale_api_key": "This message will be displayed if `stale_api_key` is returned as the abort reason."
+    "error_stale_api_key": "如果 `stale_api_key` 被返回为中止原因，将显示此消息。"
   },
   "config": {
     "error": {
-      "invalid_api_key": "This message will be displayed if `invalid_api_key` is returned as a flow error.",
-      // Reference to the common section
+      "invalid_api_key": "如果 `invalid_api_key` 被返回作为流程错误，将显示此消息。",
+      // 引用到公共部分
       "stale_api_key": "[%key:component::new_integration::common::error_stale_api_key%]"
     },
   }
   "options": {
     "error": {
-      // Reference to another section in the same file
+      // 引用同一文件中的另一个部分
       "invalid_api_key": "[%key:component::new_integration::config::error::invalid_api_key%]",
-      // Reference to the common section in the same file
+      // 引用同一文件中的公共部分
       "stale_api_key": "[%key:component::new_integration::common::error_stale_api_key%]"
     },
   }
 }
 ```
 
-### Config / Options / Subentry flows
+### 配置 / 选项 / 子条目流程
 
-The translation strings for the configuration flow handler, the option flow handler and config subentry handlers are defined under the `config`, `options` and `config_subentries` keys respectively.
+配置流处理器、选项流处理器和配置子条目处理器的翻译字符串分别在 `config`、`options` 和 `config_subentries` 键下定义。
 
-Note that `config_subentries` is a map of maps, where the keys are the subentry types supported by the integration.
+请注意 `config_subentries` 是一个映射的地图，其中键是集成支持的子条目类型。
 
-The example strings file below describes the different supported keys. Although the example shows translations for a configuration flow, the options and subentry flow translations follow the same format.
+下面的示例字符串文件描述了支持的不同键。尽管示例显示了配置流的翻译，选项和子条目流程的翻译遵循相同的格式。
 
 ```json
 {
   "config": {
-    // Optional. Title to show in list. Only will be rendered if placeholders required
-    "flow_title": "Discovered Device ({host})",
-    // Optional, only needed if the default translations in frontend are misleading
-    "entry_type": "Label explaining what an entry represents",
-    // Optional, only needed if the default translations in frontend are misleading
+    // 可选。显示在列表中的标题。仅在需要占位符时将被呈现
+    "flow_title": "发现的设备 ({host})",
+    // 可选，仅在前端默认翻译误导时需要
+    "entry_type": "解释条目表示的标签",
+    // 可选，仅在前端默认翻译误导时需要
     "initiate_flow": {
-        "reconfigure": "Menu or button label for starting a reconfigure flow",
-        "user": "Menu or button label for starting a user flow"
+        "reconfigure": "启动重新配置流程的菜单或按钮标签",
+        "user": "启动用户流程的菜单或按钮标签"
     },
     "step": {
       "init": {
-        // Optional. Will show the integration name if omitted
-        "title": "The user visible title of the `init` step.",
-        // Optional
-        "description": "Markdown that is shown with the step.",
+        // 可选。如果省略，将显示集成名称
+        "title": "用户可见的 `init` 步骤的标题。",
+        // 可选
+        "description": "与步骤一起显示的Markdown。",
         "data": {
-          "api_key": "The label for the `api_key` input field"
+          "api_key": "`api_key` 输入字段的标签"
         },
-        // Only needed if the form has sections
+        // 仅在表单有部分时需要
         "sections": {
           "auth_options": {
-            "name": "The label for the `auth_options` section"
+            "name": "`auth_options` 部分的标签"
           }
         }
       }
     },
     "error": {
-      "invalid_api_key": "This message will be displayed if `invalid_api_key` is returned as a flow error."
+      "invalid_api_key": "如果 `invalid_api_key` 被返回作为流程错误，将显示此消息。"
     },
     "abort": {
-      "stale_api_key": "This message will be displayed if `stale_api_key` is returned as the abort reason."
+      "stale_api_key": "如果 `stale_api_key` 被返回为中止原因，将显示此消息。"
     },
     "progress": {
-      "slow_task": "This message will be displayed if `slow_task` is returned as `progress_action` for `async_show_progress`."
+      "slow_task": "如果 `slow_task` 被返回作为 `progress_action` 用于 `async_show_progress`，将显示此消息。"
     }
   },
   "options": {
-    // Same format as for config flow
+    // 与配置流相同的格式
   },
   "config_subentries": {
     "subentry_type_1": {
-      // Same format as for config flow
+      // 与配置流相同的格式
     },
     "subentry_type_2": {
-      // Same format as for config flow
+      // 与配置流相同的格式
     }
   }
 }
 ```
 
-### Selectors
+### 选择器
 
-The translation for selectors are defined under the `selector` key. It supports option label translations for the selector `select`. The integration should set the `translation_key` on the selector select configuration. This allows translations on select selectors used in config and options flows. An example strings file below describes the different supported keys.
+选择器的翻译在 `selector` 键下定义。它支持选择器 `select` 的选项标签翻译。集成应在选择器选择配置上设置 `translation_key`。这允许配置和选项流程中用于选择器选择的翻译。下面的示例字符串文件描述了支持的不同键。
 
 ```json
 {
   "config": {
-    "flow_title": "Discovered Device ({host})",
+    "flow_title": "发现的设备 ({host})",
     "step": {
       "init": {
-        "title": "The user visible title of the `init` step.",
-        "description": "Markdown that is shown with the step.",
+        "title": "用户可见的 `init` 步骤的标题。",
+        "description": "与步骤一起显示的Markdown。",
         "data": {
-          // Config flow selector select with options that support translations
-          "set_ca_cert": "Broker certificate validation"
+          // 配置流选择器选择，具有支持翻译的选项
+          "set_ca_cert": "代理证书验证"
         }
       }
     }
   },
-  // Translations for selector select to be used in option and config flows
+  // 用于选项和配置流的选择器选择的翻译
   "selector": {
-    // The key is linked to the `translation_key` that needs to be set
-    // using the SelectSelectorConfig class
+    // 该键与需要设置的 `translation_key` 相关联
+    // 使用 SelectSelectorConfig 类
     "set_ca_cert": {
-      // The translations for the selector select option labels
+      // 选择器选择选项标签的翻译
       "options": {
-        "off": "Off",
-        "auto": "Auto",
-        "custom": "Custom"
+        "off": "关闭",
+        "auto": "自动",
+        "custom": "自定义"
       }
     }
   }
 }
-
 ```
 
-### Service Actions
+### 服务操作
 
-The translations of service actions strings are defined under the `services` key.
+服务操作字符串的翻译在 `services` 键下定义。
 
-It supports translating the `name` and `description` of each action,
-`name` and `description` of each action's `fields`, and the `name` and `description` of
-each collapsible section of fields.
+它支持翻译每个操作的 `name` 和 `description`，每个操作 `fields` 的 `name` 和 `description`，以及每个可折叠字段部分的 `name` 和 `description`。
 
-Note that also the translations for `name` and `description` of fields which
-are displayed in a collapsible section should be under the `fields` key.
+请注意，显示在可折叠节中的字段的 `name` 和 `description` 的翻译也应该在 `fields` 键下。
 
 ```json
 {
   "selector": {
     "fan_speed": {
       "options": {
-        "high": "High",
-        "low": "Low",
-        "medium": "Medium",
-        "off": "Off",
+        "high": "高",
+        "low": "低",
+        "medium": "中",
+        "off": "关闭"
       }
     }
   },
   "services": {
     "set_speed": {
-      "name": "Set speed",
-      "description": "Sets fan speed.",
+      "name": "设置速度",
+      "description": "设置风扇速度。",
       "fields": {
         "speed": {
-          "name": "Speed",
-          "description": "The speed to set."
+          "name": "速度",
+          "description": "要设置的速度。"
         }
       },
       "sections": {
         "advanced_fields": {
-          "name": "Advanced options"
+          "name": "高级选项"
         }
       }
     }
@@ -195,60 +191,57 @@ are displayed in a collapsible section should be under the `fields` key.
 ```
 
 :::note
-Service actions may use selectors in their `fields`. The translation of those selectors can be provided using the `translation_key` property on the selector definition in the services.yaml file. See the [Selectors](#selectors) section and the [Service action description](/docs/dev_101_services.md#service-action-descriptions) page for more information.
+服务操作可能在其 `fields` 中使用选择器。可以在 services.yaml 文件中的选择器定义中使用 `translation_key` 属性提供选择器的翻译。有关更多信息，请参见 [选择器](#selectors) 部分和 [服务操作描述](/docs/dev_101_services.md#service-action-descriptions) 页面。
 :::
 
-### Device automations
+### 设备自动化
 
-The translation strings for device automations are defined under the `device_automation` key. An example strings file below describes the different supported keys.
+设备自动化的翻译字符串在 `device_automation` 键下定义。下面的示例字符串文件描述了支持的不同键。
 
 ```json
 {
   "device_automation": {
-    // Translations for supported device actions
+    // 支持设备操作的翻译
     "action_type": {
-      "open": "Open {entity_name}"
-    }
-    // Translations for supported device conditions
+      "open": "打开 {entity_name}"
+    },
+    // 支持设备条件的翻译
     "condition_type": {
-      "is_open": "{entity_name} is open"
-    }
-    // Translations for supported device triggers
+      "is_open": "{entity_name} 是开着的"
+    },
+    // 支持设备触发器的翻译
     "trigger_type": {
-      "opened": "{entity_name} opened",
-      "remote_button_short_press": "\"{subtype}\" button pressed",
-    }
-    // Translations for device trigger sub types, typically used for names of buttons
+      "opened": "{entity_name} 被打开",
+      "remote_button_short_press": "\"{subtype}\" 按钮被按下",
+    },
+    // 设备触发器子类型的翻译，通常用于按钮名称
     "trigger_subtype": {
-      "button_1": "First button"
+      "button_1": "第一个按钮"
     }
   }
 }
-
 ```
 
-### Exceptions
+### 异常
 
-Localization is supported for `HomeAssistantError` and its subclasses.
-The translation strings for exceptions are defined under the `exception` key in a `strings.json` file. The example below describes the different supported keys.
+对 `HomeAssistantError` 及其子类支持本地化。在 `strings.json` 文件中，异常的翻译字符串在 `exception` 键下定义。下面的示例描述了支持的不同键。
 
 ```json
 {
   "exceptions": {
-    // Translations for known exceptions
+    // 已知异常的翻译
     "invalid_index": {
-      "message": "Invalid index selected, expected [0,1,2]. Got {index}"
+      "message": "选择的索引无效，期望 [0,1,2]。获得 {index}"
     }
   }
 }
-
 ```
 
-Example of raising an exception with localization during a service action call:
+在服务操作调用期间抛出带有本地化的异常的示例：
 
 ```python
 async def async_select_index(hass: HomeAssistant, index: int) -> None:
-    """Setup the config entry for my device."""
+    """为我的设备设置配置条目。"""
     try:
         check_index(index)
     except ValueError as exc:
@@ -261,88 +254,88 @@ async def async_select_index(hass: HomeAssistant, index: int) -> None:
         ) from exc
 ```
 
-### Issues
+### 问题
 
-The translation strings for repairs issues are defined under the `issues` key. An example strings file below describes the different supported keys.
+修复问题的翻译字符串在 `issues` 键下定义。下面的示例字符串文件描述了支持的不同键。
 
 ```json
 {
   "issues": {
     "cold_tea": {
-      // The title of the issue
-      "title": "The tea is cold",
-      // Translations for a fixable issue's repair flow, defined in the same way as translation for a configuration flow.
-      // Exactly one of `fix_flow` or `description. must be present.
+      // 问题的标题
+      "title": "茶是冷的",
+      // 可修复问题的修复流程的翻译，按照配置流的翻译相同的方式定义。
+      // 必须恰好存在 `fix_flow` 或 `description` 之一。
       "fix_flow": {
         "abort": {
-          "not_tea_time": "Can not re-heat the tea at this time"
+          "not_tea_time": "此时无法重新加热茶"
         }
       }
     },
     "unfixable_problem": {
-      "title": "This is not a fixable problem",
-      // Description of the issue, exactly one of `fix_flow` or `description. must be present.
-      "description": "This issue can't be fixed by a flow."
+      "title": "这不是一个可修复的问题",
+      // 问题的描述，必须恰好存在 `fix_flow` 或 `description` 之一。
+      "description": "这个问题无法通过流程修复。"
     }
   }
 }
 ```
 
-### Devices
+### 设备
 
-#### Name of devices
-Integrations can provide translations for names of its devices. To do this, provide a `device` object, that contains translations of the names and set the device's `translation_key` to a key under a domain in the `device` object.
-If the device's `translation_key` is not `None`, the `name` which is either set in an entity's `device_info` property or passed to `DeviceRegistry.async_get_or_create`, will be ignored. If the `device` object does not provide a translated name for the specified `translation_key`, the `translation_key` will be used as device name.
+#### 设备名称
+集成可以提供其设备名称的翻译。为此，提供一个 `device` 对象，包含名称的翻译，并将设备的 `translation_key` 设置为 `device` 对象下的一个键。
+如果设备的 `translation_key` 不为 `None`，则在实体的 `device_info` 属性中设置的名称或传递给 `DeviceRegistry.async_get_or_create` 的名称将被忽略。如果设备对象未提供指定 `translation_key` 的翻译名称，则将使用 `translation_key` 作为设备名称。
 
-It is also supported to use placeholders within the translation. If a placeholder is defined within the translation string, the device's `translation_placeholders` has to be set accordingly.
+在翻译中也支持使用占位符。如果在翻译字符串中定义了占位符，则设备的 `translation_placeholders` 也必须相应设置。
 
-The following example `strings.json` is for a device with its `translation_key` set to `power_strip`:
+以下示例 `strings.json` 是一个设备，其 `translation_key` 设置为 `power_strip`：
 ```json
 {
   "device": {
     "power_strip": {
-      "name": "Power strip"
+      "name": "排插"
     }
   }
 }
 ```
 
-The following example `strings.json` is for a device with its `translation_key` property set to `n_ch_power_strip` and a placeholder `number_of_sockets`:
+以下示例 `strings.json` 是一个设备，其 `translation_key` 属性设置为 `n_ch_power_strip` 并带有占位符 `number_of_sockets`：
 
 ```json
 {
   "device": {
     "n_ch_power_strip": {
-      "name": "Power strip with {number_of_sockets} sockets"
+      "name": "带有 {number_of_sockets} 个插座的排插"
     }
   }
 }
 ```
 
-### Entities
+### 实体
 
-#### Name of entities
-Integrations can provide translations for names of its entities. To do this, provide an `entity` object, that contains translations of the names and set the entity's `translation_key` property to a key under a domain in the `entity` object.
-If the entity's `translation_key` property is not `None` and the `entity` object provides a translated name, `EntityDescription.name` will be ignored.
+#### 实体名称
+集成可以提供其实体名称的翻译。为此，提供一个 `entity` 对象，包含名称的翻译，并将实体的 `translation_key` 属性设置为 `entity` 对象下的一个键。
+如果实体的 `translation_key` 属性不为 `None` 且 `entity` 对象提供了翻译名称，则将忽略 `EntityDescription.name`。
 
-Entity components, like `sensor`, already have existing translations available that can be reused by referencing those. This includes common translations for entity names based on a device class. For example, it already has translations available for a "Temperature" sensor that can be referenced. Referencing existing translations is preferred, as it prevents translating the same thing multiple times.
+实体组件，例如 `sensor`，已经存在可重用的翻译，可以通过引用那些翻译来使用。这包括基于设备类别的实体名称的通用翻译。例如，它已经为 "温度传感器" 提供了可引用的翻译。优先引用现有翻译，因为这可以防止多次翻译相同内容。
 
-It is also supported to use placeholders within the translation. If a placeholder is defined within the translation string, the entity's `translation_placeholders` property has to be set accordingly.
+在翻译中也支持使用占位符。如果在翻译字符串中定义了占位符，则实体的 `translation_placeholders` 属性也必须相应设置。
 
-The following example `strings.json` is for a `sensor` entity with its `translation_key` property set to `thermostat_mode`:
+以下示例 `strings.json` 是一个 `sensor` 实体，其 `translation_key` 属性设置为 `thermostat_mode`：
 ```json
 {
   "entity": {
     "sensor": {
       "thermostat_mode": {
-        "name": "Thermostat mode"
+        "name": "温控模式"
       }
     }
   }
 }
 ```
 
-The following example `strings.json` is for a `sensor` entity with its `translation_key` property set to `temperature_sensor` where a shared translation provided by the `sensor` integration is used:
+以下示例 `strings.json` 是一个 `sensor` 实体，其 `translation_key` 属性设置为 `temperature_sensor`，并使用 `sensor` 集成提供的共享翻译：
 
 ```json
 {
@@ -356,25 +349,25 @@ The following example `strings.json` is for a `sensor` entity with its `translat
 }
 ```
 
-The following example `strings.json` is for a `sensor` entity with its `translation_key` property set to `distance` and a placeholder `tracked_device`:
+以下示例 `strings.json` 是一个 `sensor` 实体，其 `translation_key` 属性设置为 `distance` 并带有占位符 `tracked_device`：
 
 ```json
 {
   "entity": {
     "sensor": {
       "distance": {
-        "name": "Distance of {tracked_device}"
+        "name": "{tracked_device} 的距离"
       }
     }
   }
 }
 ```
 
-#### State of entities
+#### 实体状态
 
-Integrations can provide translations for states of its entities under other integrations like sensor if the base entity component does not provide translations, or if the translation provided by the base entity component do not match the integration's entity. To do this, provide an `entity` object, that contains translations for states and set the entity's `translation_key` property to a key under a domain in the `entity` object.
+集成可以在其他集成（如传感器）下提供其实体状态的翻译，如果基础实体组件未提供翻译，或者如果基础实体组件提供的翻译与集成的实体不匹配。为此，提供一个 `entity` 对象，包含状态的翻译，并将实体的 `translation_key` 属性设置为 `entity` 对象下的一个键。
 
-To differentiate entities and their translations, provide different translation keys. The following example `strings.json` is for a Moon domain `sensor` entity with its `translation_key` property set to `phase`:
+为了区分实体及其翻译，提供不同的翻译键。以下示例 `strings.json` 是一个月亮域 `sensor` 实体，其 `translation_key` 属性设置为 `phase`：
 
 ```json
 {
@@ -382,10 +375,10 @@ To differentiate entities and their translations, provide different translation 
     "sensor": {
       "phase": {
         "state": {
-          "new_moon": "New moon",
-          "first_quarter": "First quarter",
-          "full_moon": "Full moon",
-          "last_quarter": "Last quarter"
+          "new_moon": "新月",
+          "first_quarter": "上弦月",
+          "full_moon": "满月",
+          "last_quarter": "下弦月"
         }
       }
     }
@@ -393,12 +386,11 @@ To differentiate entities and their translations, provide different translation 
 }
 ```
 
-#### Entity state attributes
+#### 实体状态属性
 
-Integrations can provide translations for its entities' state attributes under other integrations like sensor if the base entity component does not provide translations, or if the translation provided by the base entity component do not match the integration's entity. To do this, provide an `entity` object, that contains translations for entity state attributes and set the entity's `translation_key` property to a key under a domain in the `entity` object.
+集成可以在其他集成（如传感器）下提供其实体状态属性的翻译，如果基础实体组件未提供翻译，或者如果基础实体组件提供的翻译与集成的实体不匹配。为此，提供一个 `entity` 对象，包含实体状态属性的翻译，并将实体的 `translation_key` 属性设置为 `entity` 对象下的一个键。
 
-To differentiate entities and their translations, provide different translation keys. The following example `strings.json` is for a `demo` domain `climate` entity with its `translation_key` property set to `ubercool`, which has custom `fan_mode` and `swing_mode` settings:
-
+为了区分实体及其翻译，提供不同的翻译键。以下示例 `strings.json` 是一个 `demo` 域 `climate` 实体，其 `translation_key` 属性设置为 `ubercool`，具有自定义的 `fan_mode` 和 `swing_mode` 设置：
 
 ```json
 {
@@ -408,10 +400,10 @@ To differentiate entities and their translations, provide different translation 
         "state_attributes": {
           "fan_mode": {
             "state": {
-              "auto_high": "Auto High",
-              "auto_low": "Auto Low",
-              "on_high": "On High",
-              "on_low": "On Low"
+              "auto_high": "自动高级",
+              "auto_low": "自动低级",
+              "on_high": "开启高级",
+              "on_low": "开启低级"
             }
           },
           "swing_mode": {
@@ -419,8 +411,8 @@ To differentiate entities and their translations, provide different translation 
               "1": "1",
               "2": "2",
               "3": "3",
-              "auto": "Auto",
-              "off": "Off"
+              "auto": "自动",
+              "off": "关闭"
             }
           }
         }
@@ -429,23 +421,24 @@ To differentiate entities and their translations, provide different translation 
   }
 }
 ```
-#### State of entity components
 
-If your integration provides entities under its domain, you will want to translate the states. You do this by offering a `states` object under the `entity_component` dictionary, that contains translations for states with different device classes. The key `_` is used for entities without a device class.
+#### 实体组件的状态
+
+如果您的集成在其域下提供实体，您将希望翻译状态。这可以通过在 `entity_component` 字典下提供一个 `states` 对象来实现，该对象包含不同设备类别的状态翻译。键 `_` 用于没有设备类别的实体。
 
 ```json
 {
   "entity_component": {
     "problem": {
       "state": {
-        "off": "OK",
-        "on": "Problem"
+        "off": "正常",
+        "on": "有问题"
       }
     },
     "safety": {
       "state": {
-        "off": "Safe",
-        "on": "Unsafe"
+        "off": "安全",
+        "on": "不安全"
       }
     },
     "_": {
@@ -458,35 +451,35 @@ If your integration provides entities under its domain, you will want to transla
 }
 ```
 
-#### Entity attribute name and state of entity components
+#### 实体属性名称和实体组件的状态
 
 :::info
-Translation of entity attribute names and states also requires frontend support, which is currently only available for `climate` entities.
+实体属性名称和状态的翻译也需要前端支持，目前仅对 `climate` 实体可用。
 :::
 
-If your integration provides entities under its domain, you will want to translate the name of entity attributes and also entity state attributes. You do this by offering a `state_attributes` object in the `entity_component` dictionary, that contains translations for entity attributes with different device classes. The key `_` is used for entities without a device class.
+如果您的集成在其域下提供实体，您将希望翻译实体属性和实体状态属性的名称。为此，在 `entity_component` 字典中提供一个 `state_attributes` 对象，该对象包含不同设备类别的实体属性的翻译。键 `_` 用于没有设备类别的实体。
 
 ```json
 {
   "entity_component": {
     "_": {
       "state_attributes": {
-        "aux_heat": { "name": "Aux heat" },
-        "current_humidity": { "name": "Current humidity" },
-        "current_temperature": { "name": "Current temperature" },
+        "aux_heat": { "name": "辅助加热" },
+        "current_humidity": { "name": "当前湿度" },
+        "current_temperature": { "name": "当前温度" },
         "fan_mode": {
-          "name": "Fan mode",
+          "name": "风扇模式",
           "state": {
             "off": "[%key:common::state::off%]",
             "on": "[%key:common::state::on%]",
-            "auto": "Auto",
-            "low": "Low",
-            "medium": "Medium",
-            "high": "High",
-            "top": "Top",
-            "middle": "Middle",
-            "focus": "Focus",
-            "diffuse": "Diffuse"
+            "auto": "自动",
+            "low": "低",
+            "medium": "中",
+            "high": "高",
+            "top": "上",
+            "middle": "中",
+            "focus": "集聚",
+            "diffuse": "散布"
           }
         }
       }
@@ -495,37 +488,37 @@ If your integration provides entities under its domain, you will want to transla
 }
 ```
 
-#### Unit of measurement of entities
+#### 实体的测量单位
 
-Integrations can provide translations for units of measurement of its entities. To do this, provide an `entity` object, that contains translations for the units and set the entity's `translation_key` property to a key under a domain in the `entity` object.
-If the entity's `translation_key` property is not `None` and the `entity` object provides a translated unit of measurement, `SensorEntityDescription.native_unit_of_measurement` or `NumberEntityDescription.native_unit_of_measurement` should not be defined.
+集成可以提供其实体的测量单位的翻译。为此，提供一个 `entity` 对象，包含单位的翻译，并将实体的 `translation_key` 属性设置为 `entity` 对象下的一个键。
+如果实体的 `translation_key` 属性不为 `None`，而且 `entity` 对象提供了翻译的测量单位，则不应定义 `SensorEntityDescription.native_unit_of_measurement` 或 `NumberEntityDescription.native_unit_of_measurement`。
 
-The following example `strings.json` is for a `sensor` entity with its `translation_key` property set to `goal`:
+以下示例 `strings.json` 是一个 `sensor` 实体，其 `translation_key` 属性设置为 `goal`：
 ```json
 {
   "entity": {
     "sensor": {
       "goal": {
-        "unit_of_measurement": "steps"
+        "unit_of_measurement": "步数"
       }
     }
   }
 }
 ```
 
-## Test translations
+## 测试翻译
 
-In order to test changes to translation files, the translation strings must be compiled into Home Assistant’s translation directories by running the following script:
+为了测试翻译文件的更改，必须通过运行以下脚本将翻译字符串编译到 Home Assistant 的翻译目录中：
 
 ```shell
 python3 -m script.translations develop
 ```
 
-If translations do not show, clear the browser cache (cmd + R (for MacOS), ctrl + F5 (Windows and Linux))
+如果翻译没有显示，清除浏览器缓存（MacOS 上为 cmd + R，Windows 和 Linux 上为 ctrl + F5）
 
-## Introducing new strings
+## 引入新字符串
 
-To introduce new strings, add them to `strings.json` or to a platform strings file. Try to use as many references to common strings as possible. Common strings live in `homeassistant/strings.json`. You can refer to those translations using references. For example:
+要引入新字符串，添加到 `strings.json` 或平台字符串文件中。尽量尽可能多地使用对公共字符串的引用。公共字符串位于 `homeassistant/strings.json` 中。您可以通过引用这些翻译来引用它们。例如：
 
 ```json
 {
@@ -537,4 +530,4 @@ To introduce new strings, add them to `strings.json` or to a platform strings fi
 }
 ```
 
-After the pull request with the strings file is merged into the `dev` branch, the strings will be automatically uploaded to Lokalise, where contributors can submit translations. The translated strings in Lokalise will be periodically pulled in to the core repository.
+在与字符串文件的拉取请求合并到 `dev` 分支后，字符串将自动上传到 Lokalise，贡献者可以提交翻译。Lokalise 中的翻译字符串会定期拉取到核心仓库中。

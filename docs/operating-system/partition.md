@@ -1,15 +1,15 @@
 ---
-title: "Partitioning"
-sidebar_label: Partitions
+title: "分区"
+sidebar_label: 分区
 ---
 
-The Home Assistant Operating System (HAOS) partition layout is a bit different than what is typically used on a Linux system.
+Home Assistant 操作系统 (HAOS) 的分区布局与通常在 Linux 系统上使用的略有不同。
 
-## Partition table
+## 分区表
 
-HAOS prefers GPT (GUID Partition Table) whenever possible. Boot ROMs of some SoCs don't support GPT, in that case a hybrid GPT/MBR is used if possible and legacy MBR otherwise (see also [Metadata](board-metadata.md) documentation).
+HAOS 尽可能使用 GPT（GUID 分区表）。一些 SoC 的启动 ROM 不支持 GPT，在这种情况下，如果可能的话将使用混合 GPT/MBR，否则使用传统的 MBR（另见 [元数据](board-metadata.md) 文档）。
 
-## Partitions
+## 分区
 
 ```text
 -------------------------
@@ -38,18 +38,18 @@ HAOS prefers GPT (GUID Partition Table) whenever possible. Boot ROMs of some SoC
 -------------------------
 ```
 
-### System partitions
+### 系统分区
 
-The boot partition is typically a FAT partition and contains system-specific content to enable booting. On UEFI systems this is the EFI system partition containing GRUB binaries, configuration and its environment file.
+启动分区通常是 FAT 分区，包含特定于系统的内容以支持引导。在 UEFI 系统上，这是包含 GRUB 二进制文件、配置及其环境文件的 EFI 系统分区。
 
-Next two versions of the Linux kernel and the main operating systems are stored (Kernel A/B and System A/B, a total of 4 partitions). This allows the system to fall back to the previous release in case booting on the new release fails (A/B update method). The system partitions are only written to during an update and are read-only under regular operation.
+接下来将存储两个版本的 Linux 内核及主要操作系统（Kernel A/B 和 System A/B，共计 4 个分区）。这样允许系统在新版本引导失败时回退到以前的版本（A/B 更新方法）。系统分区仅在更新期间写入，在常规操作下为只读。
 
-The overlay partition is used to store certain operating system level settings (e.g. networking settings). The file system label `hassos-overlay` is used to find and mount this partition.
+覆盖分区用于存储某些操作系统级别的设置（例如网络设置）。文件系统标签 `hassos-overlay` 用于查找和挂载该分区。
 
-### Data partition
+### 数据分区
 
-The data partition is the main partition containing all containers (Supervisor/Core/Plug-Ins and Add-Ons) as well as user data. It has by far the most I/O operations and hence benefits most if mounted on a fast storage (e.g. via the data disk feature). It is mounted to `/mnt/data`, and some subdirectories are bind mounted to other places (like `/var/lib/docker`). The file system label `hassos-data` is used to find and mount this partition.
+数据分区是包含所有容器（Supervisor/Core/插件和附加组件）以及用户数据的主要分区。它的 I/O 操作量最大，因此如果挂载在快速存储上（例如通过数据磁盘功能）将获得最大的效益。它挂载到 `/mnt/data`，并将某些子目录绑定挂载到其他位置（如 `/var/lib/docker`）。文件系统标签 `hassos-data` 用于查找和挂载该分区。
 
-On a fresh installation, the data partition contains the latest version (at build time) of the Supervisor and its Plug-Ins. There is no Home Assistant Core pre-installed, instead a smaller landing page. The Supervisor downloads the latest version of Home Assistant Core on first boot. This makes sure that users start with the latest version of Home Assistant Core after starting the HAOS the first time.
+在新的安装中，数据分区包含 Supervisor 及其插件的最新版本（在构建时）。没有预安装 Home Assistant Core，而是一个较小的登录页面。Supervisor 会在首次引导时下载 Home Assistant Core 的最新版本。这确保用户在第一次启动 HAOS 后启动时使用最新版本的 Home Assistant Core。
 
-The data disk feature makes use of the fact that HAOS uses the `hassos-data` label: The feature prepares the disk by partitioning it and creating a file system with the label `hassos-data-external`. On reboot the file system utility `dumpe2fs` is used to move all data from the existing `hassos-data` partition to the new partition. Finally the file system label of the existing data partition is changed to `hassos-data-old` (to avoid getting mounted again) and the new data partition on the data disk to `hassos-data`.
+数据磁盘功能利用 HAOS 使用 `hassos-data` 标签的事实：该功能通过对磁盘进行分区并创建带有 `hassos-data-external` 标签的文件系统来准备磁盘。重启时，文件系统实用程序 `dumpe2fs` 用于将所有数据从现有的 `hassos-data` 分区移动到新分区。最后，现有数据分区的文件系统标签更改为 `hassos-data-old`（以避免再次挂载），而数据磁盘上的新数据分区改为 `hassos-data`。

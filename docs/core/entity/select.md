@@ -1,40 +1,38 @@
 ---
-title: Select entity
-sidebar_label: Select
+title: 选择实体
+sidebar_label: 选择
 ---
 
-A `select` is an entity that allows the user to select an option from a list of limited options provided by the integration. Derive entity platforms from [`homeassistant.components.select.SelectEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/select/__init__.py)
+`select` 是一种实体，允许用户从集成提供的有限选项列表中选择一个选项。从 [`homeassistant.components.select.SelectEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/select/__init__.py) 派生实体平台。
 
-This entity should only be used in cases there is no better fitting option available.
-For example, a bulb can have user selectable light effects. While that could be done using this `select` entity, it should really be part of the `light` entity, which already supports light effects.
+仅在没有更合适的选项可用时，才应使用此实体。
+例如，灯泡可以具有用户可选择的灯光效果。虽然可以使用此 `select` 实体来实现，但它实际上应该是 `light` 实体的一部分，因为 `light` 实体已经支持灯光效果。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应始终仅从内存中返回信息，而不进行 I/O（如网络请求）。实现 `update()` 或 `async_update()` 来获取数据。
 :::
 
-| Name | Type | Default | Description
-| ---- | ---- | ------- | -----------
-| current_option | str | None | The current select option
-| options | list | **Required** | A list of available options as strings
+| 名称 | 类型 | 默认值 | 描述 |
+| ---- | ---- | ------- | ----------- |
+| current_option | str | None | 当前选择的选项 |
+| options | list | **必需** | 可用选项的字符串列表 |
 
-Other properties that are common to all entities such as `icon`, `unit_of_measurement`, `name` etc are also applicable.
+其他所有实体共有的属性，如 `icon`、`unit_of_measurement`、`name` 等，也适用。
 
-## Methods
+## 方法
 
-### Select option
+### 选择选项
 
-Called when the user or automation wants to change the current selected option.
+当用户或自动化想要更改当前选择的选项时调用。
 
 ```python
 class MySelect(SelectEntity):
-    # Implement one of these methods.
+    # 实现这些方法中的一个。
 
     def select_option(self, option: str) -> None:
-        """Change the selected option."""
+        """更改所选选项。"""
 
     async def async_select_option(self, option: str) -> None:
-        """Change the selected option."""
-
-```
+        """更改所选选项。"""

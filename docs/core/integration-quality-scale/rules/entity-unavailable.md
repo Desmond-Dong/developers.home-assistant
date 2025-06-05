@@ -1,35 +1,35 @@
 ---
-title: "Mark entity unavailable if appropriate"
+title: "如果合适则标记实体为不可用"
 related_rules:
   - log-when-unavailable
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+## 理由
 
-If we can't fetch data from a device or service, we should mark it as unavailable.
-We do this to reflect a better state, than just showing the last known state.
+如果我们无法从设备或服务中获取数据，我们应该将其标记为不可用。
+这样做是为了反映出更好的状态，而不仅仅是显示最后已知的状态。
 
-If we can successfully fetch data but are temporarily missing a few pieces of data, we should mark the entity state as unknown instead.
+如果我们能够成功获取数据，但暂时缺少一些数据，我们应该将实体状态标记为未知。
 
-## Example implementation
+## 示例实现
 
-Since there are many different ways this can be implemented, we will only provide the example for integrations using the coordinator and for entities updating via `async_update`.
+由于可以实现此功能的方式有很多，我们将只提供使用协调器的集成的示例，以及通过 `async_update` 更新的实体。
 
-### Example for integrations using the coordinator
+### 使用协调器的集成示例
 
-In this example, we have an integration that uses a coordinator to fetch data.
-The coordinator, when combined with a `CoordinatorEntity` has the logic for availability built-in.
-If there is any extra availability logic needed, be sure to incorporate the `super().available` value.
-In the sensor in the example, we mark the entity unavailable when the update fails, or when the data for that device is missing.
+在这个例子中，我们有一个使用协调器来获取数据的集成。
+协调器在与 `CoordinatorEntity` 结合时，其可用性逻辑是内置的。
+如果需要任何额外的可用性逻辑，请务必结合 `super().available` 值。
+在示例中的传感器中，当更新失败或该设备的数据缺失时，我们将实体标记为不可用。
 
 `coordinator.py`
 ```python {18} showLineNumbers
 class MyCoordinator(DataUpdateCoordinator[dict[str, MyDevice]]):
-    """Class to manage fetching data."""
+    """用于管理数据获取的类。"""
 
     def __init__(self, hass: HomeAssistant, client: MyClient) -> None:
-        """Initialize coordinator."""
+        """初始化协调器。"""
         super().__init__(
             hass,
             logger=LOGGER,
@@ -42,7 +42,7 @@ class MyCoordinator(DataUpdateCoordinator[dict[str, MyDevice]]):
         try:
             return await self.client.get_data()
         except MyException as ex:
-            raise UpdateFailed(f"The service is unavailable: {ex}")
+            raise UpdateFailed(f"服务不可用: {ex}")
 ```
 
 `sensor.py`
@@ -51,15 +51,15 @@ class MySensor(SensorEntity, CoordinatorEntity[MyCoordinator]):
 
     @property
     def available(self) -> bool:
-        """Return True if entity is available."""
+        """返回实体是否可用的 True 或 False。"""
         return super().available and self.identifier in self.coordinator.data
 ```
 
-### Example for entities updating via `async_update`
+### 通过 `async_update` 更新的实体示例
 
-In this example, we have a sensor that updates its value via `async_update`.
-If we can't fetch the data, we set the entity as unavailable using shorthand notation.
-If we can fetch the data, we set the entity as available and update the value.
+在这个例子中，我们有一个通过 `async_update` 更新其值的传感器。
+如果我们无法获取数据，我们使用简写标注将实体设置为不可用。
+如果我们能够获取数据，我们将实体设置为可用并更新其值。
 
 `sensor.py`
 ```python {7,9} showLineNumbers
@@ -75,14 +75,14 @@ class MySensor(SensorEntity):
             self._attr_native_value = data.value
 ```
 
-## Additional resources
+## 其他资源
 
-For more information about managing integration state, see the [documentation](/docs/integration_fetching_data).
+有关管理集成状态的更多信息，请参阅 [文档](/docs/integration_fetching_data)。
 
-## Exceptions
+## 异常
 
-There are no exceptions to this rule.
+该规则没有例外。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

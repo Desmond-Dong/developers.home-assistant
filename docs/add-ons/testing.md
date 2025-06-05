@@ -1,28 +1,28 @@
 ---
-title: "Local add-on testing"
+title: "本地插件测试"
 ---
 
-The fastest and recommended way to develop add-ons is using a local Visual Studio Code devcontainer. We maintain a [devcontainer for this purpose](https://github.com/home-assistant/devcontainer) which is used in all our add-on repositories. This devcontainer setup for VS Code runs Supervisor and Home Assistant, with all of the add-ons mapped as local add-ons inside, making it simple for add-on developers on Windows, Mac and Linux desktop OS-es.
+开发插件的最快且推荐的方法是使用本地的 Visual Studio Code 开发容器。我们维护了一个 [用于此目的的开发容器](https://github.com/home-assistant/devcontainer)，该容器在我们所有的插件库中使用。此 VS Code 的开发容器设置运行 Supervisor 和 Home Assistant，并将所有插件作为本地插件映射在其中，使得 Windows、Mac 和 Linux 桌面操作系统上的插件开发者能够简单使用。
 
-- Follow the instructions to download and install the [Remote Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) VS Code extension.
-- Copy the [`devcontainer.json`](https://github.com/home-assistant/devcontainer/raw/main/addons/devcontainer.json) file to `.devcontainer/devcontainer.json` in your repository.
-- Copy the [`tasks.json`](https://github.com/home-assistant/devcontainer/raw/main/addons/tasks.json) file to `.vscode/tasks.json` in your repository.
-- Open the root folder inside VS Code, and when prompted re-open the window inside the container (or, from the Command Palette, select 'Rebuild and Reopen in Container').
-- When VS Code has opened your folder in the container (which can take some time for the first run) you'll need to run the task (Terminal -> Run Task) 'Start Home Assistant', which will bootstrap Supervisor and Home Assistant.
-- You'll then be able to access the normal onboarding process via the Home Assistant instance at `http://localhost:7123/`.
-- The add-on(s) found in your root folder will automatically be found in the Local Add-ons repository.
+- 按照说明下载并安装 [Remote Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) VS Code 扩展。
+- 将 [`devcontainer.json`](https://github.com/home-assistant/devcontainer/raw/main/addons/devcontainer.json) 文件复制到你仓库中的 `.devcontainer/devcontainer.json`。
+- 将 [`tasks.json`](https://github.com/home-assistant/devcontainer/raw/main/addons/tasks.json) 文件复制到你仓库中的 `.vscode/tasks.json`。
+- 在 VS Code 中打开根文件夹，当提示时在容器内重新打开窗口（或者，从命令面板中选择“重建并在容器中重新打开”）。
+- 当 VS Code 在容器中打开你的文件夹时（第一次运行可能需要一些时间），你需要运行任务（终端 -> 运行任务）“启动 Home Assistant”，这将引导 Supervisor 和 Home Assistant。
+- 然后你将能够通过 Home Assistant 实例在 `http://localhost:7123/` 访问正常的引导过程。
+- 你根文件夹中的插件将自动在本地插件库中被找到。
 
-## Remote development
+## 远程开发
 
-If you require access to physical hardware or other resources that cannot be locally emulated (for example, serial ports), the next best option to develop add-ons is by adding them to the local add-on repository on a real device running Home Assistant. To access the local add-on repository on a remote device, install either the [Samba](https://my.home-assistant.io/redirect/supervisor_addon/?addon=core_samba) or the [SSH](https://my.home-assistant.io/redirect/supervisor_addon/?addon=core_ssh) add-ons and copy the add-on files to a subdirectory of `/addons`.
+如果你需要访问不可本地模拟的物理硬件或其他资源（例如串口），开发插件的下一个最佳选择是在运行 Home Assistant 的真实设备上将插件添加到本地插件库。要访问远程设备上的本地插件库，请安装 [Samba](https://my.home-assistant.io/redirect/supervisor_addon/?addon=core_samba) 或 [SSH](https://my.home-assistant.io/redirect/supervisor_addon/?addon=core_ssh) 插件，并将插件文件复制到 `/addons` 的子目录中。
 
-Right now add-ons will work with images that are stored on Docker Hub (using `image` from add-on config). To ensure that the add-on is built locally and not fetched from an upstream repository, ensure that the `image` key is commented out in your `config.yaml` file (You can do that by adding a `#` in front of it, like `#image: xxx`).
+现在，插件将与存储在 Docker Hub 上的图像一起使用（使用来自插件配置的 `image`）。为了确保插件是本地构建的，而不是从上游库获取的，请确保在你的 `config.yaml` 文件中将 `image` 键注释掉（你可以在前面添加 `#`，例如 `#image: xxx`）。
 
-## Local build
+## 本地构建
 
-If you don't want to use the devcontainer environment, you can still build add-ons locally with Docker. The recommended method is to use the [official build tool][hassio-builder] to create the Docker images.
+如果你不想使用开发容器环境，你仍然可以使用 Docker 在本地构建插件。推荐的方法是使用 [官方构建工具][hassio-builder] 来创建 Docker 镜像。
 
-Assuming that your addon is in the folder `/path/to/addon` and your Docker socket is at `/var/run/docker.sock`, you can build the addon for all supported architectures by running the following:
+假设你的插件在 `/path/to/addon` 文件夹中，并且你的 Docker 套接字在 `/var/run/docker.sock`，你可以通过运行下列命令为所有受支持的架构构建插件：
 
 ```shell
 docker run \
@@ -40,14 +40,14 @@ docker run \
   -d local
 ```
 
-If you don't want to use the official build tool, you can still build with standalone Docker. If you use `FROM $BUILD_FROM` you'll need to set a base image with build args. Normally you can use following base images:
+如果你不想使用官方构建工具，你仍然可以使用独立的 Docker 进行构建。如果你使用 `FROM $BUILD_FROM`，你需要使用构建参数设置基础镜像。通常你可以使用以下基础镜像：
 
 - armhf: `ghcr.io/home-assistant/armhf-base:latest`
 - aarch64: `ghcr.io/home-assistant/aarch64-base:latest`
 - amd64: `ghcr.io/home-assistant/amd64-base:latest`
 - i386: `ghcr.io/home-assistant/i386-base:latest`
 
-Use `docker` from the directory containing the add-on files to build the test addon:
+从包含插件文件的目录使用 `docker` 构建测试插件：
 
 ```shell
 docker build \
@@ -58,11 +58,11 @@ docker build \
 
 [hassio-builder]: https://github.com/home-assistant/builder
 
-## Local run
+## 本地运行
 
-If you don't want to use the devcontainer environment, you can still run add-ons locally with Docker.
+如果你不想使用开发容器环境，你仍然可以使用 Docker 在本地运行插件。
 
-For that you can use the following command:
+为此，你可以使用以下命令：
 
 ```shell
 docker run \
@@ -72,6 +72,6 @@ docker run \
   local/my-test-addon
 ```
 
-## Logs
+## 日志
 
-All `stdout` and `stderr` outputs are redirected to the Docker logs. The logs can be fetched from the add-on page inside the Supervisor panel in Home Assistant.
+所有的 `stdout` 和 `stderr` 输出都被重定向到 Docker 日志。可以通过 Home Assistant 中 Supervisor 面板的插件页面获取日志。

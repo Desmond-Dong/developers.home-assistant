@@ -1,20 +1,20 @@
 ---
-title: "Create a new page"
+title: "创建一个新页面"
 ---
 
-For a platform or integration page, the fastest way is to make a copy of an existing page and edit it. The [Integration overview](https://www.home-assistant.io/integrations/) and the [Examples section](https://www.home-assistant.io/cookbook/) are generated automatically, so there is no need to add a link to those pages.
+对于平台或集成页面，最快的方法是复制现有页面并进行编辑。[集成概述](https://www.home-assistant.io/integrations/)和[示例部分](https://www.home-assistant.io/cookbook/)是自动生成的，因此无需为这些页面添加链接。
 
-Please honor the [Standards](documenting/standards.md) we have for the documentation.
+请遵循我们为文档制定的[标准](documenting/standards.md)。
 
-If you start from scratch with a page, you need to add a header. Different sections of the documentation may need different headers.
+如果你从头开始创建页面，需要添加一个标题。文档的不同部分可能需要不同的标题。
 
 ```text
 ---
-title: "Awesome Sensor"
-description: "home-assistant.io web presence"
+title: "优秀传感器"
+description: "home-assistant.io 网络存在"
 ha_release: "0.38"
 ha_category: Sensor
-ha_iot_class: "Local Polling"
+ha_iot_class: "本地轮询"
 ha_quality_scale: silver
 ha_config_flow: true
 ha_codeowners:
@@ -22,128 +22,128 @@ ha_codeowners:
 ha_domain: awesome
 related:
   - docs: /voice_control/s3_box_voice_assistant/
-    title: Creating a ESP32-S3-BOX-3 voice assistant
+    title: 创建一个 ESP32-S3-BOX-3 语音助手
   - url: https://esphome.io/projects/index.html
-    title: ESPHome projects website
+    title: ESPHome 项目网站
 ---
 
-Content... Written in markdown.
+内容... 用 markdown 编写。
 
-### Title header
+### 标题头部
 ...
 ```
 
-Additional keys for the file header:
+文件头部的附加键：
 
-- `title`: This title should match with the name of the integration as written in the integration manifest file.
-- `ha_release`: The release when the integration was included, e.g., "0.38". If the current release is 0.37, make `ha_release` 0.38. If it's 0.30 or 0.40 please quote it with `' '`.
-- `ha_category`: This entry is used to group the integration on the [Integration overview](https://www.home-assistant.io/integrations/).
-- `ha_iot_class`: [IoT class](https://www.home-assistant.io/blog/2016/02/12/classifying-the-internet-of-things) is the classifier for the device's behavior.
-- `ha_quality_scale`: [Quality scale](https://www.home-assistant.io/docs/quality_scale/) is the representation of the integration's quality.
-- `ha_config_flow`: Set to `true` if the integration has a [Data Entry Flow](/data_entry_flow_index.md), omit otherwise.
-- `ha_codeowners`: GitHub usernames or team names (starting with `@`) of people that are responsible for this integration. This should match with the codeowners as listed in the integration manifest file.
-- `ha_domain`: The domain of the integration in Home Assistant Core. This must match the name from the integration manifest file.
-- `related`: Optional. Adds a section with links to related topics to the end of the page. Use `docs` for local links and `url` for external links. When using `docs`, the `title` key is optional. If not set, the title of the page you point to will be used.
+- `title`: 这个标题应该与集成清单文件中写的集成名称匹配。
+- `ha_release`: 集成包含的版本，例如“0.38”。如果当前版本是0.37，则将`ha_release`设为0.38。如果是0.30或0.40，请用 `' '` 包含它。
+- `ha_category`: 该条目用于在[集成概述](https://www.home-assistant.io/integrations/)中对集成进行分组。
+- `ha_iot_class`: [IoT 类别](https://www.home-assistant.io/blog/2016/02/12/classifying-the-internet-of-things)是设备行为的分类器。
+- `ha_quality_scale`: [质量标准](https://www.home-assistant.io/docs/quality_scale/)是集成质量的表示。
+- `ha_config_flow`: 如果集成具有[数据输入流](/data_entry_flow_index.md)，将其设置为`true`，否则省略。
+- `ha_codeowners`: 对于负责该集成的 GitHub 用户名或团队名称（以 `@` 开头）。这应与集成清单文件中列出的代码所有者匹配。
+- `ha_domain`: 集成在 Home Assistant Core 中的域。这必须与集成清单文件中的名称匹配。
+- `related`: 可选。为页面末尾添加一个与相关主题链接的部分。使用 `docs` 进行本地链接，使用 `url` 进行外部链接。当使用 `docs` 时，`title` 键是可选的。如果未设置，将使用你指向的页面的标题。
 
-There are [pre-defined variables](https://jekyllrb.com/docs/variables/) available but usually, it's not necessary to use them when writing documentation.
+有[预定义变量](https://jekyllrb.com/docs/variables/)可用，但通常在编写文档时不需要使用它们。
 
-A couple of points to remember:
+需要记住的一些要点：
 
-- Document the needed steps to retrieve API keys or access token for the third party service or device if needed.
-- Add screenshots to support the user where it makes sense.
-- Add the type of the device(s) (incl. firmware) you have tested when you know that there are multiple out there.
+- 如果需要，请记录获取第三方服务或设备的 API 密钥或访问令牌所需的步骤。
+- 添加截图以在合适的地方支持用户。
+- 当你知道有多种设备存在时，添加你测试过的设备类型（包括固件）。
 
-### Configuration
+### 配置
 
-Every platform page should contain a configuration sample. This sample must contain only the **required** variables to make it easy to copy and paste it for users into their `configuration.yaml` file.
+每个平台页面应包含一个配置示例。该示例必须仅包含 **必需** 变量，以便用户方便地复制粘贴到他们的 `configuration.yaml` 文件中。
 
-The **Configuration Variables** section must use the `{% configuration %} ... {% endconfiguration %}` tag.
+**配置变量** 部分必须使用 `{% configuration %} ... {% endconfiguration %}` 标签。
 
 ```text
 {% configuration %}
 api_key:
-  description: The API key to access the service.
+  description: 访问该服务的 API 密钥。
   required: true
   type: string
 name:
-  description: Name to use in the frontend.
+  description: 前端使用的名称。
   required: false
-  default: The default name to use in the frontend.
+  default: 前端使用的默认名称。
   type: string
 monitored_conditions:
-  description: Conditions to display in the frontend.
+  description: 前端显示的条件。
   required: true
   type: map
   keys:
     weather:
-      description: A human-readable text summary.
+      description: 人类可读的文本摘要。
     temperature:
-      description: The current temperature.
+      description: 当前温度。
 {% endconfiguration %}
 ```
 
-Available keys:
+可用键：
 
-- **`description:`**: That the variable is about.
-- **`required:`**: If the variable is required.
+- **`description:`**: 该变量的内容。
+- **`required:`**: 如果该变量是必需的。
 
 ```text
-required: true            #=> Required
-required: false           #=> Optional
-required: inclusive       #=> Inclusive
-required: exclusive       #=> Exclusive
-required: any string here #=> Any string here
+required: true            #=> 必需
+required: false           #=> 可选
+required: inclusive       #=> 包含
+required: exclusive       #=> 排外
+required: any string here #=> 此处任何字符串
 ```
 
-- **`type:`**: The type of the variable. Allowed entries: `action`, `boolean`, `string`, `integer`, `float`, `time`, `template`, `device_class`, `icon`, `map`/`list` (for a list of entries), `date`, `datetime`, `selector`, and `any`. For multiple possibilities use `[string, integer]`. If you use `map`/`list` then should define `keys:` (see the [`template` sensor](https://www.home-assistant.io/integrations/sensor.template/) for an example). If you use `boolean`, then `default:` must be defined. 
+- **`type:`**: 变量的类型。允许的条目有: `action`, `boolean`, `string`, `integer`, `float`, `time`, `template`, `device_class`, `icon`, `map`/`list`（用于条目列表），`date`, `datetime`, `selector` 和 `any`。对于多种可能性，请使用 `[string, integer]`。如果你使用 `map`/`list`，则应定义 `keys:`（请参见 [`template` 传感器](https://www.home-assistant.io/integrations/sensor.template/) 的示例）。如果你使用 `boolean`，则必须定义 `default:`。
 
-### Embedding code
+### 嵌入代码
 
-You can use the [default markdown syntax](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#code) to generate syntax highlighted code. For inline code wrap your code in back-ticks.
+你可以使用[默认的 markdown 语法](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet#code)生成语法高亮的代码。对于内联代码，请用反引号括起来。
 
-When you're writing code that is to be executed on the terminal, do not prefix them with `$`, since this makes it hard to copy and paste the commands. However, an exception is made when there is a need to distinguish between typed commands and command output. In those cases, prefixing the commands with a `$` is required.
+当你编写将在终端上执行的代码时，不要在前面加 `$`，因为这样会使命令难以复制和粘贴。然而，当需要区分输入的命令和命令输出时，命令前加 `$` 是必要的。
 
-### Templates
+### 模板
 
-For the [configuration templating](https://www.home-assistant.io/docs/configuration/templating/) [Jinja](http://jinja.pocoo.org/) is used. Check the [Documentation Standards](documenting/standards.md) for further details.
+对于[配置模板](https://www.home-assistant.io/docs/configuration/templating/)使用[Jinja](http://jinja.pocoo.org/)。有关更多信息，请查看[文档标准](documenting/standards.md)。
 
-If you don't escape templates then they will be rendered and appear blank on the website.
+如果你不转义模板，它们将被呈现并在网站上显示为空白。
 
 ### HTML
 
-The direct usage of HTML is supported but not recommended. The note boxes are an exception.
+直接使用 HTML 是支持的，但不推荐。备注框是例外。
 
 ```html
 <div class='note warning'>
-  You need to enable telnet on your router.
+  你需要在路由器上启用 telnet。
 </div>
 ```
 
-Please note, if you want to use Markdown inside an HTML block, it has to be surrounded by a new line.
+请注意，如果你想在 HTML 块中使用 Markdown，它必须被新行包围。
 
 ```html
 <div class='note warning'>
   
-  You need to enable [**telnet**](https://en.wikipedia.org/wiki/Telnet) on your router.
+  你需要在路由器上启用 [**telnet**](https://en.wikipedia.org/wiki/Telnet)。
   
 </div>
 ```
 
-### Images, icons and logos
+### 图片、图标和徽标
 
-Having a logo with the integration, makes an integration quickly identifiable with the end-user.
-From the documentation side of things, no specific configuration is needed to enable the use of a logo,
-however, the logo must exist in our Brands repository.
+为集成提供徽标可以使集成在最终用户中快速识别。
+从文档的角度来看，启用徽标的使用无需特定配置，
+但是，徽标必须存在于我们的品牌库中。
 
-To add a logo and icon for your integration, open up a pull request at: the [Home Assistant Brands](https://github.com/home-assistant/brands).
+要为你的集成添加徽标和图标，请在[Home Assistant Brands](https://github.com/home-assistant/brands)提交拉取请求。
 
-Other images, displayed on the pages, are stored in various directories according to their purpose:
+页面上显示的其他图像根据其用途存储在不同的目录中：
 
-| Type        | Location                  |
+| 类型        | 位置                      |
 | :---------- | :------------------------ |
 | blog        | source/images/blog        |
 | screenshots | source/images/integration |
 
-### Linking from the sidebar
+### 从侧边栏链接
 
-If you are adding a new page that requires linking from the sidebar, you need to edit the `docs_navigation.html` file in `source/_includes/asides/docs_navigation.html`.
+如果你正在添加一个需要从侧边栏链接的新页面，你需要编辑 `source/_includes/asides/docs_navigation.html` 文件中的 `docs_navigation.html`。

@@ -1,41 +1,41 @@
 ---
-title: "If it's a polling integration, set an appropriate polling interval"
+title: "如果这是一个轮询集成，请设置适当的轮询间隔"
 related_rules:
   - parallel-updates
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+## 理由
 
-In an ideal world, all integrations would have a push-based data interface, where the device or service would let us know when new data is available.
-This would decrease the amount of requests Home Assistant would make.
+在理想的世界中，所有集成都将具有基于推送的数据接口，设备或服务会通知我们新数据何时可用。
+这将减少家庭助手的请求数量。
 
-However, in the real world, many devices and services are not capable of push-based communication, so we have to resort to polling.
-To do this responsibly, we should set an appropriate polling interval that will serve the majority of users.
+然而，在现实世界中，许多设备和服务无法进行基于推送的通信，因此我们不得不采用轮询的方式。
+为了负责任地做到这一点，我们应该设置一个适当的轮询间隔，以服务大多数用户。
 
-There is no real definition of what an appropriate polling interval is, as it depends on the device or service being polled.
-For example, we should not poll an air quality sensor every 5 seconds, as the data will not change that often.
-In those cases, more than 99% of the users will be fine with a polling interval of a minute or more.
+适当的轮询间隔没有真实的定义，因为这取决于被轮询的设备或服务。
+例如，我们不应该每5秒钟轮询一次空气质量传感器，因为数据不会那么频繁地变化。
+在这种情况下，超过99%的用户会对每分钟或更长时间的轮询间隔感到满意。
 
-To give another example, if we poll a cloud service for solar panel data where the data is updated every hour.
-It would not make sense for us to poll every minute, as the data will not change between the polls.
+再举一个例子，如果我们轮询一个每小时更新数据的云服务以获取太阳能板的数据。
+每分钟轮询一次是不合适的，因为数据在轮询之间不会发生变化。
 
-For the users that do want to have more frequent updates, they can [define a custom polling interval](https://www.home-assistant.io/common-tasks/general/#defining-a-custom-polling-interval)
+对于那些希望获得更频繁更新的用户，他们可以[定义自定义轮询间隔](https://www.home-assistant.io/common-tasks/general/#defining-a-custom-polling-interval)。
 
-## Example implementation
+## 示例实现
 
-There are two ways to set the polling interval.
-Which one to use depends on how the integration polls for data.
-When using an update coordinator, the polling interval can be set by setting the `update_interval` parameter or attribute in the coordinator.
-When using the built-in entity update method, having set the `should_poll` entity attribute to `True`, the polling interval can be set by setting the `SCAN_INTERVAL` constant in the platform module.
+设置轮询间隔有两种方法。
+使用哪种方法取决于集成如何轮询数据。
+使用更新协调器时，可以通过在协调器中设置`update_interval`参数或属性来设置轮询间隔。
+使用内置实体更新方法时，若将`should_poll`实体属性设置为`True`，则可以通过在平台模块中设置`SCAN_INTERVAL`常量来设置轮询间隔。
 
 `coordinator.py`:
 ```python {10} showLineNumbers
 class MyCoordinator(DataUpdateCoordinator[MyData]):
-    """Class to manage fetching data."""
+    """管理数据获取的类。"""
 
     def __init__(self, hass: HomeAssistant) -> None:
-        """Initialize coordinator."""
+        """初始化协调器。"""
         super().__init__(
             hass,
             logger=LOGGER,
@@ -49,19 +49,19 @@ class MyCoordinator(DataUpdateCoordinator[MyData]):
 SCAN_INTERVAL = timedelta(minutes=1)
 
 class MySensor(SensorEntity):
-    """Representation of a Sensor."""
+    """传感器的表现。"""
 
     _attr_should_poll = True
 ```
 
-## Additional resources
+## 额外资源
 
-More information about polling can be found in the [documentation](/docs/integration_fetching_data).
+有关轮询的更多信息可以在[文档](/docs/integration_fetching_data)中找到。
 
-## Exceptions
+## 例外情况
 
-There are no exceptions to this rule.
+此规则没有例外情况。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

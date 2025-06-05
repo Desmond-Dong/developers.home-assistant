@@ -1,37 +1,36 @@
 ---
-title: "Integration file structure"
-sidebar_label: "File structure"
+title: "集成文件结构"
+sidebar_label: "文件结构"
 ---
 
-Each integration is stored inside a directory named after the integration domain. The domain is a short name consisting of characters and underscores. This domain has to be unique and cannot be changed. Example of the domain for the mobile app integration: `mobile_app`. So all files for this integration are in the folder `mobile_app/`.
+每个集成都存储在一个以集成域命名的目录中。该域是由字符和下划线组成的简短名称。这个域必须是唯一的，不能被更改。移动应用集成的域示例：`mobile_app`。因此，所有与此集成相关的文件都位于文件夹 `mobile_app/` 中。
 
-The bare minimum content of this folder looks like this:
+该文件夹的最低内容如下所示：
 
-- `manifest.json`: The manifest file describes the integration and its dependencies. [More info](creating_integration_manifest.md)
-- `__init__.py`: The component file. If the integration only offers a platform, you can keep this file limited to a docstring introducing the integration `"""The Mobile App integration."""`.
+- `manifest.json`: 清单文件描述了集成及其依赖项。[更多信息](creating_integration_manifest.md)
+- `__init__.py`: 组件文件。如果集成仅提供一个平台，您可以将此文件限制为介绍集成的文档字符串 `"""The Mobile App integration."""`。
 
-## Integrating devices - `light.py`, `switch.py` etc
+## 集成设备 - `light.py`, `switch.py` 等
 
-If your integration is going to integrate one or more devices, you will need to do this by creating a platform that interacts with an entity integration. For example, if you want to represent a light device inside Home Assistant, you will create `light.py`, which will contain a light platform for the light integration.
+如果您的集成将要集成一个或多个设备，您需要通过创建与实体集成交互的平台来实现。例如，如果您想在 Home Assistant 中表示一个灯设备，您将创建 `light.py`，该文件将包含灯集成的灯平台。
 
-- More info on [available entity integrations](core/entity.md).
-- More info on [creating platforms](creating_platform_index.md).
+- 关于[可用实体集成](core/entity.md)的更多信息。
+- 关于[创建平台](creating_platform_index.md)的更多信息。
 
-## Integrating service actions - `services.yaml`
+## 集成服务操作 - `services.yaml`
 
-If your integration is going to register service actions, it will need to provide a description of the available actions. The description is stored in `services.yaml`. [More information about `services.yaml`.](dev_101_services.md)
+如果您的集成将注册服务操作，它将需要提供可用操作的描述。描述存储在 `services.yaml` 中。[关于 `services.yaml` 的更多信息。](dev_101_services.md)
 
-## Data update coordinator - `coordinator.py`
+## 数据更新协调器 - `coordinator.py`
 
-There are multiple ways for your integration to receive data, including push or poll. Commonly integrations will fetch data with a single coordinated poll across all entities, which requires the use of a `DataUpdateCoordinator`.
-If you want to use one, and you choose to create a subclass of it, it is recommended to define the coordinator class in `coordinator.py`. [More information about `DataUpdateCoordinator`](integration_fetching_data.md#coordinated-single-api-poll-for-data-for-all-entities).
+您的集成有多种方式接收数据，包括推送或轮询。通常，集成将通过对所有实体进行单次协调的轮询来获取数据，这需要使用 `DataUpdateCoordinator`。如果您想使用它，并选择创建它的子类，建议在 `coordinator.py` 中定义协调器类。[关于 `DataUpdateCoordinator` 的更多信息](integration_fetching_data.md#coordinated-single-api-poll-for-data-for-all-entities)。
 
-## Where Home Assistant looks for integrations
+## Home Assistant 查找集成的位置
 
-Home Assistant will look for an integration when it sees the domain referenced in the config file (i.e. `mobile_app:`) or if it is a dependency of another integration. Home Assistant will look at the following locations:
+当 Home Assistant 在配置文件中看到引用的域（即 `mobile_app:`）或如果它是另一个集成的依赖项时，它会查找集成。Home Assistant 将查看以下位置：
 
 - `<config directory>/custom_components/<domain>`
-- `homeassistant/components/<domain>` (built-in integrations)
+- `homeassistant/components/<domain>`（内置集成）
 
-You can override a built-in integration by having an integration with the same domain in your `<config directory>/custom_components` folder. [The `manifest.json` file requires a version tag when you override a core integration](creating_integration_manifest/#version). An overridden core integration can be identified by a specific icon in the upper right corner of the integration box in the overview [![Open your Home Assistant instance and show your integrations.](https://my.home-assistant.io/badges/integrations.svg)](https://my.home-assistant.io/redirect/integrations/)
-Note that overriding built-in integrations is not recommended as you will no longer get updates. It is recommended to pick a unique name.
+您可以通过在 `<config directory>/custom_components` 文件夹中拥有一个相同域的集成来覆盖内置集成。[在您覆盖核心集成时 `manifest.json` 文件需要一个版本标签](creating_integration_manifest/#version)。被覆盖的核心集成可以通过在概述的集成框右上角的特定图标来识别 [![打开您的 Home Assistant 实例并显示您的集成。](https://my.home-assistant.io/badges/integrations.svg)](https://my.home-assistant.io/redirect/integrations/)
+请注意，不推荐覆盖内置集成，因为您将不再获得更新。建议选择一个独特的名称。

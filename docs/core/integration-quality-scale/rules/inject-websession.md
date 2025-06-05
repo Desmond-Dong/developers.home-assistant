@@ -1,39 +1,39 @@
 ---
-title: "The integration dependency supports passing in a websession"
+title: "集成依赖支持传入 websession"
 related_rules:
   - async-dependency
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+## 理由
 
-Since many devices and services are connected via HTTP, the number of active web sessions can be high.
-To improve the efficiency of those web sessions, it is recommended to support passing in a web session to the dependency client that is used by the integration.
+由于许多设备和服务通过 HTTP 连接，活动 web 会话的数量可能很高。
+为了提高这些 web 会话的效率，建议支持将 web 会话传入集成使用的依赖客户端。
 
-Home Assistants supports this for [`aiohttp`](https://docs.aiohttp.org/en/stable/) and [`httpx`](https://www.python-httpx.org/).
-This means that the integration dependency should use either of those two libraries.
+Home Assistant 支持 [`aiohttp`](https://docs.aiohttp.org/en/stable/) 和 [`httpx`](https://www.python-httpx.org/)。
+这意味着集成依赖应该使用这两个库中的任意一个。
 
-## Example implementation
+## 示例实现
 
-In the example below, an `aiohttp` session is passed in to the client.
-The equivalent for `httpx` would be `get_async_client`.
+在下面的示例中，一个 `aiohttp` 会话被传入客户端。
+对于 `httpx` 来说，等价的用法是 `get_async_client`。
 
 ```python {4} showLineNumbers
 async def async_setup_entry(hass: HomeAssistant, entry: MyConfigEntry) -> bool:
-    """Set up my integration from a config entry."""
+    """通过配置条目设置我的集成。"""
 
     client = MyClient(entry.data[CONF_HOST], async_get_clientsession(hass))
 ```
 
 :::info
-There are cases where you might not want a shared session, for example when cookies are used.
-In that case, you can create a new session using `async_create_clientsession` for `aiohttp` and `create_async_httpx_client` for `httpx`.
+在某些情况下，您可能不想使用共享会话，例如当使用 cookies 时。
+在这种情况下，您可以使用 `async_create_clientsession` 为 `aiohttp` 创建一个新会话，以及使用 `create_async_httpx_client` 为 `httpx` 创建一个新会话。
 :::
 
-## Exceptions
+## 例外情况
 
-If the integration is not making any HTTP requests, this rule does not apply.
+如果集成没有进行任何 HTTP 请求，则此规则不适用。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

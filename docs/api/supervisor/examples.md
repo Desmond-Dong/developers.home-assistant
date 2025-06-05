@@ -1,16 +1,16 @@
 ---
-title: "Examples"
+title: "示例"
 ---
 
-Examples on how to interface against the supervisor API.
+有关如何与 supervisor API 接口的示例。
 
-## Get network information with cURL
+## 使用 cURL 获取网络信息
 
 ```bash
 curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/network/info
 ```
 
-**response:**
+**响应：**
 
 ```json
 {
@@ -20,10 +20,10 @@ curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/network
       "eth0": {
         "ip_address": "192.168.1.100/24",
         "gateway": "192.168.1.1",
-        "id": "Wired connection 1",
-        "type": "802-3-ethernet",
+        "id": "有线连接 1",
+        "type": "802-3-以太网",
         "nameservers": ["192.168.1.1"],
-        "method": "static",
+        "method": "静态",
         "primary": true
       }
     }
@@ -31,17 +31,16 @@ curl -sSL -H "Authorization: Bearer $SUPERVISOR_TOKEN" http://supervisor/network
 }
 ```
 
-## Ping the supervisor
+## Ping supervisor
 
 ```bash
 curl -sSL http://supervisor/supervisor/ping
 ```
 
-**response:**
+**响应：**
 
 ```json
 {
   "result": "ok",
   "data": {}
 }
-```

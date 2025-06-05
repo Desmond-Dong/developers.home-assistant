@@ -1,50 +1,50 @@
 ---
-title: Wake word detection entity
-sidebar_label: Wake word detection
+title: 唤醒词检测实体
+sidebar_label: 唤醒词检测
 ---
 
-A wake word detection entity allows other integrations or applications to detect wake words (also called hotwords) in an audio stream.
+唤醒词检测实体允许其他集成或应用程序在音频流中检测唤醒词（也称为热词）。
 
-A wake word detection entity is derived from the  [`homeassistant.components.wake_word.WakeWordDetectionEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/wake_word/__init__.py).
+唤醒词检测实体来源于 [`homeassistant.components.wake_word.WakeWordDetectionEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/wake_word/__init__.py)。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests).
+属性应该始终只从内存中返回信息，而不进行 I/O（如网络请求）。
 :::
 
-| Name                 | Type           | Default      | Description                                                                                                                 |
-|----------------------|----------------|--------------|-----------------------------------------------------------------------------------------------------------------------------|
-| supported_wake_words | list[WakeWord] | **Required** | The supported wake words of the service with:<ul><li>ww_id - unique identifier</li><li>name - human-readable name</li></ul> |
+| 名称                   | 类型               | 默认值        | 描述                                                                                                                  |
+|------------------------|-------------------|---------------|----------------------------------------------------------------------------------------------------------------------|
+| supported_wake_words   | list[WakeWord]    | **必填**      | 服务支持的唤醒词，包括：<ul><li>ww_id - 唯一标识符</li><li>name - 人类可读名称</li></ul> |
 
-## Methods
+## 方法
 
-### Process audio stream
+### 处理音频流
 
-The process audio stream method is used to detect wake words. It must return a `DetectionResult` or `None` if the audio stream ends without a detection.
+处理音频流的方法用于检测唤醒词。如果音频流结束而没有检测到唤醒词，则必须返回 `DetectionResult` 或 `None`。
 
 ```python
 class MyWakeWordDetectionEntity(WakeWordDetectionEntity):
-    """Represent a Wake Word Detection entity."""
+    """表示一个唤醒词检测实体。"""
 
     async def async_process_audio_stream(
         self, stream: AsyncIterable[tuple[bytes, int]]
     ) -> DetectionResult | None:
-        """Try to detect wake word(s) in an audio stream with timestamps.
+        """尝试在带有时间戳的音频流中检测唤醒词。
 
-        Audio must be 16Khz sample rate with 16-bit mono PCM samples.
+        音频必须是 16Khz 的采样率，16-bit 单声道 PCM 样本。
         """
 ```
 
-The audio stream is made of tuples with the form `(timestamp, audio_chunk)` where:
+音频流由形式为 `(timestamp, audio_chunk)` 的元组组成，其中：
 
-- `timestamp` is the number of milliseconds since the start of the audio stream
-- `audio_chunk` is a chunk of 16-bit signed mono PCM samples at 16Khz
+- `timestamp` 是自音频流开始以来的毫秒数
+- `audio_chunk` 是16位有符号单声道 PCM 样本的音频块，采样率为 16Khz
 
-If a wake word is detected, a `DetectionResult` is returned with:
+如果检测到唤醒词，将返回一个 `DetectionResult`，其包含：
 
-- `ww_id` - the unique identifier of the detected wake word
-- `timestamp` - the timestamp of the audio chunk when detection occurred
-- `queued_audio` - optional audio chunks that will be forwarded to speech-to-text (see below)
+- `ww_id` - 检测到的唤醒词的唯一标识符
+- `timestamp` - 检测发生时音频块的时间戳
+- `queued_audio` - 可选音频块，将被转发给语音转文本（见下文）
 
-In an [Assist pipeline](/docs/voice/pipelines), the audio stream is shared between wake word detection and speech-to-text. This means that any audio chunk removed during wake word detection **can not be processed** by speech-to-text unless passed back in the `queued_audio` of a `DetectionResult`.
+在 [Assist pipeline](/docs/voice/pipelines) 中，音频流在唤醒词检测和语音转文本之间共享。这意味着在唤醒词检测过程中移除的任何音频块 **不能被** 语音转文本处理，除非通过 `DetectionResult` 的 `queued_audio` 传回。

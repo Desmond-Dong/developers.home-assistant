@@ -1,36 +1,34 @@
 ---
-title: Date entity
-sidebar_label: Date
+title: 日期实体
+sidebar_label: 日期
 ---
 
-A `date` is an entity that allows the user to input a date to an integration. Derive entity platforms from [`homeassistant.components.date.DateEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/date/__init__.py)
+`date` 是一个实体，允许用户向集成输入一个日期。从 [`homeassistant.components.date.DateEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/date/__init__.py) 派生实体平台。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应该始终仅从内存中返回信息，而不进行 I/O（例如网络请求）。实现 `update()` 或 `async_update()` 来获取数据。
 :::
 
-| Name | Type | Default | Description
-| ---- | ---- | ------- | -----------
-| native_value | <code>datetime.date &#124; None</code> | **Required** | The value of the date.
+| 名称 | 类型 | 默认 | 描述 |
+| ---- | ---- | ------- | ----------- |
+| native_value | <code>datetime.date &#124; None</code> | **必需** | 日期的值。 |
 
-Other properties that are common to all entities such as `icon`, `name` etc are also applicable.
+其他所有实体共同具有的属性，如 `icon`、`name` 等，也适用。
 
-## Methods
+## 方法
 
-### Set value
+### 设置值
 
-Called when the user or an automation wants to update the value.
+当用户或自动化想要更新值时调用。
 
 ```python
 class MyDate(DateEntity):
-    # Implement one of these methods.
+    # 实现这些方法中的一个。
 
     def set_value(self, value: date) -> None:
-        """Update the current value."""
+        """更新当前值。"""
 
     async def async_set_value(self, value: date) -> None:
-        """Update the current value."""
-
-```
+        """更新当前值。"""

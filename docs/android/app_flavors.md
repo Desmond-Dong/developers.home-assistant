@@ -1,45 +1,45 @@
 ---
-title: "Android flavors"
-sidebar_label: "Flavors"
+title: "Android 风味"
+sidebar_label: "风味"
 ---
 
 :::info
-Only the `:app` and `:automotive` modules are affected by these flavors.
+只有 `:app` 和 `:automotive` 模块受到这些风味的影响。
 :::
 
-## Overview
+## 概述
 
-The Android app is built with two flavors: `full` and `minimal`. These flavors allow us to cater to different user preferences. This document explains the differences between the flavors, their features, and the rationale behind their implementation.
+Android 应用程序有两个风味：`full` 和 `minimal`。这些风味允许我们迎合不同用户的偏好。本文档解释了风味之间的差异、它们的特性以及实施背后的原因。
 
-## App flavors
+## 应用风味
 
-### Shared code
+### 共享代码
 
-We try, as much as possible, to keep everything in the source set agnostic `main` of the flavor so that everyone can benefit from new features. We will always favor open-source solutions if we can.
+我们尽可能地将所有内容保留在风味的源集无关的 `main` 中，以便每个人都能受益于新功能。我们将始终优先考虑开源解决方案（如果可以的话）。
 
-### Full flavor
+### 完整风味
 
-The `full` flavor uses the **Google Play Services**, enabling features such as:
+`full` 风味使用 **Google Play 服务**，启用以下功能：
 
-- Location tracking
-- Push notifications
-- Communication with Wear OS devices
+- 位置追踪
+- 推送通知
+- 与 Wear OS 设备的通信
 
-This flavor is the one distributed via the Google Play Store.
+此风味是通过 Google Play 商店分发的。
 
-### Minimal flavor
+### 最小风味
 
-The `minimal` flavor is designed for users who prefer or require an app without **Google Play Services**. It has the following limitations:
+`minimal` 风味旨在为那些偏好或需要不使用 **Google Play 服务** 的用户而设计。它有以下限制：
 
-- ❌ No location tracking for [presence detection](https://www.home-assistant.io/getting-started/presence-detection/#adding-zone-presence-detection-with-a-mobile-phone)
-- ❌ No push notifications (except when using [local notification](https://companion.home-assistant.io/docs/notifications/notification-local#requirements) over the WebSocket)
-- ❌ No communication with Wear OS devices
-- ❌ No crash reporting
+- ❌ 无法进行 [存在检测](https://www.home-assistant.io/getting-started/presence-detection/#adding-zone-presence-detection-with-a-mobile-phone) 的位置追踪
+- ❌ 无推送通知（除非通过 WebSocket 使用 [本地通知](https://companion.home-assistant.io/docs/notifications/notification-local#requirements)）
+- ❌ 无法与 Wear OS 设备通信
+- ❌ 无崩溃报告
 
-Despite these limitations, the `minimal` flavor allows us to offer the app to a broader audience, including users of devices without Google Play Services. If viable open-source alternatives to Google Play Services features are found, they may be considered for inclusion in the `minimal` flavor to remove these limitations.
+尽管有这些限制，`minimal` 风味使我们能够将应用程序提供给更广泛的受众，包括不支持 Google Play 服务的设备用户。如果找到可行的开源替代方案以替代 Google Play 服务的功能，则可能会考虑将其纳入 `minimal` 风味以消除这些限制。
 
-This flavor is used, for instance:
+此风味用于，例如：
 
-- For manual downloads of the APK or through F-Droid.
-- For Meta Quest devices.
-- For the Automotive build for OEM.
+- 通过手动下载 APK 或通过 F-Droid。
+- 用于 Meta Quest 设备。
+- 用于 OEM 的汽车构建。

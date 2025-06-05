@@ -1,18 +1,18 @@
 ---
-title: "Implements diagnostics"
+title: "实现诊断"
 ---
 
-## Reasoning
+## 理由
 
-Diagnostics are an easy way for the user to gather data about the integration and can prove useful when debugging an integration.
+诊断是用户收集有关集成数据的简单方式，并且在调试集成时可能非常有用。
 
-We consider it a good practice to have the diagnostics implemented.
-Something to keep in mind is that the diagnostics should not expose any sensitive information, such as passwords, tokens, or coordinates.
+我们认为实施诊断是一种良好的实践。
+需要记住的是，诊断不应暴露任何敏感信息，例如密码、令牌或坐标。
 
-## Example implementation
+## 示例实现
 
-In the following example we provide diagnostics which includes data from various sources, such as the configuration and the current state of the integration.
-Since the configuration may contain sensitive information, we redact the sensitive information before returning the diagnostics.
+在以下示例中，我们提供了包括来自各种来源的数据的诊断，例如配置和集成的当前状态。
+由于配置可能包含敏感信息，因此在返回诊断之前，我们会对敏感信息进行审查。
 
 `diagnostics.py`:
 ```python showLineNumbers
@@ -25,7 +25,7 @@ TO_REDACT = [
 async def async_get_config_entry_diagnostics(
     hass: HomeAssistant, entry: MyConfigEntry
 ) -> dict[str, Any]:
-    """Return diagnostics for a config entry."""
+    """返回配置项的诊断信息。"""
 
     return {
         "entry_data": async_redact_data(entry.data, TO_REDACT),
@@ -33,10 +33,10 @@ async def async_get_config_entry_diagnostics(
     }
 ```
 
-## Additional resources
+## 额外资源
 
-To learn more information about diagnostics, check out the [diagnostics documentation](/docs/core/integration_diagnostics).
+要了解有关诊断的更多信息，请查看[诊断文档](/docs/core/integration_diagnostics)。
 
-## Exceptions
+## 例外情况
 
-There are no exceptions to this rule.
+对此规则没有例外。

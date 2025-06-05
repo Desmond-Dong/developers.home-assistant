@@ -9,115 +9,75 @@ import styles from "./styles.module.css";
 const recentPosts = require("../../.docusaurus/docusaurus-plugin-content-blog/default/blog-post-list-prop-default.json");
 const features = [
   {
-    title: <>Document Structure</>,
+    title: <>文档结构</>,
     imageUrl: "",
     description: (
       <>
         <p>
           <b>
-            <a href="docs/architecture_index">Overview</a>.
+            <a href="docs/architecture_index">概览</a>.
           </b>{" "}
-          Explains various layers that make up Home Assistant.
+          解释构成 Home Assistant 的各个层。
         </p>
         <p>
           <b>
-            <a href="docs/development_index">Core</a>.
+            <a href="docs/development_index">核心</a>.
           </b>{" "}
-          Explains how to build new integrations for Home Assistant.
+          解释如何为 Home Assistant 构建新的集成。
         </p>
         <p>
           <b>
-            <a href="docs/frontend">Frontend</a>.
+            <a href="docs/frontend">前端</a>.
           </b>{" "}
-          Explains how to develop the user interface of Home Assistant.
+          解释如何开发 Home Assistant 的用户界面。
         </p>
         <p>
           <b>
-            <a href="docs/android">Android</a>.
+            <a href="docs/android">安卓</a>.
           </b>{" "}
-          Explains how to contribute to the Android companion app.
+          解释如何为 Android 伴侣应用做出贡献。
         </p>
       </>
     ),
   },
   {
-    title: <>Popular Topics</>,
+    title: <>热门主题</>,
     imageUrl: "",
     description: (
       <>
         <ul style={{ flex: "1" }}>
           <li>
-            <a href="docs/development_index">Add a new integration</a>
+            <a href="docs/development_index">添加一个新集成</a>
           </li>
           <li>
-            <a href="docs/internationalization">Translate Home Assistant</a>
+            <a href="docs/internationalization">翻译 Home Assistant</a>
           </li>
           <li>
             <a href="docs/api/websocket">Home Assistant API</a>
           </li>
         </ul>
-        <h3>Source Code</h3>
+        <h3>源代码</h3>
         <ul>
           <li>
             <a href="https://github.com/home-assistant/core">
-              Home Assistant Core
+              Home Assistant 核心
             </a>
           </li>
           <li>
             <a href="https://github.com/home-assistant/frontend">
-              Home Assistant Frontend
+              Home Assistant 前端
             </a>
           </li>
           <li>
             <a href="https://github.com/home-assistant/android">
-              Home Assistant Android
+              Home Assistant 安卓
             </a>
           </li>
         </ul>
       </>
     ),
   },
-  {
-    title: <>Recent Blog Posts</>,
-    imageUrl: "",
-    description: (
-      <>
-        <ul>
-          {recentPosts.items.slice(0, 5).map((item, index) => (
-            <li key={index}>
-              <a href={`${item.permalink}`}>{item.title}</a>{" "}
-            </li>
-          ))}
-        </ul>
-      </>
-    ),
-  },
-  {
-    title: <>Upcoming Events</>,
-    imageUrl: "",
-    description: UpcomingEvents(),
-  },
 ];
-
-function UpcomingEvents() {
-  return (
-    <BrowserOnly>
-      {() => (
-        <iframe
-          title="Upcoming Events Calendar"
-          src={`https://calendar.google.com/calendar/embed?height=400&wkst=2&bgcolor=%23ffffff&ctz=${
-            Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"
-          }&src=cDA3bjk4Z28xMW9uYW1kMDhkMGttcTZqaHNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ&color=%23039BE5&title=Release%20Schedule&mode=AGENDA&showPrint=0&showTabs=0&showCalendars=0&showTz=1&showNav=0&showDate=0&showTitle=0`}
-          style={{ borderWidth: 0, margin: "auto" }}
-          width="300"
-          height="200"
-          frameBorder="0"
-          scrolling="no"
-        />
-      )}
-    </BrowserOnly>
-  );
-}
 
 function Feature({ imageUrl, title, description }) {
   const imgUrl = useBaseUrl(imageUrl);
@@ -140,8 +100,8 @@ function Home() {
 
   return (
     <Layout
-      title={`Home Assistant Developer Docs`}
-      description="Get started developing for Home Assistant"
+      title={`Home Assistant 开发者文档`}
+      description="开始为 Home Assistant 开发"
     >
       <header className={clsx("hero hero--primary", styles.heroBanner)}>
         <div className="container">
@@ -152,9 +112,9 @@ function Home() {
               <p>
                 <a
                   className={styles.heroText}
-                  href="https://www.home-assistant.io"
+                  href="https://www.hasscn.top"
                 >
-                  Not a developer? Go to the normal website
+                  不是开发者？前往普通网站
                 </a>
               </p>
             </div>

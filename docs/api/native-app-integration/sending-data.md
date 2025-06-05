@@ -1,42 +1,42 @@
 ---
-title: "Sending data home"
+title: "发送数据到家"
 ---
 
-Once you have registered your app with the mobile app component, you can start interacting with Home Assistant via the provided webhook information.
+一旦您在移动应用组件中注册了您的应用，您就可以通过提供的 webhook 信息开始与 Home Assistant 进行交互。
 
-## Sending webhook data via Rest API
+## 通过 Rest API 发送 webhook 数据
 
-The first step is to turn the returned webhook ID into a full URL: `<instance_url>/api/webhook/<webhook_id>`. This will be the only url that we will need for all our interactions. The webhook endpoint will not require authenticated requests.
+第一步是将返回的 webhook ID 转换为完整的 URL: `<instance_url>/api/webhook/<webhook_id>`。这将是我们所有交互所需的唯一 URL。webhook 端点不需要身份验证请求。
 
-If you were provided a Cloudhook URL during registration, you should use that by default and only fall back to a constructed URL as described above if that request fails.
+如果您在注册时提供了 Cloudhook URL，您应该默认使用该 URL，只有在该请求失败时才回退到上面描述的构造 URL。
 
-If you were provided a remote UI URL during registration, you should use that as the `instance_url` when constructing a URL and only fallback to the user provided URL if the remote UI URL fails.
+如果您在注册时提供了远程 UI URL，您应该在构建 URL 时使用该 URL，只有在远程 UI URL 失败时才回退到用户提供的 URL。
 
-To summarize, here's how requests should be made:
+总结一下，以下是如何发出请求：
 
-1. If you have a Cloudhook URL, use that until a request fails. When a request fails, go to step 2.
-2. If you have a remote UI URL, use that to construct a webhook URL: `<remote_ui_url>/api/webhook/<webhook_id>`. When a request fails, go to step 3.
-3. Construct a webhook URL using the instance URL provided during setup: `<instance_url>/api/webhook/<webhook_id>`.
+1. 如果您有 Cloudhook URL，请在请求失败之前使用它。当请求失败时，转到第 2 步。
+2. 如果您有远程 UI URL，请使用它来构造 webhook URL: `<remote_ui_url>/api/webhook/<webhook_id>`。当请求失败时，转到第 3 步。
+3. 使用在设置期间提供的实例 URL 构造 webhook URL: `<instance_url>/api/webhook/<webhook_id>`。
 
-## Sending webhook data via WebSocket API
+## 通过 WebSocket API 发送 webhook 数据
 
-Webhooks can also be delivered via the WebSocket API by sending the `webhook/handle` command:
+Webhooks 也可以通过 WebSocket API 发送 `webhook/handle` 命令来传递：
 
 ```json
 {
   "type": "webhook/handle",
   "id": 5,
   "method": "GET",
-  // Below fields are optional
+  // 以下字段是可选的
   "body": "{\"hello\": \"world\"}",
   "headers": {
     "Content-Type": "application/json"
   },
-  "query": "a=1&b=2",
+  "query": "a=1&b=2"
 }
 ```
 
-The response will look as follows:
+响应将如下所示：
 
 ```json
 {
@@ -45,89 +45,89 @@ The response will look as follows:
   "result": {
     "body": "{\"ok\": true}",
     "status": 200,
-    "headers": {"Content-Type": response.content_type},
+    "headers": {"Content-Type": response.content_type}
   }
 }
 ```
 
-## Short note on instance URLs
+## 关于实例 URL 的简短说明
 
-Some users have configured Home Assistant to be available outside of their home network using a dynamic DNS service. There are some routers that don't support hairpinning / NAT loopback: a device sending data from inside the routers network, via the externally configured DNS service, to Home Assistant, which also resides inside the local network.
+一些用户已经配置 Home Assistant 以便在他们的家庭网络之外可用，使用动态 DNS 服务。有些路由器不支持发夹 / NAT 循环：一个设备从路由器网络内部发送数据，通过外部配置的 DNS 服务，发送到 Home Assistant，这也位于本地网络内。
 
-To work around this, the app should record which WiFi SSID is the users home network, and use a direct connection when connected to the home WiFi network.
+为了解决这个问题，应用应该记录哪个 WiFi SSID 是用户的家庭网络，并在连接到家庭 WiFi 网络时使用直接连接。
 
-## Interaction basics
+## 交互基础
 
-### Request
+### 请求
 
-All interaction will be done by making HTTP POST requests to the webhook url. These requests do not need to contain authentication.
+所有交互都将通过对 webhook URL 发出 HTTP POST 请求来完成。这些请求不需要包含身份验证。
 
-The payload format depends on the type of interaction, but it all shares a common base:
+有效载荷格式取决于交互类型，但它们都共享一个共同的基础：
 
 ```json
 {
-  "type": "<type of message>",
+  "type": "<消息类型>",
   "data": {}
 }
 ```
 
-If you received a `secret` during registration, you **MUST** encrypt your message and put it in the payload like this:
+如果您在注册时收到 `secret`，您 **必须** 加密您的消息并将其放入有效载荷中，如下所示：
 
 ```json
 {
   "type": "encrypted",
   "encrypted": true,
-  "encrypted_data": "<encrypted message>"
+  "encrypted_data": "<加密消息>"
 }
 ```
 
-### Response
+### 响应
 
-As a general rule, expect to receive a 200 response for all your requests. There are a few cases in which you will receive another code:
+作为一般规则，预计所有请求将收到 200 响应。在某些情况下，您将收到其他代码：
 
-- You will receive a 400 status code if your JSON is invalid. However, you will not receive this error if the encrypted JSON is invalid.
-- You will receive a 201 when creating a sensor
-- If you receive a 404, the `mobile_app` component most likely isn't loaded.
-- Receiving a 410 means the integration has been deleted. You should notify the user and most likely register again.
+- 如果您的 JSON 无效，您将收到 400 状态代码。然而，如果加密 JSON 无效，您不会收到此错误。
+- 创建传感器时，您将收到 201 响应。
+- 如果收到 404，则 `mobile_app` 组件很可能未加载。
+- 收到 410 表示集成已被删除。您应该通知用户，并很可能需要重新注册。
 
-## Implementing encryption
+## 实施加密
 
-`mobile_app` supports two way encrypted communication via [Sodium](https://libsodium.gitbook.io/doc/).
+`mobile_app` 支持通过 [Sodium](https://libsodium.gitbook.io/doc/) 实现双向加密通信。
 
 :::info
-Sodium is a modern, easy-to-use software library for encryption, decryption, signatures, password hashing and more.
+Sodium 是一个现代的、易于使用的软件库，用于加密、解密、签名、密码哈希等。
 :::
 
-### Choosing a library
+### 选择库
 
-Libraries that wrap Sodium exist for most modern programming languages and platforms. Sodium itself is written in C.
+大多数现代编程语言和平台都有包装 Sodium 的库。Sodium 本身是用 C 语言编写的。
 
-Here are the libraries we suggest using, although you should feel free to use whatever works well for you.
+以下是我们建议使用的库，尽管您可以随意使用适合您的任何库。
 
-- Swift/Objective-C: [swift-sodium](https://github.com/jedisct1/swift-sodium) (official library maintained by Sodium developers).
+- Swift/Objective-C: [swift-sodium](https://github.com/jedisct1/swift-sodium) (由 Sodium 开发者维护的官方库)。
 
-For other languages, please see the list of [Bindings for other languages](https://doc.libsodium.org/bindings_for_other_languages). If more than one choice is available, we recommend using the choice most recently updated as well as most peer reviewed (a easy way to check this is seeing how many GitHub stars a project has).
+对于其他语言，请参见 [Bindings for other languages](https://doc.libsodium.org/bindings_for_other_languages) 的列表。如果可用的选择不止一个，我们建议使用最新更新和最多同行评审的选择（检查项目的 GitHub 星标数是一种简单的方法）。
 
-### Configuration
+### 配置
 
-We use the [secret-key cryptography](https://doc.libsodium.org/secret-key_cryptography) features of Sodium to encrypt and decrypt payloads. All payloads are JSON encoded in Base64. For Base64 type, use `sodium_base64_VARIANT_ORIGINAL` (that is, "original", no padding, not URL safe). If the payload does not contain a `data` key when unencrypted (such as with the [get_config](https://developers.home-assistant.io/docs/api/native-app-integration/sending-data#get-config) request), an empty JSON object (`{}`) must be encrypted instead.
+我们使用 Sodium 的 [secret-key cryptography](https://doc.libsodium.org/secret-key_cryptography) 功能来加密和解密有效载荷。所有有效载荷都用 Base64 编码。对于 Base64 类型，请使用 `sodium_base64_VARIANT_ORIGINAL`（即 "original"，无填充，不安全的 URL）。如果有效载荷在未加密时未包含 `data` 键（例如在 [get_config](https://developers.home-assistant.io/docs/api/native-app-integration/sending-data#get-config) 请求时），必须加密一个空的 JSON 对象 (`{}`)。
 
-### Signaling encryption support
+### 信号加密支持
 
-There are two ways to enable encryption support:
+启用加密支持有两种方式：
 
-- **During initial registration** you set `supports_encryption` to `true`.
-- **After initial registration** you call the `enable_encryption` webhook action.
+- **在初始注册期间** 您设置 `supports_encryption` 为 `true`。
+- **在初始注册后** 您调用 `enable_encryption` webhook 操作。
 
-The Home Assistant instance must be able to install `libsodium` to enable encryption. Confirm that you should make all future webhook requests encrypted by the presence of the key `secret` in the initial registration or enable encryption response.
+Home Assistant 实例必须能够安装 `libsodium` 才能启用加密。确认您应该通过在初始注册或启用加密响应中出现的 `secret` 键，使所有未来的 webhook 请求都加密。
 
-You must store this secret forever. There is no way to recover it via the Home Assistant UI and you should **not** ask users to investigate hidden storage files to re-enter the encryption key. You should create a new registration if encryption ever fails and alert the user.
+您必须永远存储此秘密。不能通过 Home Assistant UI 恢复它，您 **不** 应该要求用户调查隐藏存储文件以重新输入加密密钥。如果加密失败，您应该创建新的注册并提醒用户。
 
-A registration may not initially support encryption due to a lack of Sodium/NaCL on the Home Assistant Core side. You should always strive to encrypt communications if possible. Therefore, we politely request that from time to time you attempt to enable encryption automatically or allow the user to manually enable encryption via a button in your app. That way, they can attempt to first fix whatever error is causing Sodium/NaCL to be uninstallable and then have an encrypted registration later. Home Assistant Core will log exact details if Sodium/NaCL is uninstallable.
+由于 Home Assistant Core 端缺乏 Sodium/NaCL，注册可能最初不支持加密。您应该始终努力在可能的情况下加密通信。因此，我们礼貌地请求您不时尝试自动启用加密，或允许用户通过应用中的按钮手动启用加密。这样，他们可以首先尝试修复导致 Sodium/NaCL 无法卸载的任何错误，然后稍后进行加密注册。如果 Sodium/NaCL 无法卸载，Home Assistant Core 将记录确切的细节。
 
-## Update device location
+## 更新设备位置
 
-This message will inform Home Assistant of new location information.
+此消息将通知 Home Assistant 新的位置信息。
 
 ```json
 {
@@ -140,20 +140,20 @@ This message will inform Home Assistant of new location information.
 }
 ```
 
-| Key | Type | Description
+| 键 | 类型 | 描述
 | --- | ---- | -----------
-| `location_name` | string | Name of the zone the device is in.
-| `gps` | latlong | Current location as latitude and longitude.
-| `gps_accuracy` | int | GPS accuracy in meters. Must be greater than 0.
-| `battery` | int | Percentage of battery the device has left. Must be greater than 0.
-| `speed` | int | Speed of the device in meters per second. Must be greater than 0.
-| `altitude` | int | Altitude of the device in meters. Must be greater than 0.
-| `course` | int | The direction in which the device is traveling, measured in degrees and relative to due north. Must be greater than 0.
-| `vertical_accuracy` | int | The accuracy of the altitude value, measured in meters. Must be greater than 0.
+| `location_name` | string | 设备所在区域的名称。
+| `gps` | latlong | 当前地理位置的纬度和经度。
+| `gps_accuracy` | int | GPS 精度以米为单位。必须大于 0。
+| `battery` | int | 设备剩余电池百分比。必须大于 0。
+| `speed` | int | 设备速度，以米每秒为单位。必须大于 0。
+| `altitude` | int | 设备高度，以米为单位。必须大于 0。
+| `course` | int | 设备行进方向，以度数测量，且相对于正北。必须大于 0。
+| `vertical_accuracy` | int | 高度值的精度，以米为单位。必须大于 0。
 
-## Call a service action
+## 调用服务操作
 
-Call a service action in Home Assistant.
+在 Home Assistant 中调用服务操作。
 
 ```json
 {
@@ -168,15 +168,15 @@ Call a service action in Home Assistant.
 }
 ```
 
-| Key | Type | Description
+| 键 | 类型 | 描述
 | --- | ---- | -----------
-| `domain` | string | The domain of the service action
-| `service` | string | The service action name
-| `service_data` | dict | The data to send to the service action
+| `domain` | string | 服务操作的域
+| `service` | string | 服务操作名称
+| `service_data` | dict | 要发送到服务操作的数据
 
-## Fire an event
+## 触发事件
 
-Fire an event in Home Assistant. Please be mindful of the data structure as documented on our [Data Science portal](https://data.home-assistant.io/docs/events/#database-table).
+在 Home Assistant 中触发事件。请注意数据结构，如我们在 [Data Science portal](https://data.home-assistant.io/docs/events/#database-table) 中所记录的那样。
 
 ```json
 {
@@ -190,14 +190,14 @@ Fire an event in Home Assistant. Please be mindful of the data structure as docu
 }
 ```
 
-| Key | Type | Description
+| 键 | 类型 | 描述
 | --- | ---- | -----------
-| `event_type` | string | Type of the event to fire
-| `event_data` | string | Data of the event to fire
+| `event_type` | string | 触发事件的类型
+| `event_data` | string | 触发事件的数据
 
-## Render templates
+## 渲染模板
 
-Renders one or more templates and returns the result(s).
+渲染一个或多个模板并返回结果。
 
 ```json
 {
@@ -213,16 +213,16 @@ Renders one or more templates and returns the result(s).
 }
 ```
 
-`data` must contain a map of `key`: `dictionary`. Results will be returned like `{"my_tpl": "Hello Paulus, you are home"}`. This allows for rendering multiple templates in a single call.
+`data` 必须包含一个 `key`: `dictionary` 的映射。结果将像 `{"my_tpl": "Hello Paulus, you are home"}` 一样返回。这允许在一次调用中渲染多个模板。
 
-| Key | Type | Description
+| 键 | 类型 | 描述
 | --- | ---- | -----------
-| `template` | string | The template to render
-| `variables` | Dict | The extra template variables to include.
+| `template` | string | 要渲染的模板
+| `variables` | Dict | 要包含的额外模板变量。
 
-## Update registration
+## 更新注册
 
-Update your app registration. Use this if the app version changed or any of the other values.
+更新您的应用注册。如果应用版本发生变化或任何其他值更改，请使用此方法。
 
 ```json
 {
@@ -241,20 +241,20 @@ Update your app registration. Use this if the app version changed or any of the 
 }
 ```
 
-All keys are optional.
+所有键都是可选的。
 
-| Key | Type | Description
+| 键 | 类型 | 描述
 | --- | --- | --
-| `app_data` | Dict | App data can be used if the app has a supporting component that extends mobile_app functionality or wishes to enable the notification platform.
-| `app_version` | string | Version of the mobile app.
-| `device_name` | string | Name of the device running the app.
-| `manufacturer` | string | The manufacturer of the device running the app.
-| `model` | string | The model of the device running the app.
-| `os_version` | string | The OS version of the device running the app.
+| `app_data` | Dict | 如果应用有一个支持组件来扩展 mobile_app 功能或希望启用通知平台，则可以使用应用数据。
+| `app_version` | string | 移动应用的版本。
+| `device_name` | string | 运行应用的设备名称。
+| `manufacturer` | string | 运行应用的设备的制造商。
+| `model` | string | 运行应用的设备型号。
+| `os_version` | string | 运行应用的设备的操作系统版本。
 
-## Get zones
+## 获取区域
 
-Get all enabled zones.
+获取所有启用的区域。
 
 ```json
 {
@@ -262,9 +262,9 @@ Get all enabled zones.
 }
 ```
 
-## Get config
+## 获取配置
 
-Returns a version of `/api/config` with values useful for configuring your app.
+返回 `/api/config` 的版本，其中包含配置您的应用所需的值。
 
 ```json
 {
@@ -272,11 +272,11 @@ Returns a version of `/api/config` with values useful for configuring your app.
 }
 ```
 
-## Enable encryption
+## 启用加密
 
-_This requires Home Assistant 0.106 or later._
+_这需要 Home Assistant 0.106 或更高版本。_
 
-Enables encryption support for an existing registration
+为现有注册启用加密支持。
 
 ```json
 {
@@ -284,16 +284,16 @@ Enables encryption support for an existing registration
 }
 ```
 
-There are two errors you may receive:
+您可能收到两种错误：
 
-- `encryption_already_enabled` - Encryption is already enabled for this registration
-- `encryption_not_available` - Sodium/NaCL is unable to be installed. Cease all future attempts to enable encryption.
+- `encryption_already_enabled` - 此注册已启用加密
+- `encryption_not_available` - Sodium/NaCL 无法安装。停止所有未来的加密启用尝试。
 
-## Stream camera
+## 流式传输摄像头
 
-_This requires Home Assistant 0.112 or later._
+_这需要 Home Assistant 0.112 或更高版本。_
 
-Retrieve path information on how to stream a Camera.
+检索有关如何流式传输摄像头的信息。
 
 ```json
 {
@@ -304,12 +304,12 @@ Retrieve path information on how to stream a Camera.
 }
 ```
 
-| Key | Type | Description
+| 键 | 类型 | 描述
 | --- | ---- | -----------
-| `camera_entity_id` | string | The camera entity to retrieve streaming information about
+| `camera_entity_id` | string | 要检索流媒体信息的摄像头实体
 
 
-The response will include paths for streaming either via HLS or via MJPEG image previews.
+响应将包含通过 HLS 或 MJPEG 图像预览进行流式传输的路径。
 
 ```json
 {
@@ -318,23 +318,23 @@ The response will include paths for streaming either via HLS or via MJPEG image 
 }
 ```
 
-If HLS streaming is not available, the `hls_path` will be `null`. See notes above on instance URL for how to construct a full URL.
+如果 HLS 流式传输不可用，则 `hls_path` 将为 `null`。有关如何构造完整 URL 的实例 URL 的说明，请参见上文。
 
-## Process conversation
+## 处理对话
 
-_This requires Home Assistant 2023.2.0 or later._
+_这需要 Home Assistant 2023.2.0 或更高版本。_
 
-Process a sentence with the conversation integration.
+处理对话集成中的句子。
 
 ```json
 {
   "type": "conversation_process",
   "data": {
-    "text": "Turn on the lights",
-    "language": "en",
-    "conversation_id": "ABCD",
+    "text": "打开灯",
+    "language": "zh",
+    "conversation_id": "ABCD"
   }
 }
 ```
 
-For available keys and response, see the [conversation API documentation](../../intent_conversation_api).
+有关可用键和响应，请参见 [conversation API documentation](../../intent_conversation_api)。

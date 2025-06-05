@@ -1,5 +1,5 @@
 ---
-title: "Entities have translated names"
+title: "实体具有翻译名称"
 related_rules:
   - has-entity-name
   - entity-device-class
@@ -8,30 +8,30 @@ related_rules:
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+## 理由
 
-Home Assistant is used by people all over the world.
-To also make it easier for non-English speakers to use Home Assistant, it is important that entities have translated names.
-This makes it easier for people to understand what the entity is.
+家庭助理被世界各地的人使用。
+为了使非英语使用者更容易使用家庭助理，实体具有翻译名称是非常重要的。
+这使人们更容易理解实体的含义。
 
-## Example implementation
+## 示例实现
 
-In this example, the sensor has the name "Phase voltage" in English.
-Combined with the device name, this entity will name itself "My device Phase voltage".
+在这个示例中，传感器的英文名称是“Phase voltage”。
+结合设备名称，这个实体将自我命名为“我的设备 Phase voltage”。
 
 `sensor.py`:
 ```python {5} showLineNumbers
 class MySensor(SensorEntity):
-    """Representation of a sensor."""
+    """传感器的表示。"""
 
     _attr_has_entity_name = True
     _attr_translation_key = "phase_voltage"
 
     def __init__(self, device_id: str) -> None:
-        """Initialize the sensor."""
+        """初始化传感器。"""
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, device_id)},
-            name="My device",
+            name="我的设备",
         )
 ```
 
@@ -49,18 +49,18 @@ class MySensor(SensorEntity):
 ```
 
 :::info
-If the entity's platform is either `binary_sensor`, `number`, `sensor`, or `update` and it has a device class set, and you want the entity to have the same name as the device class, you can omit the translation key because the entity will then automatically use the device class name.
+如果实体的平台是 `binary_sensor`、`number`、`sensor` 或 `update` 并且设置了设备类，并且您希望实体与设备类拥有相同的名称，您可以省略翻译键，因为实体将自动使用设备类名称。
 :::
 
-## Additional resources
+## 其他资源
 
-More information about the translation process can be found in the [translation](/docs/internationalization/core) documentation, it also contains information about the [entity translations](/docs/internationalization/core#name-of-entities).
-More information about entity naming can be found in the [entity](/docs/core/entity#has_entity_name-true-mandatory-for-new-integrations) documentation.
+有关翻译过程的更多信息，请参阅[翻译](/docs/internationalization/core)文档，它还包含有关[实体翻译](/docs/internationalization/core#name-of-entities)的信息。
+有关实体命名的更多信息，请参阅[实体](/docs/core/entity#has_entity_name-true-mandatory-for-new-integrations)文档。
 
-## Exceptions
+## 例外
 
-There are no exceptions to this rule.
+此规则没有例外。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

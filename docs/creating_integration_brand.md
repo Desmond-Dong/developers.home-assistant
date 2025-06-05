@@ -1,15 +1,14 @@
 ---
-title: "Brands"
+title: "品牌"
 ---
 
-A commercial brand may have several integrations which provide support for different offerings under that brand. Also, a brand may offer devices which comply with an IoT standard, for example Zigbee or Z-Wave.
-As an example of the first case, there are multiple integrations providing support for different Google products, e.g. Google Calendar by the `google` integration and Google Sheets by the `google_sheets` integration.
-As an example of the second case, Innovelli offers Zigbee and Z-Wave devices and doesn't need its own integration.
+一个商业品牌可能有多个集成，这些集成为该品牌下的不同产品提供支持。此外，一个品牌可能会提供符合IoT标准的设备，例如Zigbee或Z-Wave。
+第一个案例的例子是，有多个集成为不同的Google产品提供支持，例如`google`集成的Google日历和`google_sheets`集成的Google表格。
+第二个案例的例子是，Innovelli提供Zigbee和Z-Wave设备，并不需要自己的集成。
 
+为了使用户更容易找到这些集成，它们应被收集在`homeassistant/brands`文件夹中的一个文件内。
 
-To make these integrations easier to find by the user, they should be collected in a file within the `homeassistant/brands`folder.
-
-Examples:
+示例：
 ```json
 {
   "domain": "google",
@@ -26,7 +25,7 @@ Examples:
 }
 ```
 
-Or a minimal example that you can copy into your project:
+或者一个可以复制到您项目中的最小示例：
 
 ```json
 {
@@ -37,19 +36,18 @@ Or a minimal example that you can copy into your project:
 }
 ```
 
-## Domain
+## 域
 
-The domain is a short name consisting of characters and underscores. This domain has to be unique and cannot be changed. Example of the domain for the Google brand: `google`. The domain key has to match the file name of the brand file it is in. If there's an integration with the same
-domain, it has to be listed in the brand's `integrations`.
+域是一个由字符和下划线组成的短名称。该域必须是唯一的，并且不能更改。Google品牌的域例子：`google`。域键必须与其所在品牌文件的文件名匹配。如果有一个具有相同域的集成，它必须在品牌的`integrations`中列出。
 
-## Name
+## 名称
 
-The name of the brand.
+品牌的名称。
 
-## Integrations
+## 集成
 
-A list of integration domains implementing offerings of the brand.
+实现该品牌产品的集成域列表。
 
-## IoT standards
+## IoT标准
 
-A list of IoT standards which are supported by devices of the brand. Possible values are `homekit`, `zigbee` and `zwave`. Note that a certain device may not support any of the listed IoT standards.
+品牌设备支持的IoT标准列表。可能的值包括`homekit`、`zigbee`和`zwave`。请注意，某些设备可能不支持任何列出的IoT标准。

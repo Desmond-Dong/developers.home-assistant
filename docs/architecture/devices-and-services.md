@@ -1,57 +1,57 @@
 ---
-title: "Entities: integrating devices & services"
-sidebar_label: "Introduction"
+title: "实体：集成设备和服务"
+sidebar_label: "介绍"
 ---
 
-Integrations can represent devices & services in Home Assistant. The data points are represented as entities. Entities are standardized by other integrations like `light`, `switch`, etc. Standardized entities come with actions for control, but an integration can also provide their own service actions in case something is not standardized.
+集成可以在 Home Assistant 中表示设备和服务。数据点被表示为实体。实体通过其他集成标准化，例如 `light`、`switch` 等。标准化实体附带控制的操作，但集成也可以提供自己的服务操作，以防某些内容未标准化。
 
-An entity abstracts away the internal workings of Home Assistant. As an integrator, you don't have to worry about how service actions or the state machine work. Instead, you extend an entity class and implement the necessary properties and methods for the device type that you're integrating.
+实体抽象了 Home Assistant 的内部工作。作为集成者，您不必担心服务操作或状态机是如何工作的。相反，您扩展实体类并实现所集成设备类型所需的属性和方法。
 
 <img className='invertDark'
   src='/img/en/architecture/integrating-devices-services.svg'
-  alt='Integrating devices & services' />
+  alt='集成设备和服务' />
 
 <!--
   https://docs.google.com/drawings/d/1oysZ1VMcPPuyKhY4tequsBWcblDdLydbWxlu6bH6678/edit?usp=sharing
 -->
 
-Configuration is provided by the user via a [Config Entry](../config_entries_index.md) or in special/legacy cases via [configuration.yaml](../configuration_yaml_index.md).
+配置由用户通过 [Config Entry](../config_entries_index.md) 提供，或在特殊/遗留情况下通过 [configuration.yaml](../configuration_yaml_index.md) 提供。
 
-The device integration (i.e. `hue`) will use this configuration to set up a connection with the device/service. It will forward the config entry (legacy uses discovery helper) to set up its entities in their respective integrations (light, switch). The device integration can also register their own service actions for things that are not made standardized. These actions are published under the integration's domain, ie `hue.activate_scene`.
+设备集成（即 `hue`）将使用此配置建立与设备/服务的连接。它将转发配置条目（遗留使用发现助手）以在其各自的集成（灯光、开关）中设置实体。设备集成还可以注册自己的服务操作，以便处理未标准化的事项。这些操作发布在集成的域下，即 `hue.activate_scene`。
 
-The entity integration (i.e. `light`) is responsible for defining the abstract entity class and services to control the entities.
+实体集成（即 `light`）负责定义抽象实体类和控制实体的服务。
 
-The Entity Component helper is responsible for distributing the configuration to the platforms, forward discovery and collect entities for service calls.
+Entity Component 助手负责将配置分发到平台，转发发现并收集服务调用的实体。
 
-The Entity Platform helper manages all entities for the platform and polls them for updates if necessary. When adding entities, the Entity Platform is responsible for registering the entity with the device and entity registries.
+Entity Platform 助手管理平台的所有实体，并在必要时轮询它们以进行更新。在添加实体时，Entity Platform 负责在设备和实体注册表中注册实体。
 
-Integration Platform (i.e. `hue.light`) uses configuration to query the external device/service and create entities to be added. It is also possible for integration platforms to register entity services. These services will work on all entities of the device integration for the entity integration (i.e. all Hue light entities). These services are published under the device integration domain.
+集成平台（即 `hue.light`）使用配置查询外部设备/服务并创建要添加的实体。集成平台也可以注册实体服务。这些服务将作用于实体集成的设备集成的所有实体（即所有 Hue 灯实体）。这些服务在设备集成域下发布。
 
-## Entity interaction with Home Assistant Core
+## 实体与 Home Assistant 核心的交互
 
-The integration entity class that inherits from the entity base class is responsible for fetching the data and handle the service calls. If polling is disabled, it is also responsible for telling Home Assistant when data is available.
+继承自实体基类的集成实体类负责获取数据并处理服务调用。如果禁用轮询，它还负责告诉 Home Assistant 数据何时可用。
 
 <img className='invertDark'
   src='/img/en/architecture/entity-core-interaction.svg'
-  alt='Entities interacting with core' />
+  alt='实体与核心的交互' />
 
 <!--
   https://docs.google.com/drawings/d/12Z0t6hriYrQZ2L5Ou7BVhPDd9iGvOvFiGniX5sgqsE4/edit?usp=sharing
 -->
 
-The entity base class (defined by the entity integration)  is responsible for formatting the data and writing it to the state machine.
+实体基类（由实体集成定义）负责格式化数据并将其写入状态机。
 
-The entity registry will write an `unavailable` state for any registered entity that is not currently backed by an entity object.
+实体注册表将为任何当前未由实体对象支持的注册实体写入 `unavailable` 状态。
 
-## Entity data hierarchy
+## 实体数据层次结构
 
 <img className='invertDark'
   style={{maxWidth: "200px"}}
   src='/img/en/architecture/entity-data-hierarchy.svg'
-  alt='Entity hierarchy' />
+  alt='实体层次结构' />
 
 <!--
   https://docs.google.com/drawings/d/1TorZABszaj3m7tgTyf-EMrheYCj3HAvwXB8YmJW5NZ4/edit?usp=sharing
 -->
 
-Delete, disable or re-enable any object and all objects below will be adjusted accordingly.
+删除、禁用或重新启用任何对象，所有下属对象将相应调整。

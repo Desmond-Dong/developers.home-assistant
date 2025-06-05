@@ -1,88 +1,88 @@
 ---
-title: "Android architecture"
-sidebar_label: "Architecture"
+title: "Android架构"
+sidebar_label: "架构"
 ---
 
-## Introduction
+## 介绍
 
-The Android project for Home Assistant started in 2019. Since then, the Android ecosystem has evolved significantly, and many contributors have shaped the project. As a result, you may encounter legacy code that does not adhere to current best practices. This documentation serves as the source of truth for the app's architecture and development practices.
+Home Assistant的Android项目始于2019年。从那时起，Android生态系统发生了显著变化，许多贡献者塑造了这个项目。因此，您可能会遇到不符合当前最佳实践的遗留代码。本文档作为应用架构和开发实践的真实来源。
 
-Home Assistant has been a frontrunner in [PWA](https://en.wikipedia.org/wiki/Progressive_web_app) development, and this philosophy is reflected in the native application. The app's centerpiece is a [WebView](https://developer.android.com/reference/android/webkit/WebView), which integrates with Home Assistant's frontend. Over time, native capabilities have been added, such as background sensor data collection.
+Home Assistant在[PWA](https://en.wikipedia.org/wiki/Progressive_web_app)开发方面一直处于领先地位，这一理念在原生应用中得到了体现。应用的核心是一个[WebView](https://developer.android.com/reference/android/webkit/WebView)，它与Home Assistant的前端集成。随着时间的推移，增加了本地功能，例如后台传感器数据收集。
 
-## Core principles
+## 核心原则
 
-### Kotlin first
+### Kotlin优先
 
-The entire codebase is written in [Kotlin](https://kotlinlang.org), ensuring modern, concise, and type-safe development.
+整个代码库使用[Kotlin](https://kotlinlang.org)编写，确保现代、简洁和类型安全的开发。
 
-### Android version support
+### Android版本支持
 
-- **Target SDK**: We aim to keep up with the latest Android SDK releases and test new versions as they are released.
-- **Min SDK**: To ensure broad compatibility, the app supports Android [Lollipop](https://en.wikipedia.org/wiki/Android_Lollipop) (API 21).
+- **目标SDK**：我们旨在跟上最新的Android SDK发布，并在新版本发布时进行测试。
+- **最小SDK**：为了确保广泛兼容性，应用支持Android [Lollipop](https://en.wikipedia.org/wiki/Android_Lollipop)（API 21）。
 
-## Application architecture
+## 应用架构
 
-We follow Google's recommended [Android architecture](https://developer.android.com/topic/architecture) and draw inspiration from the [NowInAndroid repository](https://github.com/android/nowinandroid).
+我们遵循谷歌推荐的[Android架构](https://developer.android.com/topic/architecture)，并从[NowInAndroid仓库](https://github.com/android/nowinandroid)中汲取灵感。
 
-### Build logic
+### 构建逻辑
 
-The project uses multiple Gradle modules. Shared logic is centralized in a separate Gradle project named `build-logic`, included in the main project via `includeBuild`.
+该项目使用多个Gradle模块。共享逻辑集中在一个名为`build-logic`的单独Gradle项目中，通过`includeBuild`包含在主项目中。
 
-### Common Gradle module
+### 共享Gradle模块
 
-To share code across different applications, we use a common Gradle module named `:common`.
+为了在不同应用之间共享代码，我们使用一个名为`:common`的共享Gradle模块。
 
-## UI development
+## 用户界面开发
 
-### Native UI
+### 原生用户界面
 
-All new UI components are built using [Jetpack Compose](https://developer.android.com/compose), ensuring a modern and declarative approach to UI development.
+所有新的UI组件都是使用[Jetpack Compose](https://developer.android.com/compose)构建的，确保以现代和声明性的方法进行UI开发。
 
-### Legacy UI
+### 遗留用户界面
 
-Some legacy XML layouts, `databinding`, and `viewbinding` still exist in the app. These should be replaced with Compose as part of ongoing modernization efforts.
+应用中仍然存在一些遗留的XML布局、`databinding`和`viewbinding`。这些应该在持续的现代化工作中替换为Compose。
 
-### Theming
+### 主题
 
-The app uses multiple themes to support both legacy XML and Compose-based UI. All new components should use `HomeAssistantAppTheme`, which is based on [Material Design](https://developer.android.com/develop/ui/compose/components).
+该应用使用多个主题，以支持遗留的XML和基于Compose的用户界面。所有新的组件应该使用`HomeAssistantAppTheme`，该主题基于[Material Design](https://developer.android.com/develop/ui/compose/components)。
 
-## Key features
+## 关键特性
 
-### Dependency injection (DI)
+### 依赖注入（DI）
 
-We use [Hilt](https://developer.android.com/training/dependency-injection/hilt-android) extensively for dependency injection, ensuring modular and testable code.
+我们广泛使用[Hilt](https://developer.android.com/training/dependency-injection/hilt-android)进行依赖注入，确保代码模块化和可测试。
 
-### Concurrency
+### 并发
 
-All concurrency is handled using [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html), providing a structured and efficient way to manage asynchronous tasks.
+所有并发都使用[Kotlin协程](https://kotlinlang.org/docs/coroutines-overview.html)进行处理，提供了一种结构化和高效的方式来管理异步任务。
 
-### Services
+### 服务
 
-We use [Foreground Services](https://developer.android.com/develop/background-work/services/fgs) for retrieving sensor values and uploading them to Home Assistant Core asynchronously.
+我们使用[前台服务](https://developer.android.com/develop/background-work/services/fgs)来检索传感器值并异步上传到Home Assistant Core。
 
 ### WebSocket
 
-The app maintains a direct connection to Home Assistant Core's WebSocket using [OkHttp](https://square.github.io/okhttp/). This is essential for features like Assist and real-time discussions.
+应用维持与Home Assistant Core的WebSocket的直接连接，使用[OkHttp](https://square.github.io/okhttp/)。这对于助手和实时讨论等功能至关重要。
 
 ### REST API
 
-Communication with Home Assistant's REST API is handled using [Retrofit](https://square.github.io/retrofit/), enabling seamless interaction with the backend.
+与Home Assistant的REST API的通信使用[Retrofit](https://square.github.io/retrofit/)处理，便于与后端的无缝交互。
 
-### Local storage
+### 本地存储
 
-- **Room**: User data is stored locally using [Room](https://developer.android.com/training/data-storage/room), which provides a robust database solution.
-- **SharedPreferences**: For app-specific settings, we use [SharedPreferences](https://developer.android.com/reference/android/content/SharedPreferences) with an abstraction layer named `LocalStorage`.
+- **Room**：用户数据使用[Room](https://developer.android.com/training/data-storage/room)在本地存储，提供了强大的数据库解决方案。
+- **SharedPreferences**：对于应用特定的设置，我们使用带有抽象层的[SharedPreferences](https://developer.android.com/reference/android/content/SharedPreferences)，该抽象层名为`LocalStorage`。
 
-### Deep linking
+### 深度链接
 
-The app supports deep linking using `homeassistant://` URLs to navigate to specific parts of the app. For more details, refer to the [user documentation](https://companion.home-assistant.io/docs/integrations/url-handler/).
+该应用支持使用`homeassistant://` URLs进行深度链接，以导航到应用的特定部分。有关更多详细信息，请参阅[用户文档](https://companion.home-assistant.io/docs/integrations/url-handler/)。
 
-## Platform-specific features
+## 特定平台的功能
 
-### Automotive
+### 汽车
 
-The automotive application reuses the sources of the `:app` module, simplifying development.
+汽车应用重用了`:app`模块的源代码，简化了开发。
 
 ### Wear OS
 
-The Wear OS app communicates with the mobile app to retrieve credentials for the Home Assistant server and other configurations using the [Messaging API](https://developer.android.com/training/wearables/data/messages). It only works with the `full` flavor, as it requires Google Play Services. Once the initial setup is complete, all further communication is handled directly with Home Assistant through the WebSocket and the [webhook](/docs/api/native-app-integration/sending-data) that is created for the app.
+Wear OS应用与移动应用通信，以获取Home Assistant服务器的凭证和其他配置，使用[消息API](https://developer.android.com/training/wearables/data/messages)。它仅适用于`full`风味，因为它需要Google Play服务。一旦初始设置完成，所有后续通信都将通过WebSocket和为应用创建的[webhook](/docs/api/native-app-integration/sending-data)直接与Home Assistant进行处理。

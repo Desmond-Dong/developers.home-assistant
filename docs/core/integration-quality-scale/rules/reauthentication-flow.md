@@ -1,5 +1,5 @@
 ---
-title: "Reauthentication needs to be available via the UI"
+title: "重新身份验证需要通过用户界面可用"
 related_rules:
   - config-flow
   - test-before-configure
@@ -9,38 +9,38 @@ related_rules:
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+##  推理
 
-It can happen that users change their password of a device or service and forget that their device or account is still linked to Home Assistant.
-To avoid that the user has to remove the configuration entry and re-add it, we start a reauthentication flow.
-During this flow, the user can provide the new credentials to use from now on.
+用户可能会更改设备或服务的密码，并忘记他们的设备或账户仍然链接到 Home Assistant。
+为了避免用户必须删除配置条目并重新添加它，我们启动重新身份验证流程。
+在此流程中，用户可以提供今后要使用的新凭据。
 
-This is a very user-friendly way to let the user know that they need to take action and update their credentials.
+这是一种非常用户友好的方式，让用户知道他们需要采取行动并更新他们的凭据。
 
-## Example implementation
+## 示例实现
 
-In the example below, we show an authentication flow that allows the user to reauthenticate with a new API token.
-When we receive the new token, we check if we can connect to the service to avoid the user from entering an invalid token.
-If the connection is successful, we update the configuration entry with the new token.
+在下面的示例中，我们展示了一个身份验证流程，允许用户使用新的 API 令牌重新身份验证。
+当我们收到新令牌时，我们检查是否可以连接到服务，以避免用户输入无效的令牌。
+如果连接成功，我们用新令牌更新配置条目。
 
 `config_flow.py`:
 ```python {6-11,13-35} showLineNumbers
 class MyConfigFlow(ConfigFlow, domain=DOMAIN):
-    """My config flow."""
+    """我的配置流程。"""
     
     host: str
 
     async def async_step_reauth(
         self, entry_data: Mapping[str, Any]
     ) -> ConfigFlowResult:
-        """Perform reauthentication upon an API authentication error."""
+        """在 API 身份验证错误时执行重新身份验证。"""
         self.host = entry_data[CONF_HOST]
         return await self.async_step_reauth_confirm()
 
     async def async_step_reauth_confirm(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Confirm reauthentication dialog."""
+        """确认重新身份验证对话框。"""
         errors: dict[str, str] = {}
         if user_input:
             client = MyClient(self.host, user_input[CONF_API_TOKEN])
@@ -64,7 +64,7 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Handle a flow initialized by the user."""
+        """处理用户初始化的流程。"""
         errors: dict[str, str] = {}
         if user_input:
             client = MyClient(user_input[CONF_HOST], user_input[CONF_API_TOKEN])
@@ -91,14 +91,14 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
         )
 ```
 
-## Additional resources
+## 附加资源
 
-For more info about handling expired credentials, check the [documentation](/docs/integration_setup_failures#handling-expired-credentials).
+有关处理过期凭据的更多信息，请查看 [文档](/docs/integration_setup_failures#handling-expired-credentials)。
 
-## Exceptions
+## 例外情况
 
-If the integration doesn't require any form of authentication, this rule doesn't apply.
+如果集成不需要任何形式的身份验证，则此规则不适用。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

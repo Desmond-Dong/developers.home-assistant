@@ -1,25 +1,25 @@
 ---
-title: "Intent matching test syntax"
-sidebar_label: "Test syntax"
+title: "意图匹配测试语法"
+sidebar_label: "测试语法"
 ---
 
-To ensure that the template sentences work as expected, we have an extensive test suite. This test suite is based on YAML files that contain a list of input sentences and the expected matched intent and slots.
+为了确保模板句子按预期工作，我们有一个广泛的测试套件。这个测试套件基于包含输入句子列表及预期匹配意图和槽位的 YAML 文件。
 
-The tests are stored [on GitHub](https://github.com/home-assistant/intents/tree/main/tests) and are organized by having for each language a directory of files `tests/<language>/`:
+测试存储在 [GitHub](https://github.com/home-assistant/intents/tree/main/tests) 上，并通过为每种语言设置一个目录 `tests/<language>/` 来组织：
 
- - `_fixtures.yaml` - Fake entities and areas that can be referenced during testing
- - `<domain>_<intent>.yaml` - Sentences for a [single intent](../../intent_builtin) and domain. These files should only test sentences that are defined in the [match sentences file](./template-sentence-syntax) with the same name.
+ - `_fixtures.yaml` - 可以在测试期间引用的虚构实体和区域
+ - `<domain>_<intent>.yaml` - 针对 [单一意图](../../intent_builtin) 和领域的句子。这些文件只应测试在 [匹配句子文件](./template-sentence-syntax) 中定义的同名句子。
 
 ``` yaml
-# Example homeassistant_HassTurnOn.yaml
+# 示例 homeassistant_HassTurnOn.yaml
 language: "en"
 tests:
-  # You can have multiple blocks of tests, each with different expected match data
+  # 您可以有多个测试块，每个块具有不同的预期匹配数据
   - sentences:
-      # Multiple sentences can be tested at once
-      - "turn on the ceiling fan"
-      - "turn the ceiling fan on"
-    # Expected match data
+      # 可以同时测试多个句子
+      - "打开天花板风扇"
+      - "将天花板风扇打开"
+    # 预期匹配数据
     intent:
       name: "HassTurnOn"
       slots:
@@ -28,23 +28,23 @@ tests:
 
 ## Fixtures
 
-When Home Assistant is matching sentences, it will provide a list of areas and entities that can be referenced in the sentence. For tests we define these in `_fixtures.yaml`.
+当 Home Assistant 匹配句子时，它将提供可以在句子中引用的区域和实体列表。对于测试，我们在 `_fixtures.yaml` 中定义这些内容。
 
 ```yaml
-# Example _fixtures.yaml for English
+# 示例 _fixtures.yaml（英语）
 language: "en"
 areas:
-  - name: "Kitchen"
+  - name: "厨房"
     id: "kitchen"
-  - name: "Living Room"
+  - name: "客厅"
     id: "living_room"
 entities:
-  - name: "Kitchen Switch"
+  - name: "厨房开关"
     id: "switch.kitchen"
     area: "kitchen"
-  - name: "Curtain Left"
+  - name: "左侧窗帘"
     id: "cover.curtain_left"
     area: "living_room"
 ```
 
-Make sure that fixtures do not have generic names like "garage door" or "curtains". Instead, use a unique name like "garage door left" or "curtains left". This is necessary to allow defining matching sentences based on the generic names, like "open the garage door".
+确保 fixtures 不要有像 "车库门" 或 "窗帘" 这样的通用名称。相反，使用唯一名称，如 "左侧车库门" 或 "左侧窗帘"。这是必要的，以允许根据通用名称定义匹配句子，例如 "打开车库门"。

@@ -1,30 +1,29 @@
 ---
-title: "Contributing your voice"
+title: "贡献你的声音"
 ---
 
-You can help us and the rest of the  open voice community develop **speech-to-text** and **text-to-speech** models for your language.
+您可以帮助我们和其他开放语音社区为您的语言开发 **语音转文本** 和 **文本转语音** 模型。
 
-## Speech-to-text
+## 语音转文本
 
-When you speak to a computer, it **transcribes** the audio from your voice into text. There are many ways to do this, but they all rely on recordings of people speaking.
+当你对着电脑说话时，它会 **转录** 你声音中的音频为文本。实现这一点的方式有很多，但它们都依赖于人们说话的录音。
 
-For speech-to-text, it is important to have:
+对于语音转文本，重要的是要有：
 
-* Many different speakers and accents
-* A variety of recording devices and quality levels
-    * Typically 16Khz audio with 16-bit samples
-* Multiple recording environments, including different rooms and noise levels
+* 许多不同的说话者和口音
+* 各种录音设备和质量水平
+    * 通常为 16KHz 音频，16 位样本
+* 多个录音环境，包括不同的房间和噪音水平
 
-We recommend that users contribute to [Mozilla's Common Voice](https://commonvoice.mozilla.org) project for speech-to-text. This free and open dataset crowd sources spoken sentences from people around the world. Contributors may also help by validating existing recordings.
+我们建议用户为 [Mozilla 的 Common Voice](https://commonvoice.mozilla.org) 项目贡献语音转文本。这是一个免费开放的数据集，众包来自全球人们的口语句子。贡献者也可以通过验证现有录音来提供帮助。
 
+## 文本转语音
 
-## Text-to-speech
+当计算机对你说话时，它会从文本中 **合成** 音频。这与语音转文本数据集有不同的要求：
 
-When a computer speaks to you, it **synthesizes** audio from text. This has different requirements than a speech to text dataset:
+* 一个说话者，或者所有说话者的数据量相等
+* 高质量的录音设备
+    * 通常为 48KHz，32 位样本
+* 安静、可控的录音环境，例如隔音间
 
-* A single speaker, or equal amounts of data for all speakers
-* A high quality recording device
-    * Typically 48Khz with 32-bit samples
-* A quiet, controlled recording environment such as a sound-proof booth
-
-We recommend that users contribute to the [LibriVox](https://librivox.org/) project for text to speech. This not only provides training data for the open voice community, but also free audio books for everyone to enjoy. Importantly, the books that are read must be in the public domain.
+我们建议用户为 [LibriVox](https://librivox.org/) 项目贡献文本转语音。这不仅为开放语音社区提供训练数据，还为每个人提供免费的有声书。重要的是，所读的书籍必须是公共领域的。

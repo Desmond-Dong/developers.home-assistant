@@ -1,88 +1,88 @@
 ---
-title: "The documentation describes the supported functionality, including entities, and platforms"
+title: "文档描述了支持的功能，包括实体和平台"
 ---
 
-## Reasoning
+## 理由
 
-Users should be able to understand what value the integration will add for their (to be bought) device.
-This will help set users' expectations.
+用户应该能够理解集成将为他们（即将购买的）设备带来什么价值。
+这将有助于设定用户的期望。
 
-For example, if a user is looking for a new fridge, we should try to be clear about what they can expect from the integration.
-If the integration only supports checking if the door is open or closed, they would be disappointed if they expected to be able to view the temperature of the fridge.
+例如，如果用户正在寻找一台新的冰箱，我们应该尽量明确他们可以从集成中期待什么。
+如果集成仅支持检查门是开还是关，他们会感到失望，如果他们期望能够查看冰箱的温度。
 
-## Example implementation
+## 示例实现
 
-Example, sorted by entity types:
+示例，按实体类型排序：
 
 ```markdown showLineNumbers
-## Supported functionality
+## 支持的功能
 
-### Entities
+### 实体
 
-The XY integration provides the following entities.
+XY 集成提供以下实体。
 
-#### Buttons
+#### 按钮
 
-- **Start backflush**
-  - **Description**: Starts the backflush process on your machine. You got 15 seconds to turn the paddle after activation.
-  - **Available for machines**: all
+- **启动反冲洗**
+  - **描述**：启动机器上的反冲洗过程。激活后你有 15 秒的时间转动桨叶。
+  - **适用机器**：所有
 
-#### Numbers
+#### 数字
 
-- **Dose**
-  - **Description**: Dosage (in ticks) for each key
-  - **Available for machines**: GS3 AV, Linea Mini.
-  - **Remarks**: GS3 has this multiple times, one for each physical key (1-4), and the entities are disabled by default.
+- **剂量**
+  - **描述**：每个按键的剂量（以滴为单位）
+  - **适用机器**：GS3 AV、Linea Mini。
+  - **备注**：GS3 有多次此功能，每个物理按键（1-4）都有，其实体默认禁用。
 
-#### Sensors
+#### 传感器
 
-- **Current coffee temperature**
-  - **Description**: Current temperature of the coffee boiler.
-  - **Available for machines**: all
-  - **Remarks**: When the machine reaches temperature, this will be approximately 3 degrees higher than the `Coffee target temperature`, due to different measurement points.
+- **当前咖啡温度**
+  - **描述**：咖啡锅的当前温度。
+  - **适用机器**：所有
+  - **备注**：当机器达到温度时，这将高于 `咖啡目标温度` 约 3 度，原因是测量点不同。
 
-- **Current steam temperature**
-  - **Description**: Current temperature of the steam boiler.
-  - **Available for machines**: Linea Micra, GS3 AV, GS3 MP.
-  - **Remarks**: -
+- **当前蒸汽温度**
+  - **描述**：蒸汽锅的当前温度。
+  - **适用机器**：Linea Micra、GS3 AV、GS3 MP。
+  - **备注**：-
 
-#### Updates
+#### 更新
 
-- **Gateway firmware**
-  - **Description**: Firmware status of the gateway.
-  - **Available for machines**: all
+- **网关固件**
+  - **描述**：网关的固件状态。
+  - **适用机器**：所有
 
-#### Selects
+#### 选择
 
-- **Prebrew/-infusion mode**
-  - **Description**: Whether to use prebrew, preinfusion, or neither.
-  - **Options**: Disabled, Prebrew, Preinfusion
-  - **Available for machines**: Linea Micra, Linea Mini, GS3 AV
+- **预浸/预注入模式**
+  - **描述**：是否使用预浸、预注入或两者都不使用。
+  - **选项**：禁用、预浸、预注入
+  - **适用机器**：Linea Micra、Linea Mini、GS3 AV
 
-- **Steam level**
-  - **Description**: The level your steam boiler should run at.
-  - **Options**: 1, 2, 3
-  - **Available for machines**: Linea Micra
+- **蒸汽水平**
+  - **描述**：蒸汽锅应运行的水平。
+  - **选项**：1、2、3
+  - **适用机器**：Linea Micra
 ```
 
-Example, sorted by device:
+示例，按设备排序：
 
 ```markdown
-## Supported functionality
+## 支持的功能
 
-### XYZ productname Air Purifier, Air Humidifier and Standing Fan
+### XYZ 产品名空气净化器、空气加湿器和立式风扇
 
-#### Sensors
+#### 传感器
 
-- **Filter lifetime remaining**: The remaining life of the filter in number of years. Enabled by default.
-- **Purify volume**: The volume of purified air in cubic meters. Disabled by default.
+- **过滤器剩余寿命**：过滤器剩余寿命（以年为单位）。默认启用。
+- **净化体积**：净化空气的体积（以立方米为单位）。默认禁用。
 
-#### Numbers
+#### 数字
 
-- **Favorite level**: Set the favorite level. Possible values are 0 to 10. `0` means it is turned off.)
-- **Volume**: Set the volume. In percent. `0%` means it is off.
+- **最爱水平**：设置最爱水平。可能的值为 0 到 10。`0` 表示关闭。
+- **音量**：设置音量。以百分比表示。`0%` 表示关闭。
 ```
 
-## Exceptions
+## 例外
 
-There are no exceptions to this rule.
+该规则没有例外。

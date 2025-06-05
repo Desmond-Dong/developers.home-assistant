@@ -1,25 +1,25 @@
 ---
-title: "Home Assistant API for Large Language Models"
+title: "Home Assistant API 用于大型语言模型"
 sidebar_label: "LLM API"
 ---
 
-Home Assistant can interact with large language models (LLMs). By exposing a Home Assistant API to an LLM, the LLM can fetch data or control Home Assistant to better assist the user. Home Assistant comes with a built-in LLM API, but custom integrations can register their own to provide more advanced functionality.
+Home Assistant 可以与大型语言模型 (LLM) 进行交互。通过向 LLM 暴露 Home Assistant API，LLM 可以获取数据或控制 Home Assistant，以更好地帮助用户。Home Assistant 提供了内置的 LLM API，但自定义集成可以注册自己的 API，以提供更高级的功能。
 
-## Built-in Assist API
+## 内置助手 API
 
-Home Assistant has a built-in API which exposes the Assist API to LLMs. This API allows LLMs to interact with Home Assistant via [intents](../../intent_builtin), and can be extended by registering intents.
+Home Assistant 提供了一个内置 API，该 API 向 LLM 暴露了助手 API。此 API 允许 LLM 通过 [意图](../../intent_builtin) 与 Home Assistant 进行交互，并可以通过注册意图进行扩展。
 
-The Assist API is equivalent to the capabilities and exposed entities that are also accessible to the built-in conversation agent. No administrative tasks can be performed.
+助手 API 等同于内置对话代理可访问的功能和实体。无法执行任何管理任务。
 
-## Supporting LLM APIs
+## 支持 LLM API
 
-The LLM API needs to be integrated in two places in your integration. Users need to be able to configure which APIs should be used, and the tools offered by the APIs should be passed to the LLM when interacting with it.
+LLM API 需要在您的集成中集成两个地方。用户需要能够配置应使用哪些 API，并且 API 提供的工具应在与 LLM 交互时传递给 LLM。
 
-### Options flow
+### 选项流
 
-The chosen API should be stored in the config entry options. It should hold a string or list of selected API IDs, if any. If no API is selected, the key must be omitted.
+所选择的 API 应存储在配置条目的选项中。它应包含一个字符串或所选 API ID 的列表（如果有）。如果未选择任何 API，则必须省略该键。
 
-In your options flow, you should offer a selector to the user to pick which API should be used.
+在您的选项流中，您应向用户提供一个选择器，以选择应使用哪个 API。
 
 ```python
 from types import MappingProxyType
@@ -39,7 +39,7 @@ def async_get_options_schema(
     hass: HomeAssistant,
     options: MappingProxyType[str, Any],
 ) -> vol.Schema:
-    """Return the options schema."""
+    """返回选项架构。"""
     apis: list[SelectOptionDict] = [
         SelectOptionDict(
             label=api.name,
@@ -59,9 +59,9 @@ def async_get_options_schema(
 ```
 
 
-### Fetching tools
+### 获取工具
 
-When interacting with the LLM, the provided `ChatLog` will make any selected tools available from the selected API and the conversation entity should pass them to the LLM together with the extra prompt provided by the API.
+与 LLM 交互时，提供的 `ChatLog` 将使所选工具从所选 API 中可用，并且会话实体应将它们与 API 提供的额外提示一起传递给 LLM。
 
 ```python
 from homeassistant.const import CONF_LLM_HASS_API
@@ -73,7 +73,7 @@ from homeassistant.helpers import intent, llm
 class MyConversationEntity(conversation.ConversationEntity):
 
     def __init__(self, entry: ConfigEntry) -> None:
-        """Initialize the agent."""
+        """初始化代理。"""
         self.entry = entry
 
     ...
@@ -83,7 +83,7 @@ class MyConversationEntity(conversation.ConversationEntity):
         user_input: conversation.ConversationInput,
         chat_log: conversation.ChatLog,
     ) -> conversation.ConversationResult:
-        """Call the API."""
+        """调用 API。"""
 
         try:
             await chat_log.async_update_llm_data(
@@ -98,26 +98,26 @@ class MyConversationEntity(conversation.ConversationEntity):
         tools: list[dict[str, Any]] | None = None
         if chat_log.llm_api:
             tools = [
-                _format_tool(tool)  # TODO format the tools as your LLM expects
+                _format_tool(tool)  # TODO 格式化工具以符合您的 LLM 期望
                 for tool in chat_log.llm_api.tools
             ]
 
         messages = [
             m
             for content in chat_log.content
-            for m in _convert_content(content)  # TODO format messages
+            for m in _convert_content(content)  # TODO 格式化消息
         ]
 
-        # Interact with LLM and pass tools
+        # 与 LLM 交互并传递工具
         request = user_input.text
         for _iteration in range(10):
-            response = ... # Send request to LLM and get streaming response
+            response = ... # 向 LLM 发送请求并获取流式响应
 
             messages.extend(
                 [
-                    _convert_content(content)  # TODO format messages
+                    _convert_content(content)  # TODO 格式化消息
                     async for content in chat_log.async_add_delta_content_stream(
-                        user_input.agent_id, _transform_stream(response)  # TODO call tools and stream responses
+                        user_input.agent_id, _transform_stream(response)  # TODO 调用工具并流式响应
                     )
                 ]
             )
@@ -125,7 +125,7 @@ class MyConversationEntity(conversation.ConversationEntity):
             if not chat_log.unresponded_tool_results:
                 break
 
-        # Send the final response to the user
+        # 将最终响应发送给用户
         intent_response = intent.IntentResponse(language=user_input.language)
         intent_response.async_set_speech(chat_log.content[-1].content or "")
         return conversation.ConversationResult(
@@ -135,13 +135,13 @@ class MyConversationEntity(conversation.ConversationEntity):
         )
 ```
 
-## Creating your own API
+## 创建您自己的 API
 
-To create your own API, you need to create a class that inherits from `API` and implement the `async_get_tools` method. The `async_get_tools` method should return a list of `Tool` objects that represent the functionality that you want to expose to the LLM.
+要创建您自己的 API，您需要创建一个继承自 `API` 的类，并实现 `async_get_tools` 方法。`async_get_tools` 方法应返回表示您想向 LLM 暴露的功能的 `Tool` 对象列表。
 
-### Tools
+### 工具
 
-The `llm.Tool` class represents a tool that can be called by the LLM.
+`llm.Tool` 类表示 LLM 可以调用的工具。
 
 ```python
 from homeassistant.core import HomeAssistant
@@ -151,12 +151,12 @@ from homeassistant.util.json import JsonObjectType
 
 
 class TimeTool(llm.Tool):
-    """Tool to get the current time."""
+    """获取当前时间的工具。"""
 
     name = "GetTime"
-    description: "Returns the current time."
+    description: "返回当前时间。"
 
-    # Optional. A voluptuous schema of the input parameters.
+    # 可选。输入参数的 Voluptuous 架构。
     parameters = vol.Schema({
       vol.Optional('timezone'): str,
     })
@@ -164,7 +164,7 @@ class TimeTool(llm.Tool):
     async def async_call(
         self, hass: HomeAssistant, tool_input: ToolInput, llm_context: LLMContext
     ) -> JsonObjectType:
-        """Call the tool."""
+        """调用工具。"""
         if "timezone" in tool_input.tool_args:
             tzinfo = dt_util.get_time_zone(tool_input.tool_args["timezone"])
         else:
@@ -173,40 +173,40 @@ class TimeTool(llm.Tool):
         return dt_util.now(tzinfo).isoformat()
 ```
 
-The `llm.Tool` class has the following attributes:
+`llm.Tool` 类具有以下属性：
 
-| Name                | Type       | Description                                                                                                    |
-|---------------------|------------|----------------------------------------------------------------------------------------------------------------|
-| `name`              | string     | The name of the tool. Required.                                                                                |
-| `description`       | string     | Description of the tool to help the LLM understand when and how it should be called. Optional but recommended. |
-| `parameters`        | vol.Schema | The voluptuous schema of the parameters. Defaults to vol.Schema({})                                            |
+| 名称             | 类型       | 描述                                                                                                   |
+|------------------|------------|--------------------------------------------------------------------------------------------------------|
+| `name`           | string     | 工具的名称。必需。                                                                                     |
+| `description`    | string     | 帮助 LLM 理解何时以及如何调用工具的描述。可选，但推荐。                                                |
+| `parameters`     | vol.Schema | 参数的 Voluptuous 架构。默认为 vol.Schema({})                                                        |
 
-The `llm.Tool` class has the following methods:
+`llm.Tool` 类具有以下方法：
 
 #### `async_call`
 
-Perform the actual operation of the tool when called by the LLM. This must be an async method. Its arguments are `hass` and an instance of `llm.ToolInput`.
+在 LLM 调用工具时执行工具的实际操作。这必须是一个异步方法。其参数为 `hass` 和 `llm.ToolInput` 的实例。
 
-Response data must be a dict and serializable in JSON [`homeassistant.util.json.JsonObjectType`](https://github.com/home-assistant/home-assistant/blob/master/homeassistant/util/json.py).
+响应数据必须是一个 dict，并且可序列化为 JSON [`homeassistant.util.json.JsonObjectType`](https://github.com/home-assistant/home-assistant/blob/master/homeassistant/util/json.py)。
 
-Errors must be raised as `HomeAssistantError` exceptions (or its subclasses). The response data should not contain error codes used for error handling.
+错误必须作为 `HomeAssistantError` 异常（或其子类）引发。响应数据不应包含用于错误处理的错误代码。
 
-The `ToolInput` has following attributes:
+`ToolInput` 具有以下属性：
 
-| Name              | Type    | Description                                                                                             |
-|-------------------|---------|---------------------------------------------------------------------------------------------------------|
-| `tool_name`       | string  | The name of the tool being called                                                                       |
-| `tool_args`       | dict    | The arguments provided by the LLM. The arguments are converted and validated using `parameters` schema. |
-| `platform`        | string  | The DOMAIN of the conversation agent using the tool                                                     |
-| `context`         | Context | The `homeassistant.core.Context` of the conversation                                                    |
-| `user_prompt`     | string  | The raw text input that initiated the tool call                                                         |
-| `language`        | string  | The language of the conversation agent, or "*" for any language                                         |
-| `assistant`       | string  | The assistant name used to control exposed entities. Currently, only `conversation` is supported.        |
-| `device_id`       | string  | The device_id of the device the user used to initiate the conversation.                                 |
+| 名称               | 类型     | 描述                                                                                      |
+|--------------------|----------|------------------------------------------------------------------------------------------|
+| `tool_name`        | string   | 被调用工具的名称                                                                        |
+| `tool_args`        | dict     | LLM 提供的参数。参数使用 `parameters` 架构进行转换和验证。                             |
+| `platform`         | string   | 使用工具的对话代理的 DOMAIN                                                              |
+| `context`          | Context  | 对话的 `homeassistant.core.Context`                                                       |
+| `user_prompt`      | string   | 发起工具调用的原始文本输入                                                              |
+| `language`         | string   | 对话代理的语言，或 "*" 表示任何语言                                                     |
+| `assistant`        | string   | 用于控制暴露实体的助手名称。目前只支持 `conversation`。                                   |
+| `device_id`        | string   | 用户用于发起对话的设备的 device_id。                                                  |
 
 ### API
 
-The API object allows creating API instances. An API Instance represents a collection of tools that will be made available to the LLM.
+API 对象允许创建 API 实例。API 实例表示将提供给 LLM 的工具的集合。
 
 ```python
 from homeassistant.config_entries import ConfigEntry
@@ -217,22 +217,21 @@ from homeassistant.util.json import JsonObjectType
 
 
 class MyAPI(API):
-    """My own API for LLMs."""
+    """我自己的 LLM API。"""
 
     async def async_get_api_instance(self, llm_context: LLMContext) -> APIInstance:
-        """Return the instance of the API."""
+        """返回 API 的实例。"""
         return APIInstance(
             api=self,
-            api_prompt="Call the tools to fetch data from Home Assistant.",
+            api_prompt="调用工具以从 Home Assistant 获取数据。",
             llm_context=llm_context,
             tools=[TimeTool()],
         )
 
 
 async def async_setup_api(hass: HomeAssistant, entry: ConfigEntry) -> None:
-    """Register the API with Home Assistant."""
-    # If the API is associated with a Config Entry, the LLM API must be
-    # unregistered when the config entry is unloaded.
+    """向 Home Assistant 注册 API。"""
+    # 如果 API 与配置条目相关联，卸载配置条目时必须注销 LLM API。
     unreg = llm.async_register_api(
         hass,
         MyAPI(hass, f"my_unique_key-{entry.entry_id}", entry.title)
@@ -240,18 +239,18 @@ async def async_setup_api(hass: HomeAssistant, entry: ConfigEntry) -> None:
     entry.async_on_unload(unreg)
 ```
 
-The `llm.API` class has the following attributes:
+`llm.API` 类具有以下属性：
 
-| Name              | Type    | Description                                                                                             |
-|-------------------|---------|---------------------------------------------------------------------------------------------------------|
-| `id`              | string  | A unique identifier for the API. Required.                                                              |
-| `name`            | string  | The name of the API. Required.                                                                          |
+| 名称              | 类型     | 描述                                                                                      |
+|--------------------|----------|------------------------------------------------------------------------------------------|
+| `id`               | string   | API 的唯一标识符。必需。                                                                  |
+| `name`             | string   | API 的名称。必需。                                                                        |
 
-The `llm.APIInstance` class has the following attributes:
+`llm.APIInstance` 类具有以下属性：
 
-| Name              | Type    | Description                                                                                             |
-|-------------------|---------|---------------------------------------------------------------------------------------------------------|
-| `api`             | API     | The API object. Required.                                                                               |
-| `api_prompt`      | string  | Instructions for LLM on how to use the LLM tools. Required.                                      |
-| `llm_context`    | LLMContext | The context of the tool call. Required.                                                                 |
-| `tools`           | list[Tool] | The tools that are available in this API. Required.                                                     |
+| 名称               | 类型      | 描述                                                                                     |
+|--------------------|-----------|-----------------------------------------------------------------------------------------|
+| `api`              | API       | API 对象。必需。                                                                        |
+| `api_prompt`       | string    | 对 LLM 使用 LLM 工具的指示。必需。                                                   |
+| `llm_context`      | LLMContext | 工具调用的上下文。必需。                                                                  |
+| `tools`            | list[Tool] | 此 API 中可用的工具。必需。                                                              |

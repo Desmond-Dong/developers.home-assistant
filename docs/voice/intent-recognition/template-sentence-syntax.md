@@ -1,37 +1,37 @@
 ---
-title: "Template sentence syntax"
+title: "模板句子语法"
 ---
 
-Template sentences are defined in YAML files using the format of [Hassil, our template matcher](https://github.com/home-assistant/hassil). Our template sentences are stored [on GitHub](https://github.com/home-assistant/intents/tree/main/sentences) and are organized by having for each language a directory of files in `sentences/<language>/`:
+模板句子在 YAML 文件中定义，使用 [Hassil， 我们的模板匹配器](https://github.com/home-assistant/hassil) 的格式。我们的模板句子存储在 [GitHub](https://github.com/home-assistant/intents/tree/main/sentences) 上，并通过为每种语言提供一个文件夹来组织，路径为 `sentences/<language>/`：
 
- - `_common.yaml` - Lists, expansion rules and skip words to be used across all template sentences.
- - `<domain>_<intent>.yaml` - Template sentences for a [single intent](../../intent_builtin) and domain.
+ - `_common.yaml` - 列出可在所有模板句子中使用的列表、扩展规则和跳过的词。
+ - `<domain>_<intent>.yaml` - 针对单个意图和域的模板句子。
 
-Besides the data in `_common.yaml`, template sentences can also use the lists `name` and `area`. These lists are made available by Home Assistant during intent recognition.
+除了 `_common.yaml` 中的数据外，模板句子还可以使用列表 `name` 和 `area`。这些列表在意图识别期间由 Home Assistant 提供。
 
-``` yaml
-# Example light_HassTurnOn.yaml
+```yaml
+# 示例 light_HassTurnOn.yaml
 language: "en"
 intents:
-  HassTurnOn:  # Intent name
+  HassTurnOn:  # 意图名称
     data:
       - sentences:
           - "<turn> on [all] [the] (light | lights) in [the] {area}"
           - "<turn> on [all] [the] {area} (light | lights)"
           - "<turn> [all] [the] (light | lights) in [the] {area} on"
-        # Optional; used to set fixed slot values when the intent is matched
+        # 可选；用于在意图匹配时设置固定槽值
         slots:
           domain: "light"
 ```
 
-The above example will match the sentence `turn on all the lights in the living room` to the intent `HassTurnOn` and extract the area `living room`. The domain value is set to `light`. In Home Assistant, when the intent is executed, it will turn on all entities of type `light` in the area `living room`.
+上面的示例将句子 `turn on all the lights in the living room` 匹配到意图 `HassTurnOn`，并提取出区域 `living room`。域值设置为 `light`。在 Home Assistant 中，当执行该意图时，它将打开位于 `living room` 区域的所有 `light` 类型的实体。
 
-## Responses
+## 响应
 
-A sentence template file may contain a response "key" for a group of sentences:
+句子模板文件可以包含一组句子的响应 "key"：
 
-``` yaml
-# Example light_HassLightSet.yaml
+```yaml
+# 示例 light_HassLightSet.yaml
 language: "en"
 intents:
   HassTurnOn:
@@ -43,7 +43,7 @@ intents:
         response: "brightness"
 ```
 
-In the example above, the response key "brightness" refers to a template inside the file `responses/en/HassLightSet.yaml`:
+在上面的示例中，响应键 "brightness" 指的是文件 `responses/en/HassLightSet.yaml` 中的模板：
 
 ```yaml
 language: en
@@ -53,43 +53,43 @@ responses:
       brightness: '{{ slots.name }} brightness set to {{ slots.brightness }}'
 ```
 
-If no response key is provided, then `"default"` is assumed.
+如果没有提供响应键，则假定为 `"default"`。
 
-Response templates uses [Jinja2 syntax](https://jinja.palletsprojects.com/en/latest/templates/) and may refer to the `slots` object whose attributes are the matched intent's slot values.
+响应模板使用 [Jinja2 语法](https://jinja.palletsprojects.com/en/latest/templates/) 并可能引用 `slots` 对象，其属性为匹配意图的槽值。
 
-See all [translated responses](https://github.com/home-assistant/intents/tree/main/responses) for more examples.
+查看所有 [翻译的响应](https://github.com/home-assistant/intents/tree/main/responses) 以获取更多示例。
 
-## Sentence templates syntax
+## 句子模板语法
 
-* Alternative word, phrases, or parts of a word
+* 替代词、短语或词的一部分
   * `(red | green | blue)`
   * `turn(ed | ing)`
-* Optional word, phrases, or parts of a word
+* 可选词、短语或词的一部分
   * `[the]`
   * `[this | that]`
   * `light[s]`
-* Slot Lists
+* 槽列表
   * `{list_name}`
-  * `{list_name:slot_name}` (if intent slot is named different)
-  * Every value of the list is a different option
-  * In YAML, `list_name` should be under `lists`
-  * Use `values` for text lists, `range` for numeric lists
-* Expansion Rules
+  * `{list_name:slot_name}`（如果意图槽命名不同）
+  * 列表中的每个值都是一个不同的选项
+  * 在 YAML 中，`list_name` 应在 `lists` 下
+  * 使用 `values` 处理文本列表，使用 `range` 处理数字列表
+* 扩展规则
   * `<rule_name>`
-  * The body of the rule is substituted for `<rule_name>`
-  * In YAML, `rule_name` should be under `expansion_rules`. If the `rule_name` wraps a slot name, it should match the slot name. Otherwise it should be in the native language.
-* [Permutations](https://en.wikipedia.org/wiki/Permutation) of 2 or more items
+  * 规则的主体会替换 `<rule_name>`
+  * 在 YAML 中，`rule_name` 应在 `expansion_rules` 下。如果 `rule_name` 包裹了一个槽名称，它应该与槽名称匹配。否则，它应该用母语书写。
+* [排列](https://en.wikipedia.org/wiki/Permutation) 两个或更多项的变体
   * `(patience;you must have)`
-  * Permutation items are always padded with spaces to prevent new word formations
-  * Limit the number of items to 2-4, as the number of permutations for `n` items increases very quickly with `n`, this number being `n! == 1 * 2 * ... * n`
+  * 排列项目始终用空格填充以防止新词形成
+  * 限制项目数量为 2-4，因为 `n` 个项目的排列数随 `n` 的增加而快速增加，这个数字为 `n! == 1 * 2 * ... * n`
 
-## The common file
+## 公共文件
 
-The common file `_common.yaml` contains lists, expansion rules, and skip words that are used across template sentences for all intents and domains.
+公共文件 `_common.yaml` 包含在所有意图和域的模板句子中使用的列表、扩展规则和跳过的词。
 
-### Lists
+### 列表
 
-Lists are possible values for a slot. Slots are data that we want to extract from a sentence. For example, we can make a list `color` to match possible colors.
+列表是槽的可能值。槽是我们想要从句子中提取的数据。例如，我们可以创建一个列表 `color` 来匹配可能的颜色。
 
 ```yaml
 lists:
@@ -100,7 +100,7 @@ lists:
       - "orange"
 ```
 
-Intent handlers in Home Assistant expect color to be defined in English. To allow other languages to define colors, lists support the in-out format. This allows you to define a list of values in the native language, but the intent handler will receive the values in English.
+Home Assistant 中的意图处理器期望颜色以英语定义。为了允许其他语言定义颜色，列表支持进出格式。这允许您用母语定义值列表，但意图处理器将以英语接收这些值。
 
 ```yaml
 lists:
@@ -112,7 +112,7 @@ lists:
         out: "orange"
 ```
 
-A list can also be a range of numbers. This is useful for defining a range of brightness values or temperature that you want to match.
+列表也可以是数字范围。这对于定义您希望匹配的亮度值或温度范围非常有用。
 
 ```yaml
 lists:
@@ -123,7 +123,7 @@ lists:
       to: 100
 ```
 
-Specific numbers can also be matched by a list, like returning 100 from the keyword maximum. To use this list to set the brightness in a sentence, use the following syntax: `{brightness_level:brightness}`. This will get the value from the list but put it in the slot for brightness. 
+特定数字也可以通过列表进行匹配，比如从关键字最大值返回 100。要使用此列表在句子中设置亮度，请使用以下语法：`{brightness_level:brightness}`。这将从列表中获取值，但将其放入亮度槽中。
 
 ```yaml
 lists:
@@ -131,13 +131,13 @@ lists:
     values:
       - in: (max | maximum | highest)
         out: 100
-      - in: ( minimum | lowest)
+      - in: (minimum | lowest)
         out: 1
 ```
 
-#### Wildcards
+#### 通配符
 
-Wildcard lists can match any text, for example:
+通配符列表可以匹配任何文本，例如：
 
 ```yaml
 language: en
@@ -153,11 +153,11 @@ lists:
     wildcard: true
 ```
 
-will match sentences such as "play the white album by the beatles". The `PlayAlbum` intent will have an `album` slot with "the white album " (note the trailing whitespace) and an `artist` slot with "the beatles".
+将匹配句子，例如 "play the white album by the beatles"。`PlayAlbum` 意图将有一个 `album` 槽，其值为 "the white album "（注意后面的空格）和一个 `artist` 槽，其值为 "the beatles"。
 
-#### Local lists
+#### 局部列表
 
-Sometimes you don't need a slot list available for all intents and sentences, so you can define one locally, making it usable only in the context of the intent data (like a collection of sentences) where it was defined. For example:
+有时您不需要为所有意图和句子提供的槽列表，因此您可以在本地定义一个，只在它被定义的意图数据（如句子集）上下文中使用。例如：
 
 ```yaml
 language: en
@@ -171,11 +171,11 @@ intents:
             wildcard: true
 ```
 
-### Expansion rules
+### 扩展规则
 
-A lot of template sentences can be written in a similar way. To avoid having to repeat the same matching structure multiple times, we can define expansion rules. For example, a user might add "the" in front of the area name, or they might not. We can define an expansion rule to match both cases.
+许多模板句子可以以类似的方式编写。为了避免重复相同的匹配结构，我们可以定义扩展规则。例如，用户可能会在区域名称前加上 "the"，也可能不会。我们可以定义一个扩展规则以匹配这两种情况。
 
-Expansion rules can contain slots, lists, and other expansion rules.
+扩展规则可以包含槽、列表和其他扩展规则。
 
 ```yaml
 expansion_rules:
@@ -186,9 +186,9 @@ expansion_rules:
   turn: "(turn | switch)"
 ```
 
-#### Local expansion rules
+#### 局部扩展规则
 
-Expansion rules can also be defined locally next to a list of sentences, and will only be available within those templates. This allows you to write similar templates for different situations. For example:
+扩展规则也可以在句子列表旁本地定义，并且只在这些模板内可用。这允许您为不同情况编写类似的模板。例如：
 
 ```yaml
 language: en
@@ -223,11 +223,11 @@ lists:
 
 ```
 
-The same template `is the door <state>` is used for both binary sensors and regular locks, but the local `state` expansion rules refer to different lists.
+同一个模板 `is the door <state>` 被用于二进制传感器和常规锁，但局部的 `state` 扩展规则引用了不同的列表。
 
-### Skip words
+### 跳过词
 
-Skip words are words that the intent recognizer will skip during recognition. This is useful for words that are not part of the intent, but are commonly used in sentences. For example, a user might use the word "please" in a sentence, but it is not part of the intent.
+跳过词是在识别过程中意图识别器将跳过的词。这对于那些不属于意图，但在句子中常用的词非常有用。例如，用户在句子中可能会使用 "please" 这个词，但它不是意图的一部分。
 
 ```yaml
 skip_words:
@@ -235,11 +235,11 @@ skip_words:
   - "can you"
 ```
 
-### Requires/excludes context
+### 需要/排除上下文
 
-Hassil returns the first intent match it can find, so additional **context** may be required if the same sentence could produce multiple matches. 
+Hassil 返回它可以找到的第一个意图匹配，因此如果相同句子可能产生多个匹配，则可能需要额外的 **上下文**。
 
-For example, consider the following template:
+例如，考虑以下模板：
 
 ```yaml
 language: "en"
@@ -253,9 +253,9 @@ intents:
           brightness: 100
 ```
 
-If you have an entity named "kitchen light", then you will be able to say "set kitchen light brightness to maximum". Similarly, "set kitchen brightness to maximum" will work if you have an area named "kitchen".
+如果您有一个名为 "kitchen light" 的实体，那么您就可以说 "set kitchen light brightness to maximum"。同样，如果您有一个名为 "kitchen" 的区域，则 "set kitchen brightness to maximum" 也能正常工作。
 
-But what if you have a media player named "kitchen"? The same sentence could match either the area or the media player. Hassil will require more context to know what to do:
+但是，如果您有一个名为 "kitchen" 的媒体播放器呢？相同的句子可能匹配区域或媒体播放器。Hassil 将需要更多的上下文来知道该怎么做：
 
 ```yaml
 language: "en"
@@ -274,9 +274,9 @@ intents:
           brightness: 100
 ```
 
-We've split the sentences into two groups. The first group is for individual entities, and now has `requires_context` with a `domain` of `light`. This ensures that Hassil will only produce a match if the entity from `{name}` has the correct domain. Since areas do not have domains, we need to move the `{area}` sentence to its own group.
+我们将句子分成了两组。第一组用于单个实体，现在具有 `requires_context` 和 `domain` 为 `light`。这确保 Hassil 仅在 `{name}` 中的实体具有正确的域时才会产生匹配。由于区域没有域，我们需要将 `{area}` 句子移动到其自己的组中。
 
-Context is also useful if you want to want different responses within the same intent:
+上下文在您希望在同一意图中获得不同响应时也很有用：
 
 ```yaml
 language: "en"
@@ -295,4 +295,4 @@ intents:
         response: "cover"
 ```
 
-The first sentence group uses `excludes_context` to skip over `cover` entities, while the second group specifically matches `cover` entities and uses a different [response](#responses).
+第一组句子使用 `excludes_context` 跳过 `cover` 实体，而第二组则特定于 `cover` 实体并使用不同的 [响应](#responses)。

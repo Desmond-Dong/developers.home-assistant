@@ -1,86 +1,84 @@
 ---
-title: Lock entity
-sidebar_label: Lock
+title: 锁实体
+sidebar_label: 锁
 ---
 
-A lock entity is able to be locked and unlocked. Locking and unlocking can optionally be secured with a user code. Some locks also allow for opening of latches, this may also be secured with a user code. Derive a platform entity from [`homeassistant.components.lock.LockEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/lock/__init__.py).
+锁实体能够被锁定和解锁。锁定和解锁可以选择性地通过用户代码来保护。一些锁还允许打开闩锁，这也可以通过用户代码来保护。从 [`homeassistant.components.lock.LockEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/lock/__init__.py) 派生一个平台实体。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性始终只应从内存中返回信息，而不是进行 I/O（如网络请求）。实现 `update()` 或 `async_update()` 以获取数据。
 :::
 
-| Name | Type | Default | Description
-| ---- | ---- | ------- | -----------
-| changed_by | string | None | Describes what the last change was triggered by.
-| code_format | string | None | Regex for code format or None if no code is required.
-| is_locked | bool | None | Indication of whether the lock is currently locked. Used to determine `state`.
-| is_locking | bool | None | Indication of whether the lock is currently locking. Used to determine `state`.
-| is_unlocking | bool | None | Indication of whether the lock is currently unlocking. Used to determine `state`.
-| is_jammed | bool | None | Indication of whether the lock is currently jammed. Used to determine `state`.
-| is_opening | bool | None | Indication of whether the lock is currently opening. Used to determine `state`.
-| is_open | bool | None | Indication of whether the lock is currently open. Used to determine `state`.
+| 名称       | 类型    | 默认   | 描述
+|------------|---------|--------|---------
+| changed_by | string  | None   | 描述最后一次更改是由什么触发的。
+| code_format| string  | None   | 代码格式的正则表达式，如果不需要代码，则为 None。
+| is_locked  | bool    | None   | 指示锁当前是否被锁定。用于确定 `state`。
+| is_locking | bool    | None   | 指示锁当前是否正在锁定。用于确定 `state`。
+| is_unlocking| bool   | None   | 指示锁当前是否正在解锁。用于确定 `state`。
+| is_jammed  | bool    | None   | 指示锁当前是否被卡住。用于确定 `state`。
+| is_opening | bool    | None   | 指示锁当前是否正在开启。用于确定 `state`。
+| is_open    | bool    | None   | 指示锁当前是否打开。用于确定 `state`。
 
-### States
+### 状态
 
-The state is defined by setting the above properties. The resulting state is using the `LockState` enum to return one of the below members.
+状态是通过设置上述属性来定义的。得到的状态使用 `LockState` 枚举，返回以下成员之一。
 
-| Value       | Description                                                        |
-|-------------|--------------------------------------------------------------------|
-| `LOCKED`    | The lock is locked.                                                |
-| `LOCKING`   | The lock is locking.                                               |
-| `UNLOCKING` | The lock is unlocking.                                             |
-| `UNLOCKED`  | The lock is unlocked.                                             |
-| `JAMMED`    | The lock is currently jammed.                                      |
-| `OPENING`   | The lock is opening.                                               |
-| `OPEN`      | The lock is open.                                                  |
+| 值         | 描述                                                            |
+|------------|-----------------------------------------------------------------|
+| `LOCKED`   | 锁定是锁定状态。                                               |
+| `LOCKING`  | 锁正在锁定。                                                  |
+| `UNLOCKING`| 锁正在解锁。                                                  |
+| `UNLOCKED` | 锁是解锁状态。                                                |
+| `JAMMED`   | 锁当前被卡住。                                                |
+| `OPENING`  | 锁正在开启。                                                  |
+| `OPEN`     | 锁是打开状态。                                                |
 
-## Supported features
+## 支持的功能
 
-Supported features are defined by using values in the `LockEntityFeature` enum
-and are combined using the bitwise or (`|`) operator.
+支持的功能通过使用 `LockEntityFeature` 枚举中的值定义，并使用按位或 (`|`) 操作符组合。
 
-| Value  | Description                                |
-| ------ | ------------------------------------------ |
-| `OPEN` | This lock supports opening the door latch. |
+| 值        | 描述                                     |
+|-----------|------------------------------------------|
+| `OPEN`    | 此锁支持打开门闩。                      |
 
-## Methods
+## 方法
 
-### Lock
+### 锁定
 
 ```python
 class MyLock(LockEntity):
 
     def lock(self, **kwargs):
-        """Lock all or specified locks. A code to lock the lock with may optionally be specified."""
+        """锁定所有或指定的锁。可以选择性地指定锁定锁的代码。"""
 
     async def async_lock(self, **kwargs):
-        """Lock all or specified locks. A code to lock the lock with may optionally be specified."""
+        """锁定所有或指定的锁。可以选择性地指定锁定锁的代码。"""
 ```
 
-### Unlock
+### 解锁
 
 ```python
 class MyLock(LockEntity):
 
     def unlock(self, **kwargs):
-        """Unlock all or specified locks. A code to unlock the lock with may optionally be specified."""
+        """解锁所有或指定的锁。可以选择性地指定解锁锁的代码。"""
 
     async def async_unlock(self, **kwargs):
-        """Unlock all or specified locks. A code to unlock the lock with may optionally be specified."""
+        """解锁所有或指定的锁。可以选择性地指定解锁锁的代码。"""
 ```
 
-### Open
+### 打开
 
-Only implement this method if the flag `SUPPORT_OPEN` is set.
+仅在设置 `SUPPORT_OPEN` 标志时实现此方法。
 
 ```python
 class MyLock(LockEntity):
 
     def open(self, **kwargs):
-        """Open (unlatch) all or specified locks. A code to open the lock with may optionally be specified."""
+        """打开（解闩）所有或指定的锁。可以选择性地指定打开锁的代码。"""
 
     async def async_open(self, **kwargs):
-        """Open (unlatch) all or specified locks. A code to open the lock with may optionally be specified."""
-```
+        """打开（解闩）所有或指定的锁。可以选择性地指定打开锁的代码。"""

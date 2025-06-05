@@ -1,12 +1,12 @@
 ---
-title: "Firing events"
+title: "触发事件"
 ---
 
-Some integrations represent devices or services that have events, like when motion is detected or a momentary button is pushed. An integration can make these available to users by firing them as events in Home Assistant.
+某些集成表示具有事件的设备或服务，如检测到运动时或按下瞬时按钮时。集成可以通过在 Home Assistant 中触发这些事件使其可供用户使用。
 
-Your integration should fire events of type `<domain>_event`. For example, the ZHA integration fires `zha_event` events.
+您的集成应该触发 `<domain>_event` 类型的事件。例如，ZHA 集成触发 `zha_event` 事件。
 
-If the event is related to a specific device/service, it should be correctly attributed. Do this by adding a `device_id` attribute to the event data that contains the device identifier from the device registry.
+如果事件与特定设备/服务相关联，则应该进行正确的归属。通过在事件数据中添加一个 `device_id` 属性，将设备注册表中的设备标识符包含在内，以此实现。
 
 ```
 event_data = {
@@ -16,14 +16,14 @@ event_data = {
 hass.bus.async_fire("mydomain_event", event_data)
 ```
 
-If a device or service only fires events, you need to [manually register it in the device registry](device_registry_index.md#manual-registration).
+如果设备或服务仅触发事件，您需要[手动在设备注册表中注册它](device_registry_index.md#manual-registration)。
 
-## Making events accessible to users
+## 使事件对用户可访问
 
-A [Device trigger](device_automation_trigger.md) can be attached to a specific event based on the payload, and will make the event accessible to users. With a device trigger a user will be able to see all available events for the device and use it in their automations.
+可以根据有效负载将[设备触发器](device_automation_trigger.md)附加到特定事件，并将该事件对用户可用。通过设备触发器，用户将能够查看设备的所有可用事件并在其自动化中使用。
 
-## What not to do
+## 不要做的事情
 
-Event related code should not be part of the entity logic of your integration. You want to enable the logic of converting your integration events to Home Assistant events from inside `async_setup_entry` inside `__init__.py`.
+与事件相关的代码不应成为您集成的实体逻辑的一部分。您需要在 `__init__.py` 的 `async_setup_entry` 内部启用将集成事件转换为 Home Assistant 事件的逻辑。
 
-Entity state should not represent events. For example, you don't want to have a binary sensor that is `on` for 30 seconds when an event happens.
+实体状态不应表示事件。例如，当事件发生时，您不希望有一个二进制传感器在 30 秒内处于 `on` 状态。

@@ -1,21 +1,21 @@
 ---
-title: "The documentation describes use cases to illustrate how this integration can be used"
+title: "文档描述了使用案例，以说明该集成如何使用"
 ---
 
-## Reasoning
+## 理由
 
-Sometimes, seeing a device or service integrated into Home Assistant can make you wonder, "Why would I integrate this?"
-For some integrations, the intended use and benefit are more obvious than for others.
+有时候，看到一个设备或服务集成到 Home Assistant 中，可能会让你想：“我为什么要集成这个？”
+对于一些集成，预期的使用和好处比其他集成更明显。
 
-Use case examples in the documentation can showcase the value of an integration.
+文档中的用例示例可以展示集成的价值。
 
-## Example implementation
+## 示例实现
 
 ```markdown showLineNumbers
-The motion detection devices of MyCompany are cheap and usable.
-When you combine it with their other device you can do x.
+MyCompany 的运动检测设备便宜且可用。
+当你将它与他们的其他设备结合时，可以实现 x 功能。
 ```
 
-## Exceptions
+## 例外
 
-There are no exceptions to this rule.
+这个规则没有例外。

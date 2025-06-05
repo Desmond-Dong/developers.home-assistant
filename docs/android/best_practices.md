@@ -1,44 +1,44 @@
 ---
-title: "Android best practices"
-sidebar_label: "Best Practices"
+title: "Android 最佳实践"
+sidebar_label: "最佳实践"
 ---
 
-## General principles
+## 一般原则
 
-In general, we should follow standard development principles such as:
+一般来说，我们应该遵循标准的开发原则，例如：
 
-- **SOLID**: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion. Learn more with [Kotlin SOLID Principles Examples](https://medium.com/huawei-developers/kotlin-solid-principles-tutorial-examples-192bf8c049dd)
-- **KISS**: Keep It Simple, Stupid.
-- **DRY**: Don't Repeat Yourself
-- **Community guidelines**: Follow the practices showcased in the [NowInAndroid](https://github.com/android/nowinandroid) repository.
+- **SOLID**：单一职责、开闭原则、里氏替换、接口分隔、依赖反转。了解更多请查看 [Kotlin SOLID 原则示例](https://medium.com/huawei-developers/kotlin-solid-principles-tutorial-examples-192bf8c049dd)
+- **KISS**：保持简单，愚蠢。
+- **DRY**：不要重复自己
+- **社区指南**：遵循 [NowInAndroid](https://github.com/android/nowinandroid) 资源库中展示的实践。
 
-## Documentation
+## 文档
 
-Documentation in the code should bring value and evolve with the codebase. Keep the following in mind:
+代码中的文档应带来价值并随代码库的演变而演变。请记住以下几点：
 
-- **Stay up-to-date**: Documentation must be updated as the code changes.
-- **Balance comments**: Avoid over-commenting, but don’t forget to comment where necessary.
-- **Future-proof**: Ask yourself, *"Will I understand what I did in 6 months?"*
+- **保持最新**：文档必须在代码更改时进行更新。
+- **平衡注释**：避免过多注释，但不要忘记在必要的地方添加注释。
+- **面向未来**：问问自己，“*在六个月后，我会理解我所做的事情吗？*”
 
 :::info
-Documentation should help, not hinder.
+文档应该提供帮助，而不是阻碍。
 :::
 
-## Logging
+## 日志
 
-Logging is essential but should be used judiciously. As Jake Wharton says in his [Timber](https://github.com/JakeWharton/timber) library:
+日志是必不可少的，但应谨慎使用。正如 Jake Wharton 在他的 [Timber](https://github.com/JakeWharton/timber) 库中所说：
 
-> Every time you log in production, a puppy dies.
+> 每次你在生产环境中记录日志时，一只小狗就会死去。
 
-- Avoid excessive logging in production.
-- Use structured and meaningful log messages.
-- Leverage tools like Timber to manage logging effectively.
+- 避免在生产环境中记录过多日志。
+- 使用结构化和有意义的日志消息。
+- 利用像 Timber 这样的工具有效管理日志。
 
-## Time and duration
+## 时间和持续时间
 
-When working with time, date, or duration, avoid using primitive types. Instead, use strong types to prevent unit mix-ups.
+处理时间、日期或持续时间时，避免使用原始类型。相反，使用强类型以防止单位混淆。
 
-### ❌ Don't do this
+### ❌ 不要这样做
 
 ```kotlin
 const val THRESHOLD = 600000
@@ -47,12 +47,12 @@ fun main() {
     val now = System.currentTimeMillis()
     
     if (now > THRESHOLD) {
-        // Do something
+        // 做一些事情
     }
 }
 ```
 
-### ✅ Do this
+### ✅ 这样做
 
 ```kotlin
 val THRESHOLD = Instant.ofEpochSecond(60)
@@ -61,59 +61,59 @@ fun main() {
     val now = Instant.now()
 
     if (now > THRESHOLD) {
-        // Do something
+        // 做一些事情
     }
 }
 ```
 
 :::warning
-If you must use primitive types, ensure the variable name includes the unit (e.g., `THRESHOLD_MS` instead of `THRESHOLD`) to reduce ambiguity.
+如果必须使用原始类型，请确保变量名包含单位（例如，`THRESHOLD_MS` 而不是 `THRESHOLD`），以减少歧义。
 :::
 
-- Apply the same logic to dates, durations, and timestamps.
-- For APIs that use `long` for timestamps (e.g., milliseconds vs. seconds), convert the values to a strong type as soon as possible to minimize exposure to untyped units.
+- 将相同的逻辑应用于日期、持续时间和时间戳。
+- 对于使用 `long` 作为时间戳的 API（例如，毫秒与秒），请尽早将值转换为强类型，以最小化对无类型单位的暴露。
 
-## Concurrency
+## 并发
 
-Concurrency is powerful but requires careful handling to avoid issues like memory leaks and race conditions.
+并发很强大，但需要谨慎处理，以避免诸如内存泄漏和竞争条件等问题。
 
-### Coroutine scope
+### 协程作用域
 
-Tie your coroutines to an Android lifecycle (e.g., `viewModelScope` or `lifecycleScope`) to prevent memory leaks.
+将协程绑定到 Android 生命周期（例如，`viewModelScope` 或 `lifecycleScope`）以防止内存泄漏。
 
-### Concurrent access
+### 并发访问
 
-- Ensure that any references accessed outside of a coroutine are thread-safe.
-- If a reference is not safe, either make it safe or don't use it.
-- Debugging concurrency issues (e.g., race conditions) can be extremely challenging, so design carefully.
+- 确保在协程之外访问的任何引用是线程安全的。
+- 如果引用不安全，要么使其安全，要么不使用它。
+- 调试并发问题（例如，竞争条件）可能非常具有挑战性，因此请谨慎设计。
 
-For more details on race conditions, see [Race Condition](https://en.wikipedia.org/wiki/Race_condition#In_software).
+有关竞争条件的更多细节，请参见 [竞争条件](https://en.wikipedia.org/wiki/Race_condition#In_software)。
 
-## Code organization
+## 代码组织
 
-### Keep your classes small
+### 保持类小巧
 
-- Large classes often have too many responsibilities, making them harder to review, test, and maintain.
-- Aim for small classes with proper separation of concerns and abstraction.
+- 大类往往有太多职责，使其更难以审查、测试和维护。
+- 目标是构建小类，适当地分离关注点和抽象。
 
-### Keep your functions small and meaningful
+### 保持函数小且有意义
 
-- Functions should be small and focused on a single responsibility.
-- A function's name should clearly describe what it does. If it’s hard to name, the function likely does too much.
-- Well-named, small functions reduce the need for documentation and make the code self-explanatory.
+- 函数应该小且专注于单一职责。
+- 函数的名称应清楚地描述其功能。如果命名困难，该函数可能做得太多。
+- 命名良好的小函数减少了对文档的需求，使代码自解释。
 
 :::note
-Naming is hard, but smaller functions make it easier to choose meaningful names.
+命名很难，但小函数使选择有意义的名称变得更容易。
 :::
 
-## Keep your PRs small
+## 保持你的 PR 小巧
 
-- **Why?** Smaller PRs are easier to review, reduce delays, and minimize frustration.
-- **How?** Break down large changes into smaller, logical chunks.
+- **为什么？** 较小的 PR 更容易审查，减少延迟，并降低挫败感。
+- **如何？** 将大型更改拆分为较小的逻辑块。
 
-For more details, see [submit](/docs/android/submit).
+有关更多细节，请参见 [提交](/docs/android/submit)。
 
-## Additional notes
+## 其他说明
 
-- **Testing**: Write [unit tests](/docs/android/testing/unit_testing) for critical functionality to ensure reliability.
-- **Code reviews**: Always review code for adherence to these best practices.
+- **测试**：为关键功能编写 [单元测试](/docs/android/testing/unit_testing)，以确保可靠性。
+- **代码审查**：始终审查代码以确保遵循这些最佳实践。

@@ -1,58 +1,58 @@
 ---
-title: "Android testing"
-sidebar_label: "Introduction"
+title: "Android 测试"
+sidebar_label: "介绍"
 ---
 
-## Why do we write tests?
+## 为什么我们要编写测试？
 
-Testing is an essential part of software development. While there are different kinds of tests, each serving a unique purpose, they all exist for the same fundamental reason: humans make mistakes. Tests are designed to catch these mistakes as early as possible in the development process.
+测试是软件开发的重要组成部分。虽然有不同种类的测试，每种测试都有其独特的目的，但它们都有一个基本的原因：人类会犯错。测试旨在尽早捕捉这些错误，以便在开发过程中及时发现。
 
-By identifying issues before they reach production, we save our users from frustration and ourselves from spending time debugging. Writing tests may feel like extra effort at first, but the value becomes clear when a test catches an issue before it impacts the end user.
+通过在问题到达生产环境之前识别它们，我们可以避免用户的沮丧，同时避免自己花费时间调试。编写测试在开始时可能感觉像是额外的工作，但当测试在影响最终用户之前捕捉到问题时，其价值便变得明显。
 
-### Benefits of writing tests
+### 编写测试的好处
 
-- **Early issue detection**: Catch bugs before they reach production.
-- **Improved code quality**: Tests encourage better design and maintainability.
-- **Time savings**: Debugging production issues is far more time-consuming than resolving issues during development.
-- **User satisfaction**: Fewer bugs in production lead to a better user experience.
+- **早期问题检测**：在问题到达生产环境之前捕捉错误。
+- **提高代码质量**：测试鼓励更好的设计和可维护性。
+- **节省时间**：调试生产环境中的问题要比在开发阶段解决问题耗时得多。
+- **用户满意度**：生产环境中较少的错误会带来更好的用户体验。
 
-## How to write effective tests
+## 如何编写有效的测试
 
-To ensure clarity and maintainability, test functions should always (when possible) be written as descriptive sentences. Ideally, they should follow the [GIVEN-WHEN-THEN](https://en.wikipedia.org/wiki/Given-When-Then) structure. This approach makes tests easier to understand at a glance, even for complex scenarios.
+为了确保清晰性和可维护性，测试函数应该始终（如果可能的话）以描述性句子的形式编写。理想情况下，它们应该遵循 [GIVEN-WHEN-THEN](https://en.wikipedia.org/wiki/Given-When-Then) 结构。这种方法使测试在第一眼看去就容易理解，即使是对于复杂的场景。
 
-Example of a well-named test:
+一个命名良好的测试示例：
 
 ```kotlin
 @Test
-fun `Given a user with Home Assistant when they open the app then they see the default dashboard`() {
-    // Test implementation here
+fun `给定一个具有家庭助手的用户，当他们打开应用程序时，则看到默认的仪表板`() {
+    // 测试实现
 }
 ```
 
-### Why use GIVEN-WHEN-THEN?
+### 为什么使用GIVEN-WHEN-THEN？
 
-- **GIVEN**: Describes the initial context or setup.
-- **WHEN**: Specifies the action or event being tested.
-- **THEN**: Defines the expected outcome or result.
+- **GIVEN**：描述初始上下文或设置。
+- **WHEN**：指定正在测试的动作或事件。
+- **THEN**：定义预期的结果或结果。
 
-This structure ensures that tests are both readable and self-explanatory, making it easier for developers to understand the purpose of the test without diving into the implementation.
+这种结构确保测试既可读又自解释，使开发人员能够在不深入实现的情况下理解测试的目的。
 
-## Types of tests
+## 测试的类型
 
-While this document focuses on Android testing, it’s important to understand the different types of tests and their purposes:
+虽然本文件关注于Android测试，但理解不同类型的测试及其目的仍然很重要：
 
-1. **Unit tests**: Validate individual components or functions in isolation.
-2. **Integration tests**: Ensure that different parts of the application work together as expected.
-3. **UI tests**: Verify the user interface and user interactions.
-4. **End-to-End tests**: Test the entire application flow from start to finish.
+1. **单元测试**：验证单个组件或函数的独立性。
+2. **集成测试**：确保应用程序的不同部分按预期协同工作。
+3. **UI 测试**：验证用户界面和用户交互。
+4. **端到端测试**：测试整个应用程序流程，从开始到结束。
 
-Each type of test has its place in the development process, and a well-tested application often includes a combination of all these types.
+每种类型的测试在开发过程中都有其位置，而经过良好测试的应用程序通常包括所有这些类型的组合。
 
-## Best practices for writing tests
+## 编写测试的最佳实践
 
-- **Keep tests small and focused**: Each test should validate a single behavior or scenario.
-- **Use descriptive names**: Test names should clearly describe what is being tested and the expected outcome.
-- **Avoid dependencies**: Tests should be independent of each other to ensure reliability.
-- **Mock external dependencies**: Use mocks or fakes to isolate the code under test.
+- **保持测试小而专注**：每个测试应验证单一行为或场景。
+- **使用描述性名称**：测试名称应清楚地描述正在测试的内容和预期结果。
+- **避免依赖性**：测试应独立于彼此，以确保可靠性。
+- **模拟外部依赖**：使用模拟或假对象来隔离被测试代码。
 
-By following these guidelines, you can write tests that are both effective and maintainable.
+通过遵循这些指导原则，您可以编写既有效又可维护的测试。

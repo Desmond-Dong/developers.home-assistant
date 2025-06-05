@@ -1,21 +1,18 @@
 ---
-title: "Integration quality scale rules"
+title: "集成质量等级规则"
 ---
 import RuleOverview from './_includes/rule_overview.jsx'
 
-The rules for each tier are defined down below and come with its own page with examples and more information.
+每个等级的规则在下面定义，并附有各自的页面，提供示例和更多信息。
 
-### 🥉 Bronze
+### 🥉 铜牌
 <RuleOverview tier="bronze" />
 
-
-### 🥈 Silver
+### 🥈 银牌
 <RuleOverview tier="silver" />
 
-
-### 🥇 Gold
+### 🥇 金牌
 <RuleOverview tier="gold" />
 
-
-### 🏆 Platinum
+### 🏆 铂金
 <RuleOverview tier="platinum" />

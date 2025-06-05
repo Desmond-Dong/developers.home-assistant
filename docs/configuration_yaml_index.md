@@ -1,33 +1,33 @@
 ---
-title: "Integration configuration via YAML"
+title: "通过YAML进行集成配置"
 ---
 
-`configuration.yaml` is a configuration file defined by the user. It is automatically created by Home Assistant on first launch. It defines which components to load.
+`configuration.yaml` 是由用户定义的配置文件。它在Home Assistant首次启动时自动创建。它定义了要加载的组件。
 
-:::info Note about YAML for devices and/or services
+:::info 关于设备和/或服务的YAML说明
 
-Integrations that communicate with devices and/or services are configured via a config flow. In rare cases, we can make an exception. Existing integrations that should not have a YAML configuration are allowed and encouraged to implement a configuration flow and remove YAML support. Changes to existing YAML configuration for these same existing integrations will no longer be accepted.
+与设备和/或服务通信的集成通过配置流程进行配置。在极少数情况下，我们可以例外。已存在的集成如果不应有YAML配置，允许并鼓励实施配置流程并移除YAML支持。对这些已有集成的现有YAML配置的更改将不再被接受。
 
-For more detail read [ADR-0010](https://github.com/home-assistant/architecture/blob/master/adr/0010-integration-configuration.md#decision)
+更多详细信息请参阅 [ADR-0010](https://github.com/home-assistant/architecture/blob/master/adr/0010-integration-configuration.md#decision)
 :::
 
-## Pre-processing
+## 预处理
 
-Home Assistant will do some pre-processing on the config based on the components that are specified to load.
+Home Assistant将根据指定加载的组件对配置进行一些预处理。
 
 ### CONFIG_SCHEMA
 
-If a component defines a variable `CONFIG_SCHEMA`, the config object that is passed in will be the result of running the config through `CONFIG_SCHEMA`. `CONFIG_SCHEMA` should be a voluptuous schema.
+如果一个组件定义了变量 `CONFIG_SCHEMA`，则传入的配置对象将是通过 `CONFIG_SCHEMA` 运行配置的结果。 `CONFIG_SCHEMA` 应该是一个强壮的模式（voluptuous schema）。
 
 ### PLATFORM_SCHEMA
 
-If a component defines a variable `PLATFORM_SCHEMA`, the component will be treated as an entity component. The configuration of entity components is a list of platform configurations.
+如果一个组件定义了变量 `PLATFORM_SCHEMA`，则该组件将被视为实体组件。实体组件的配置是平台配置的列表。
 
-Home Assistant will gather all platform configurations for this component. It will do so by looking for configuration entries under the domain of the component (ie `light`) but also under any entry of domain + extra text.
+Home Assistant将收集此组件的所有平台配置。它将通过查找组件域（如 `light`）下的配置条目，同时还会查找域+附加文本的任何条目来实现。
 
-While gathering the platform configs, Home Assistant will validate them. It will see if the platform exists and if the platform defines a PLATFORM_SCHEMA, validate against that schema. If not defined, it will validate the config against the PLATFORM_SCHEMA defined in the component. Any configuration that references non existing platforms or contains invalid config will be removed.
+在收集平台配置时，Home Assistant会对其进行验证。它会检查平台是否存在，并且如果平台定义了 `PLATFORM_SCHEMA`，则会根据该模式进行验证。如果未定义，则会根据组件中定义的 `PLATFORM_SCHEMA` 来验证配置。任何引用不存在的平台或包含无效配置的配置将被删除。
 
-The following `configuration.yaml`:
+以下的 `configuration.yaml`：
 
 ```yaml
 unrelated_component:
@@ -42,7 +42,7 @@ switch living room:
   - platform: invalid_platform
 ```
 
-will be passed to the component as
+将被传递给组件为
 
 ```python
 {
@@ -59,4 +59,3 @@ will be passed to the component as
         }
     ],
 }
-```

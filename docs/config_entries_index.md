@@ -1,90 +1,87 @@
 ---
-title: Config entries
+title: 配置条目
 ---
 
-Config entries are configuration data that are persistently stored by Home Assistant. A config entry is created by a user via the UI. The UI flow is powered by a [config flow handler](config_entries_config_flow_handler.md) as defined by the integration.
+配置条目是由Home Assistant持久存储的配置数据。配置条目由用户通过用户界面创建。用户界面的流程由集成定义的[配置流程处理程序](config_entries_config_flow_handler.md)支持。
 
-Once created, config entries can be removed by the user. Optionally, config entries can be changed by the user via a [reconfigure step](config_entries_config_flow_handler.md#reconfigure) or [options flow handler](config_entries_options_flow_handler.md), also defined by the integration.
+一旦创建，配置条目可以由用户删除。可选地，配置条目可以通过[重新配置步骤](config_entries_config_flow_handler.md#reconfigure)或[选项流程处理程序](config_entries_options_flow_handler.md)进行更改，这也由集成定义。
 
-### Config subentries
+### 配置子条目
 
-Config entries can logically separate the stored configuration data into subentries, which can be added by the user via the UI to an existing config entry. An example of this is an integration providing weather forecasts, where the config entry stores authentication details and each location for which weather forecasts should be provided is stored as a subentry.
+配置条目可以在逻辑上将存储的配置数据分隔成子条目，这些子条目可以由用户通过用户界面添加到现有的配置条目中。一个例子是一个提供天气预报的集成，其中配置条目存储身份验证详细信息，每个需要提供天气预报的位置作为子条目存储。
 
-Similar to config entries, subentries can optionally support a reconfigure step.
+与配置条目类似，子条目也可选地支持重新配置步骤。
 
-## Lifecycle
+## 生命周期
 
-| State | Description |
+| 状态 | 描述 |
 | ----- | ----------- |
-| not loaded | The config entry has not been loaded. This is the initial state when a config entry is created or when Home Assistant is restarted. |
-| setup in progress | An intermediate state while attempting to load the config entry. |
-| loaded | The config entry has been loaded. |
-| setup error | An error occurred when trying to set up the config entry. |
-| setup retry | A dependency of the config entry was not ready yet. Home Assistant will automatically retry loading this config entry in the future. Time between attempts will automatically increase. |
-| migration error | The config entry had to be migrated to a newer version, but the migration failed. |
-| unload in progress | An intermediate state while attempting to unload the config entry. |
-| failed unload | The config entry was attempted to be unloaded, but this was either not supported or it raised an exception. |
+| 未加载 | 配置条目尚未加载。这是在创建配置条目或重启Home Assistant时的初始状态。 |
+| 设置中 | 在尝试加载配置条目时的中间状态。 |
+| 已加载 | 配置条目已被加载。 |
+| 设置错误 | 在尝试设置配置条目时发生错误。 |
+| 设置重试 | 配置条目的依赖项尚未准备好。Home Assistant将在将来自动重试加载此配置条目。尝试之间的时间将自动增加。 |
+| 迁移错误 | 配置条目必须迁移到更新版本，但迁移失败。 |
+| 卸载中 | 在尝试卸载配置条目时的中间状态。 |
+| 卸载失败 | 尝试卸载配置条目，但这要么不被支持，要么引发了异常。 |
 
-More information about surfacing errors and requesting a retry are in [Handling Setup Failures](integration_setup_failures.md#integrations-using-async_setup_entry).
+有关错误呈现和请求重试的更多信息，请参见[处理设置失败](integration_setup_failures.md#integrations-using-async_setup_entry)。
 
+## 设置条目
 
-## Setting up an entry
+在启动期间，Home Assistant首先调用[正常集成设置](/creating_component_index.md)，
+然后对每个条目调用方法`async_setup_entry(hass, entry)`。如果在运行时创建了新的配置条目，Home Assistant还会调用`async_setup_entry(hass, entry)`（[示例](https://github.com/home-assistant/core/blob/f18ddb628c3574bc82e21563d9ba901bd75bc8b5/homeassistant/components/hassio/__init__.py#L522)）。
 
-During startup, Home Assistant first calls the [normal integration setup](/creating_component_index.md),
-and then calls the method `async_setup_entry(hass, entry)` for each entry. If a new Config Entry is
-created at runtime, Home Assistant will also call `async_setup_entry(hass, entry)` ([example](https://github.com/home-assistant/core/blob/f18ddb628c3574bc82e21563d9ba901bd75bc8b5/homeassistant/components/hassio/__init__.py#L522)).
+### 对于平台
 
-### For platforms
-
-If an integration includes platforms, it will need to forward the Config Entry set up to the platform. This can
-be done by calling the forward function on the config entry manager ([example](https://github.com/home-assistant/core/blob/f18ddb628c3574bc82e21563d9ba901bd75bc8b5/homeassistant/components/hassio/__init__.py#L529)):
+如果集成包括平台，它将需要将配置条目设置转发到平台。这可以通过调用配置条目管理器上的转发函数来完成（[示例](https://github.com/home-assistant/core/blob/f18ddb628c3574bc82e21563d9ba901bd75bc8b5/homeassistant/components/hassio/__init__.py#L529)）:
 
 ```python
 await hass.config_entries.async_forward_entry_setups(config_entry, ["light", "sensor", "switch"])
 ```
 
-For a platform to support config entries, it will need to add a setup entry function ([example](https://github.com/home-assistant/core/blob/f18ddb628c3574bc82e21563d9ba901bd75bc8b5/homeassistant/components/hassio/__init__.py#L522)):
+对于平台支持配置条目，需要添加一个设置条目功能（[示例](https://github.com/home-assistant/core/blob/f18ddb628c3574bc82e21563d9ba901bd75bc8b5/homeassistant/components/hassio/__init__.py#L522)）:
 
 ```python
 async def async_setup_entry(hass, config_entry, async_add_entities):
-    """Set up entry."""
+    """设置条目。"""
 ```
 
-## Unloading entries
+## 卸载条目
 
-Integrations can optionally support unloading a config entry. When unloading an entry, the integration needs to clean up all entities, unsubscribe any event listener and close all connections. To implement this, add `async_unload_entry(hass, entry)` to your integration ([example](https://github.com/home-assistant/core/blob/f18ddb628c3574bc82e21563d9ba901bd75bc8b5/homeassistant/components/hassio/__init__.py#L534)). The state of the config entry is set to `ConfigEntryState.UNLOAD_IN_PROGRESS` before `async_unload_entry` is called.
+集成可以选择支持卸载配置条目。在卸载条目时，集成需要清理所有实体，取消订阅任何事件监听器并关闭所有连接。要实现这一点，请在您的集成中添加`async_unload_entry(hass, entry)`（[示例](https://github.com/home-assistant/core/blob/f18ddb628c3574bc82e21563d9ba901bd75bc8b5/homeassistant/components/hassio/__init__.py#L534)）。在调用`async_unload_entry`之前，配置条目的状态设置为`ConfigEntryState.UNLOAD_IN_PROGRESS`。
 
-For each platform that you forwarded the config entry to, you will need to forward the unloading too.
+对于每个平台，您需要转发卸载。
 
 ```python
 async def async_unload_entry(hass: HomeAssistant, entry: MyConfigEntry) -> bool:
-    """Unload a config entry."""
+    """卸载配置条目。"""
 ```
 
-If you need to clean up resources used by an entity in a platform, have the entity implement the [`async_will_remove_from_hass`](core/entity.md#async_will_remove_from_hass) method.
+如果您需要清理平台中用于实体的资源，请让实体实现[`async_will_remove_from_hass`](core/entity.md#async_will_remove_from_hass)方法。
 
-## Removal of entries
+## 移除条目
 
-If an integration needs to clean up code when an entry is removed, it can define a removal function `async_remove_entry`. The config entry is deleted from `hass.config_entries` before `async_remove_entry` is called.
+如果集成需要在条目被移除时清理代码，可以定义一个移除函数`async_remove_entry`。在调用`async_remove_entry`之前，从`hass.config_entries`中删除配置条目。
 
 ```python
 async def async_remove_entry(hass, entry) -> None:
-    """Handle removal of an entry."""
+    """处理条目的移除。"""
 ```
 
-## Migrating config entries to a new version
+## 将配置条目迁移到新版本
 
-If the config entry version is changed, `async_migrate_entry` must be implemented to support the migration of old entries. This is documented in detail in the [config flow documentation](/config_entries_config_flow_handler.md#config-entry-migration)
+如果配置条目版本发生更改，必须实现`async_migrate_entry`以支持旧条目的迁移。这在[配置流程文档](/config_entries_config_flow_handler.md#config-entry-migration)中有详细文档。
 
 ```python
 async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
-    """Migrate old entry."""
+    """迁移旧条目。"""
 ```
 
-## Modifying a config entry
+## 修改配置条目
 
-A `ConfigEntry` object, including the data and options, must never be mutated directly by integrations, instead integrations must call `async_update_entry`, the use of which is illustrated in the [config flow documentation](/config_entries_config_flow_handler.md#config-entry-migration).
+`ConfigEntry`对象，包括数据和选项，绝不能直接被集成修改，而是集成必须调用`async_update_entry`，其用法在[配置流程文档](/config_entries_config_flow_handler.md#config-entry-migration)中有所说明。
 
-## Subscribing to config entry state changes
+## 订阅配置条目状态更改
 
-If you want to be notified about a `ConfigEntry` changing its `state` (e.g. from `ConfigEntryState.LOADED` to `ConfigEntryState.UNLOAD_IN_PROGRESS`), you can add a listener which will be notified to `async_on_state_change`. This helper also returns a callback you can call to remove the listener again. Subscribing to changes until the entry is unloaded would therefore be `entry.async_on_unload(entry.async_on_state_change(notify_me))`.
+如果您希望在`ConfigEntry`更改其`state`时收到通知（例如，从`ConfigEntryState.LOADED`更改为`ConfigEntryState.UNLOAD_IN_PROGRESS`），您可以添加一个监听器，该监听器将被通知到`async_on_state_change`。此助手还返回一个可以调用的回调，以再次移除监听器。因此，在条目卸载之前订阅更改将是`entry.async_on_unload(entry.async_on_state_change(notify_me))`。

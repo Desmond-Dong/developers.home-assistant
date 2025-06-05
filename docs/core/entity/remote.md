@@ -1,115 +1,113 @@
 ---
-title: Remote entity
-sidebar_label: Remote
+title: 远程实体
+sidebar_label: 远程
 ---
 
-The remote entity can represent two different types of devices:
+远程实体可以表示两种不同类型的设备：
 
-1. A physical device that sends commands.
-2. A virtual device in Home Assistant that sends commands to another physical device, eg a television.
+1. 一个发送指令的物理设备。
+2. 一个在 Home Assistant 中的虚拟设备，它向另一个物理设备发送指令，例如电视。
 
-Derive entity platforms from [`homeassistant.components.remote.RemoteEntity`](https://github.com/home-assistant/home-assistant/blob/master/homeassistant/components/remote/__init__.py)
+从 [`homeassistant.components.remote.RemoteEntity`](https://github.com/home-assistant/home-assistant/blob/master/homeassistant/components/remote/__init__.py) 派生实体平台
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应该始终只从内存中返回信息，而不进行 I/O（如网络请求）。实现 `update()` 或 `async_update()` 来获取数据。
 :::
 
-| Name | Type | Default | Description
+| 名称 | 类型 | 默认 | 描述
 | ---- | ---- | ------- | -----------
-| current_activity | str | None | Return the current active activity |
-| activity_list | list | None | Return the list of available activities |
+| current_activity | str | None | 返回当前活动 |
+| activity_list | list | None | 返回可用活动的列表 |
 
-### Activity
+### 活动
 
-An activity is a predefined activity or macro that puts the remote in a specific state. For example, a "Watch TV" activity may turn on multiple devices and change the channel to a specific channel.
+活动是一个预定义的活动或宏，它将远程控制器置于特定状态。例如，一个“观看电视”活动可能会开启多个设备并将频道更改为特定频道。
 
-## Supported features
+## 支持的特性
 
-Supported features are defined by using values in the `RemoteEntityFeature` enum
-and are combined using the bitwise or (`|`) operator.
+支持的特性通过使用 `RemoteEntityFeature` 枚举中的值定义，并使用按位或 (`|`) 运算符组合。
 
-| Value            | Description                                   |
-| ---------------- | --------------------------------------------- |
-| `LEARN_COMMAND`  | Entity allows learning commands from devices. |
-| `DELETE_COMMAND` | Entity allows deleting commands from devices. |
-| `ACTIVITY`       | Entity supports activities.                   |
+| 值                | 描述                                      |
+| ----------------- | ------------------------------------------ |
+| `LEARN_COMMAND`   | 实体允许从设备学习指令。                    |
+| `DELETE_COMMAND`  | 实体允许从设备删除指令。                    |
+| `ACTIVITY`        | 实体支持活动。                             |
 
-## Methods
+## 方法
 
-### Turn on command
+### 开启指令
 
 ```python
 class MyRemote(RemoteEntity):
 
     def turn_on(self, activity: str = None, **kwargs):
-         """Send the power on command."""
+         """发送开启指令。"""
 
     async def async_turn_on(self, activity: str = None, **kwargs):
-         """Send the power on command."""
+         """发送开启指令。"""
 ```
 
-### Turn off command
+### 关闭指令
 
 ```python
 class MyRemote(RemoteEntity):
 
     def turn_off(self, activity: str = None, **kwargs):
-         """Send the power off command."""
+         """发送关闭指令。"""
 
     async def async_turn_off(self, activity: str = None, **kwargs):
-         """Send the power off command."""
+         """发送关闭指令。"""
 ```
 
-### Toggle command
+### 切换指令
 
 ```python
 class MyRemote(RemoteEntity):
 
     def toggle(self, activity: str = None, **kwargs):
-         """Toggle a device."""
+         """切换设备。"""
 
     async def async_toggle(self, activity: str = None, **kwargs):
-         """Toggle a device."""
+         """切换设备。"""
 ```
 
-### Send command
+### 发送指令
 
 ```python
 class MyRemote(RemoteEntity):
 
     def send_command(self, command: Iterable[str], **kwargs):
-        """Send commands to a device."""
+        """向设备发送指令。"""
 
     async def async_send_command(self, command: Iterable[str], **kwargs):
-        """Send commands to a device."""
+        """向设备发送指令。"""
 ```
 
-### Learn command
+### 学习指令
 
-Only implement this method if the flag `SUPPORT_LEARN_COMMAND` is set.
+仅在标志 `SUPPORT_LEARN_COMMAND` 被设置时实现此方法。
 
 ```python
 class MyRemote(RemoteEntity):
 
     def learn_command(self, **kwargs):
-        """Learn a command from a device."""
+        """从设备学习指令。"""
 
     async def async_learn_command(self, **kwargs):
-        """Learn a command from a device."""
+        """从设备学习指令。"""
 ```
 
-### Delete command
+### 删除指令
 
-Only implement this method if the flag `SUPPORT_DELETE_COMMAND` is set.
+仅在标志 `SUPPORT_DELETE_COMMAND` 被设置时实现此方法。
 
 ```python
 class MyRemote(RemoteEntity):
 
     def delete_command(self, **kwargs):
-        """Delete a command from a device."""
+        """从设备删除指令。"""
 
     async def async_delete_command(self, **kwargs):
-        """Delete a command from a device."""
-```
+        """从设备删除指令。"""

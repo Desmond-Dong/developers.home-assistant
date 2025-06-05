@@ -1,32 +1,32 @@
 ---
-title: "The documentation describes known supported / unsupported devices"
+title: "文档描述已知的支持/不支持的设备"
 ---
 
-## Reasoning
+## 原因
 
-A lot of Home Assistant users buy devices based on if Home Assistant supports them.
-To make it easier for users to find out if a device is supported, the documentation should describe the known supported or unsupported devices.
-This will decrease the amount of bad experiences where the user finds out their device is not supported when they try to set it up.
+许多Home Assistant用户会根据Home Assistant是否支持某个设备来购买设备。
+为了让用户更容易找到设备是否受支持，文档应该描述已知的支持或不支持的设备。
+这将减少用户在尝试设置设备时发现不受支持而带来的不良体验。
 
-## Example implementation
+## 示例实现
 
 ```markdown showLineNumbers
 
-## Supported devices
+## 支持的设备
 
-The following devices are known to be supported by the integration:
-- Device 1
-- Device 2
-- Every appliance that runs MyOS
+以下设备已知为集成所支持：
+- 设备 1
+- 设备 2
+- 运行MyOS的所有设备
 
-## Unsupported devices
+## 不支持的设备
 
-The following devices are not supported by the integration:
-- Device 3
-- Appliances built before 2010
+以下设备不被集成所支持：
+- 设备 3
+- 2010年前制造的设备
 ```
 
-## Exceptions
+## 例外
 
-This rule does not apply to integrations that do not connect to a device or service.
-This rule also does not apply to integrations that don't integrate physical devices.
+此规则不适用于不连接到设备或服务的集成。
+此规则也不适用于不集成物理设备的集成。

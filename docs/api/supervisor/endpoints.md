@@ -1,35 +1,35 @@
 ---
-title: "Endpoints"
+title: "端点"
 ---
 import ApiEndpoint from '@site/static/js/api_endpoint.jsx'
 
-For API endpoints marked with :lock: you need use an authorization header with a `Bearer` token.
+对于标记为 :lock: 的 API 端点，您需要使用带有 `Bearer` 令牌的授权标头。
 
-The token is available for add-ons and Home Assistant using the
-`SUPERVISOR_TOKEN` environment variable.
+该令牌可用于附加组件和 Home Assistant，使用
+`SUPERVISOR_TOKEN` 环境变量。
 
-To see more details about each endpoint, click on it to expand it.
+要查看更多关于每个端点的详细信息，请点击它以展开。
 
-### Add-ons
+### 附加组件
 
 <ApiEndpoint path="/addons" method="get">
-Return overview information about installed add-ons.
+返回已安装附加组件的概览信息。
 
-**Payload:**
+**有效负载：**
 
-| key          | type | description                                        |
-| ------------ | ---- | -------------------------------------------------- |
-| addons       | list | A list of [Addon models](api/supervisor/models.md#addon)           |
+| 键          | 类型 | 描述                                        |
+| ------------ | ---- | ------------------------------------------ |
+| addons       | 列表 | [附加组件模型](api/supervisor/models.md#addon) 的列表 |
 
-**Example response:**
+**示例响应：**
 
 ```json
 {
   "addons": [
     {
-      "name": "Awesome add-on",
+      "name": "很棒的附加组件",
       "slug": "awesome_addon",
-      "description": "My awesome add-on",
+      "description": "我的很棒的附加组件",
       "advanced": false,
       "stage": "stable",
       "repository": "core",
@@ -52,135 +52,133 @@ Return overview information about installed add-ons.
 </ApiEndpoint>
 
 <ApiEndpoint path="/addons/reload" method="post">
-Reloads the information stored about add-ons.
+重新加载关于附加组件的存储信息。
 </ApiEndpoint>
 
 <ApiEndpoint path="/addons/<addon>/changelog" method="get">
-Get the changelog for an add-on.
+获取附加组件的变更日志。
 </ApiEndpoint>
 
 <ApiEndpoint path="/addons/<addon>/documentation" method="get">
-Get the documentation for an add-on.
+获取附加组件的文档。
 </ApiEndpoint>
 
 <ApiEndpoint path="/addons/<addon>/logs" method="get">
 
-Get logs for an add-on via the Systemd journal backend.
+通过 Systemd 日志后端获取附加组件的日志。
 
-The endpoint accepts the same headers and provides the same functionality as
-`/host/logs`.
+该端点接受相同的标头，并提供与
+`/host/logs` 相同的功能。
 
 </ApiEndpoint>
 
 <ApiEndpoint path="/addons/<addon>/logs/follow" method="get">
 
-Identical to `/addons/<addon>/logs` except it continuously returns new log entries.
+与 `/addons/<addon>/logs` 相同，只是它持续返回新的日志条目。
 
 </ApiEndpoint>
 
 <ApiEndpoint path="/addons/<addon>/logs/boots/<bootid>" method="get">
 
-Get logs for an add-on related to a specific boot.
+获取与特定启动相关的附加组件日志。
 
-The `bootid` parameter is interpreted in the same way as in
-`/host/logs/boots/<bootid>` and the endpoint otherwise provides the same
-functionality as `/host/logs`.
+`bootid` 参数的解释方式与
+`/host/logs/boots/<bootid>` 相同，其他方面该端点提供的功能与 `/host/logs` 相同。
 
 </ApiEndpoint>
 
 <ApiEndpoint path="/addons/<addon>/logs/boots/<bootid>/follow" method="get">
 
-Identical to `/addons/<addon>/logs/boots/<bootid>` except it continuously returns
-new log entries.
+与 `/addons/<addon>/logs/boots/<bootid>` 相同，只是它持续返回新的日志条目。
 
 </ApiEndpoint>
 
 <ApiEndpoint path="/addons/<addon>/icon" method="get">
-Get the add-on icon
+获取附加组件图标
 </ApiEndpoint>
 
 <ApiEndpoint path="/addons/<addon>/info" method="get">
-Get details about an add-on
+获取有关附加组件的详细信息
 
-**Returned data:**
+**返回数据：**
 
-| key                 | type               | description                                                                            |
-| ------------------- | ------------------ | -------------------------------------------------------------------------------------- |
-| advanced            | boolean            | `true` if advanced mode is enabled                                                     |
-| apparmor            | string             | disabled, default or the name of the profile                                           |
-| arch                | list               | A list of supported architectures for the add-on                                       |
-| audio               | boolean            | `true` if audio is enabled                                                             |
-| audio_input         | float or null      | The device index                                                                       |
-| audio_output        | float or null      | The device index                                                                       |
-| auth_api            | boolean            | `true` if auth api access is granted is enabled                                        |
-| auto_uart           | boolean            | `true` if auto_uart access is granted is enabled                                       |
-| auto_update         | boolean            | `true` if auto update is enabled                                                       |
-| available           | boolean            | `true` if the add-on is available                                                      |
-| boot                | string             | "auto" or "manual"                                                                     |
-| boot_config         | string             | Default boot mode of addon or "manual_only" if boot mode cannot be auto                |
-| build               | boolean            | `true` if local add-on                                                                 |
-| changelog           | boolean            | `true` if changelog is available                                                       |
-| description         | string             | The add-on description                                                                 |
-| detached            | boolean            | `true` if the add-on is running detached                                               |
-| devices             | list               | A list of attached devices                                                             |
-| devicetree          | boolean            | `true` if devicetree access is granted is enabled                                      |
-| discovery           | list               | A list of discovery services                                                           |
-| dns                 | list               | A list of DNS servers used by the add-on                                               |
-| docker_api          | boolean            | `true` if docker_api access is granted is enabled                                      |
-| documentation       | boolean            | `true` if documentation is available                                                   |
-| full_access         | boolean            | `true` if full access access is granted is enabled                                     |
-| gpio                | boolean            | `true` if gpio access is granted is enabled                                            |
-| hassio_api          | boolean            | `true` if hassio api access is granted is enabled                                      |
-| hassio_role         | string             | The hassio role (default, homeassistant, manager, admin)                               |
-| homeassistant       | string or null     | The minimum Home Assistant Core version                                                |
-| homeassistant_api   | boolean            | `true` if homeassistant api access is granted is enabled                               |
-| host_dbus           | boolean            | `true` if host dbus access is granted is enabled                                       |
-| host_ipc            | boolean            | `true` if host ipc access is granted is enabled                                        |
-| host_network        | boolean            | `true` if host network access is granted is enabled                                    |
-| host_pid            | boolean            | `true` if host pid access is granted is enabled                                        |
-| host_uts            | boolean            | `true` if host UTS namespace access is enabled.                                        |
-| hostname            | string             | The host name of the add-on                                                            |
-| icon                | boolean            | `true` if icon is available                                                            |
-| ingress             | boolean            | `true` if ingress is enabled                                                           |
-| ingress_entry       | string or null     | The ingress entrypoint                                                                 |
-| ingress_panel       | boolean or null    | `true` if ingress_panel is enabled                                                     |
-| ingress_port        | int or null        | The ingress port                                                                       |
-| ingress_url         | string or null     | The ingress URL                                                                        |
-| ip_address          | string             | The IP address of the add-on                                                           |
-| kernel_modules      | boolean            | `true` if kernel module access is granted is enabled                                   |
-| logo                | boolean            | `true` if logo is available                                                            |
-| long_description    | string             | The long add-on description                                                            |
-| machine             | list               | A list of supported machine types for the add-on                                       |
-| name                | string             | The name of the add-on                                                                 |
-| network             | dictionary or null | The network configuration for the add-on                                               |
-| network_description | dictionary or null | The description for the network configuration                                          |
-| options             | dictionary         | The add-on configuration                                                               |
-| privileged          | list               | A list of hardwars/system attributes the add-onn has access to                         |
-| protected           | boolean            | `true` if protection mode is enabled                                                   |
-| rating              | int                | The addon rating                                                                       |
-| repository          | string             | The URL to the add-on repository                                                       |
-| schema              | dictionary or null | The schema for the add-on configuration                                                |
-| services_role       | list               | A list of services and the add-ons role for that service                               |
-| slug                | string             | The add-on slug                                                                        |
-| stage               | string             | The add-on stage (stable, experimental, deprecated)                                    |
-| startup             | string             | The stage when the add-on is started (initialize, system, services, application, once) |
-| state               | string or null     | The state of the add-on (started, stopped)                                             |
-| stdin               | boolean            | `true` if the add-on accepts stdin commands                                            |
-| system_managed      | boolean            | Indicates whether the add-on is managed by Home Assistant                              |
-| system_managed_config_entry | string     | Provides the configuration entry ID if the add-on is managed by Home Assistant         |
-| translations        | dictionary         | A dictionary containing content of translation files for the add-on                    |
-| udev                | boolean            | `true` if udev access is granted is enabled                                            |
-| update_available    | boolean            | `true` if an update is available                                                       |
-| url                 | string or null     | URL to more information about the add-on                                               |
-| usb                 | list               | A list of attached USB devices                                                         |
-| version             | string             | The installed version of the add-on                                                    |
-| version_latest      | string             | The latest version of the add-on                                                       |
-| video               | boolean            | `true` if video is enabled                                                             |
-| watchdog            | boolean            | `true` if watchdog is enabled                                                          |
-| webui               | string or null     | The URL to the web UI for the add-on                                                   |
-| signed              | boolean            | True if the image is signed and trust                                                  |
+| 键                 | 类型               | 描述                                                                            |
+| ------------------- | ------------------ | -------------------------------------------------------------------------------- |
+| advanced            | boolean            | 如果启用了高级模式，则为 `true`                                                  |
+| apparmor            | string             | 禁用、默认或配置文件的名称                                                        |
+| arch                | list               | 附加组件支持的体系结构列表                                                        |
+| audio               | boolean            | 如果启用了音频，则为 `true`                                                        |
+| audio_input         | float or null      | 设备索引                                                                          |
+| audio_output        | float or null      | 设备索引                                                                          |
+| auth_api            | boolean            | 如果启用了 auth api 访问，则为 `true`                                             |
+| auto_uart           | boolean            | 如果启用了 auto_uart 访问，则为 `true`                                          |
+| auto_update         | boolean            | 如果启用了自动更新，则为 `true`                                                  |
+| available           | boolean            | 如果附加组件可用，则为 `true`                                                    |
+| boot                | string             | "auto" 或 "manual"                                                                |
+| boot_config         | string             | 附加组件的默认启动模式或如果无法自动启动则为 "manual_only"                       |
+| build               | boolean            | 如果是本地附加组件，则为 `true`                                                  |
+| changelog           | boolean            | 如果有变更日志，则为 `true`                                                      |
+| description         | string             | 附加组件描述                                                                      |
+| detached            | boolean            | 如果附加组件是分离运行，则为 `true`                                              |
+| devices             | list               | 附加设备的列表                                                                    |
+| devicetree          | boolean            | 如果授予了 devicetree 访问权限，则为 `true`                                     |
+| discovery           | list               | 发现服务的列表                                                                    |
+| dns                 | list               | 附加组件使用的 DNS 服务器列表                                                    |
+| docker_api          | boolean            | 如果启用了 docker_api 访问，则为 `true`                                          |
+| documentation       | boolean            | 如果有文档，则为 `true`                                                          |
+| full_access         | boolean            | 如果授予了完全访问权限，则为 `true`                                              |
+| gpio                | boolean            | 如果授予了 gpio 访问权限，则为 `true`                                           |
+| hassio_api          | boolean            | 如果启用了 hassio api 访问，则为 `true`                                          |
+| hassio_role         | string             | hassio 角色 (default, homeassistant, manager, admin)                             |
+| homeassistant       | string or null     | 最低 Home Assistant Core 版本                                                   |
+| homeassistant_api   | boolean            | 如果启用了 homeassistant api 访问，则为 `true`                                   |
+| host_dbus           | boolean            | 如果授予了主机 dbus 访问权限，则为 `true`                                        |
+| host_ipc            | boolean            | 如果授予了主机 ipc 访问权限，则为 `true`                                         |
+| host_network        | boolean            | 如果授予了主机网络访问权限，则为 `true`                                          |
+| host_pid            | boolean            | 如果授予了主机 pid 访问权限，则为 `true`                                         |
+| host_uts            | boolean            | 如果启用了主机 UTS 命名空间访问，则为 `true`                                     |
+| hostname            | string             | 附加组件的主机名                                                                  |
+| icon                | boolean            | 如果有图标，则为 `true`                                                          |
+| ingress             | boolean            | 如果启用了入口，则为 `true`                                                       |
+| ingress_entry       | string or null     | 入口点                                                                           |
+| ingress_panel       | boolean or null    | 如果启用了 ingress_panel，则为 `true`                                            |
+| ingress_port        | int or null        | 入口端口                                                                         |
+| ingress_url         | string or null     | 入口 URL                                                                        |
+| ip_address          | string             | 附加组件的 IP 地址                                                               |
+| kernel_modules      | boolean            | 如果授予了内核模块访问权限，则为 `true`                                          |
+| logo                | boolean            | 如果有徽标，则为 `true`                                                          |
+| long_description    | string             | 附加组件的详细描述                                                              |
+| machine             | list               | 附加组件支持的机器类型列表                                                      |
+| name                | string             | 附加组件的名称                                                                    |
+| network             | dictionary or null | 附加组件的网络配置                                                               |
+| network_description | dictionary or null | 网络配置的描述                                                                    |
+| options             | dictionary         | 附加组件配置                                                                    |
+| privileged          | list               | 附加组件访问的硬件/系统属性列表                                                  |
+| protected           | boolean            | 如果启用了保护模式，则为 `true`                                                |
+| rating              | int                | 附加组件评分                                                                     |
+| repository          | string             | 附加组件仓库的 URL                                                               |
+| schema              | dictionary or null | 附加组件配置的模式                                                                |
+| services_role       | list               | 服务及其附加组件角色的列表                                                        |
+| slug                | string             | 附加组件的 slug                                                                    |
+| stage               | string             | 附加组件的阶段 (stable, experimental, deprecated)                              |
+| startup             | string             | 启动附加组件的阶段 (initialize, system, services, application, once)         |
+| state               | string or null     | 附加组件的状态 (started, stopped)                                               |
+| stdin               | boolean            | 如果附加组件接受 stdin 命令，则为 `true`                                        |
+| system_managed      | boolean            | 指示附加组件是否由 Home Assistant 管理                                          |
+| system_managed_config_entry | string     | 如果附加组件由 Home Assistant 管理，则提供配置条目 ID                          |
+| translations        | dictionary         | 包含附加组件翻译文件内容的字典                                                  |
+| udev                | boolean            | 如果授予了 udev 访问权限，则为 `true`                                          |
+| update_available    | boolean            | 如果有可用更新，则为 `true`                                                      |
+| url                 | string or null     | 有关附加组件的更多信息的 URL                                                     |
+| usb                 | list               | 附加的 USB 设备列表                                                               |
+| version             | string             | 附加组件的已安装版本                                                              |
+| version_latest      | string             | 附加组件的最新版本                                                                |
+| video               | boolean            | 如果启用了视频，则为 `true`                                                      |
+| watchdog            | boolean            | 如果启用了看门狗，则为 `true`                                                    |
+| webui               | string or null     | 附加组件的 web UI 的 URL                                                         |
+| signed              | boolean            | 如果映像已签名并受信任，则为 true                                                |
 
-**Example response:**
+**示例响应：**
 
 ```json
 {
@@ -190,6 +188,8 @@ Get details about an add-on
   "audio_input": null,
   "audio_output": null,
   "audio": false,
+  "auth_api": false,
+  "auto_uart": false,
   "auth_api": false,
   "auto_uart": false,
   "auto_update": false,

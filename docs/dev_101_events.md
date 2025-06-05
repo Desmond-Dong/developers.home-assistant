@@ -1,61 +1,61 @@
 ---
-title: "Events"
+title: "事件"
 ---
 
-The core of Home Assistant is driven by events. That means that if you want to respond to something happening, you'll have to respond to events. Most of the times you won't interact directly with the event system but use one of the [event listener helpers][helpers].
+Home Assistant 的核心是由事件驱动的。这意味着如果您想要响应某些发生的事情，您需要响应事件。在大多数情况下，您不会直接与事件系统互动，而是使用某个 [事件监听器助手][helpers]。
 
-The event system is very flexible. There are no limitations on the event type, as long as it's a string. Each event can contain data. The data is a dictionary that can contain any data as long as it's JSON serializable. This means that you can use number, string, dictionary and list.
+事件系统非常灵活。事件类型没有限制，只要它是一个字符串。每个事件可以包含数据。数据是一个字典，可以包含任何只要是 JSON 可序列化的数据。这意味着您可以使用数字、字符串、字典和列表。
 
-[List of events that Home Assistant fires.][object]
+[Home Assistant 触发的事件列表。][object]
 
-## Firing events
+## 触发事件
 
-To fire an event, you have to interact with the event bus. The event bus is available on the Home Assistant instance as `hass.bus`. Please be mindful of the data structure as documented on our [Data Science portal](https://data.home-assistant.io/docs/events/#database-table).
+要触发事件，您必须与事件总线进行交互。事件总线在 Home Assistant 实例上可用，称为 `hass.bus`。请注意数据结构，如我们在 [数据科学门户](https://data.home-assistant.io/docs/events/#database-table) 上所述。
 
-Example component that will fire an event when loaded. Note that custom event names are prefixed with the component name.
+示例组件将在加载时触发事件。请注意，自定义事件名称以组件名称为前缀。
 
 ```python
 DOMAIN = "example_component"
 
 
 def setup(hass, config):
-    """Set up is called when Home Assistant is loading our component."""
+    """当 Home Assistant 正在加载我们的组件时调用 set up。"""
 
-    # Fire event example_component_my_cool_event with event data answer=42
+    # 触发事件 example_component_my_cool_event，事件数据为 answer=42
     hass.bus.fire("example_component_my_cool_event", {"answer": 42})
 
-    # Return successful setup
+    # 返回成功设置
     return True
 ```
 
-## Listening to events
+## 监听事件
 
-Most of the times you'll not be firing events but instead listen to events. For example, the state change of an entity is broadcasted as an event.
+大多数情况下，您不会触发事件，而是监听事件。例如，实体的状态变化会作为事件广播。
 
 ```python
 DOMAIN = "example_component"
 
 
 def setup(hass, config):
-    """Set up is called when Home Assistant is loading our component."""
+    """当 Home Assistant 正在加载我们的组件时调用 set up。"""
     count = 0
 
-    # Listener to handle fired events
+    # 处理触发事件的监听器
     def handle_event(event):
         nonlocal count
         count += 1
-        print(f"Answer {count} is: {event.data.get('answer')}")
+        print(f"答案 {count} 是: {event.data.get('answer')}")
 
-    # Listen for when example_component_my_cool_event is fired
+    # 监听 example_component_my_cool_event 被触发的事件
     hass.bus.listen("example_component_my_cool_event", handle_event)
 
-    # Return successful setup
+    # 返回成功设置
     return True
 ```
 
-### Helpers
+### 助手
 
-Home Assistant comes with a lot of bundled helpers to listen to specific types of event. There are helpers to track a point in time, to track a time interval, a state change or the sun set. [See available methods.][helpers]
+Home Assistant 附带了许多捆绑助手，以便监听特定类型的事件。有助手跟踪某个时刻、跟踪时间间隔、状态变化或日落。[查看可用的方法。][helpers]
 
 [helpers]: https://developers.home-assistant.io/docs/integration_listen_events#available-event-helpers
 [object]: https://www.home-assistant.io/docs/configuration/events/

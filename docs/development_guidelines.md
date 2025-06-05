@@ -1,69 +1,68 @@
 ---
-title: "Style guidelines"
+title: "样式指南"
 ---
 
-Home Assistant enforces quite strict [PEP8 style](https://peps.python.org/pep-0008/) and [PEP 257 (Docstring Conventions)](https://peps.python.org/pep-0257/) compliance on all code submitted.
+Home Assistant 对提交的所有代码执行相当严格的 [PEP8 风格](https://peps.python.org/pep-0008/) 和 [PEP 257（文档字符串约定）](https://peps.python.org/pep-0257/) 合规性检查。
 
-We use [Ruff](https://docs.astral.sh/ruff/) for code formatting. Every pull request is automatically checked as part of the linting process and we never merge submissions that diverge.
+我们使用 [Ruff](https://docs.astral.sh/ruff/) 进行代码格式化。每个拉取请求在 linting 过程中会自动检查，我们绝不会合并不符合标准的提交。
 
-Summary of the most relevant points:
+最相关点的摘要：
 
-- Comments should be full sentences and end with a period.
-- [Imports](https://peps.python.org/pep-0008/#imports) should be ordered.
-- Constants and the content of lists and dictionaries should be in alphabetical order.
+- 注释应为完整句子并以句号结束。
+- [导入](https://peps.python.org/pep-0008/#imports) 应有序。
+- 常量及列表和字典的内容应按字母顺序排列。
 
-It is advisable to adjust IDE or editor settings to match those requirements.
+建议调整 IDE 或编辑器设置以符合这些要求。
 
-## Our recommendations
+## 我们的建议
 
-For some cases [PEPs](https://peps.python.org/) don't make a statement. This section covers our recommendations about the code style. Those points were collected from the existing code and based on what contributors and developers were using the most. This is basically a majority decision, thus you may not agree with it. But we would like to encourage you follow those recommendations to keep the code consistent.
+对于某些情况 [PEPs](https://peps.python.org/) 并没有明确的说明。此部分涵盖了我们对代码风格的建议。这些要点来自现有代码，并基于贡献者和开发者最常使用的内容。这基本上是多数决策，因此您可能不同意。但我们希望鼓励您遵循这些建议，以保持代码的一致性。
 
-### File headers
+### 文件头
 
-The docstring in the file header should describe what the file is about.
+文件头中的文档字符串应描述该文件的内容。
 
 ```python
-"""Support for MQTT lights."""
+"""对 MQTT 灯的支持。"""
 ```
 
-### Log messages
+### 日志消息
 
-There is no need to add the platform or component name to the log messages. This will be added automatically. Like `syslog` messages there shouldn't be any period at the end. A widely used style is shown below but you are free to compose the messages as you like.
+日志消息中无需添加平台或组件名称。这将自动添加。与 `syslog` 消息一样，末尾不应有句号。以下是广泛使用的风格，但您可以随意编写消息。
 
 ```python
-_LOGGER.error("No route to device: %s", self._resource)
+_LOGGER.error("无法连接设备: %s", self._resource)
 ```
 
 ```log
-2017-05-01 14:28:07 ERROR [homeassistant.components.sensor.arest] No route to device: 192.168.0.18
+2017-05-01 14:28:07 ERROR [homeassistant.components.sensor.arest] 无法连接设备: 192.168.0.18
 ```
 
-Do not print out API keys, tokens, usernames or passwords (even if they are wrong).
-Be restrictive with `_LOGGER.info`, use `_LOGGER.debug` for anything which is not targetting the user.
+请勿打印 API 密钥、令牌、用户名或密码（即使它们是错误的）。
+对 `_LOGGER.info` 要限制使用，对于任何不针对用户的内容，请使用 `_LOGGER.debug`。
 
-### Use new style string formatting
+### 使用新的字符串格式化风格
 
-Prefer [f-strings](https://docs.python.org/3/reference/lexical_analysis.html#f-strings) over `%` or `str.format`.
+优先使用 [f-strings](https://docs.python.org/3/reference/lexical_analysis.html#f-strings)，而不是 `%` 或 `str.format`。
 
 ```python
-# New
+# 新的
 f"{some_value} {some_other_value}"
-# Old, wrong
-"{} {}".format("New", "style")
-"%s %s" % ("Old", "style")
+# 旧的，不正确
+"{} {}".format("新", "风格")
+"%s %s" % ("旧", "风格")
 ```
 
-One exception is for logging which uses the percentage formatting. This is to avoid formatting the log message when it is suppressed.
+唯一的例外是日志记录，它使用百分号格式化。这是为了避免在消息被抑制时格式化日志消息。
 
 ```python
-_LOGGER.info("Can't connect to the webservice %s at %s", string1, string2)
+_LOGGER.info("无法连接到 webservice %s 在 %s", string1, string2)
 ```
 
-### Typing
+### 类型提示
 
-We encourage the use of fully typing your code. This helps with finding/preventing issues and bugs in our codebase,
-but also helps fellow contributors making adjustments to your code in the future as well.
+我们鼓励完全为代码进行类型提示。这有助于在我们的代码库中发现/防止问题和错误，
+同时也有助于未来的其他贡献者对您的代码进行调整。
 
-By default, Home Assistant will statically check for type hints in our automated CI process.
-Python modules can be included for strict checking, if they are fully typed, by adding an entry
-to the `.strict-typing` file in the root of the Home Assistant Core project.
+默认情况下，Home Assistant 在我们的自动化 CI 过程中会静态检查类型提示。
+如果 Python 模块完全类型化，可以通过在 Home Assistant Core 项目根目录下的 `.strict-typing` 文件中添加条目进行严格检查。

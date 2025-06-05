@@ -1,22 +1,22 @@
 ---
-title: "Supported languages"
+title: "支持的语言"
 ---
 
 import languages from '!!yaml-loader!../../../intents/languages.yaml';
 import intents from '!!yaml-loader!../../../intents/intents.yaml';
 
-If you don't see your language below, [help us translate!](/docs/voice/intent-recognition/contributing)
+如果您在下面没有看到您的语言，[请帮助我们翻译!](/docs/voice/intent-recognition/contributing)
 
-For a full progress report per language, [click here.](https://home-assistant.github.io/intents/)
+有关每种语言的完整进度报告，[点击这里。](https://home-assistant.github.io/intents/)
 
 <>
   <table>
     <thead>
       <tr>
-        <th>Code</th>
-        <th>Language</th>
-        <th>Leader</th>
-        <th>Links</th>
+        <th>代码</th>
+        <th>语言</th>
+        <th>负责人</th>
+        <th>链接</th>
       </tr>
     </thead>
     <tbody>
@@ -40,7 +40,7 @@ For a full progress report per language, [click here.](https://home-assistant.gi
                     )}
               </td>
               <td>
-                <a href={`https://github.com/home-assistant/intents/tree/main/sentences/${language}`}>Sentences</a>
+                <a href={`https://github.com/home-assistant/intents/tree/main/sentences/${language}`}>句子</a>
               </td>
             </tr>
         )
@@ -49,4 +49,4 @@ For a full progress report per language, [click here.](https://home-assistant.gi
   </table>
 </>
 
-[This page is automatically generated based on the Intents repository.](https://github.com/home-assistant/intents/blob/main/languages.yaml)
+[该页面是基于 Intents 仓库自动生成的。](https://github.com/home-assistant/intents/blob/main/languages.yaml)

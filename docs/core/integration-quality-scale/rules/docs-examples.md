@@ -1,26 +1,25 @@
 ---
-title: "The documentation provides automation examples the user can use."
+title: "文档提供用户可以使用的自动化示例。"
 ---
 
-## Reasoning
+## 逻辑推理
 
-To show how the integration can be used, we should provide a limited set of blueprints, containing common or useful ones.
-This will help users to get started with the integration faster and easier.
+为了显示集成可以如何使用，我们应该提供一组有限的蓝图，包含常见或有用的蓝图。这将帮助用户更快、更轻松地开始使用集成。
 
-The documentation pages should not be used as a collection or as a replacement of the blueprint exchange on the forums.
+文档页面不应作为论坛上蓝图交换的集合或替代品。
 
-## Example implementation
+## 示例实现
 
 ```markdown showLineNumbers
-## Examples
+## 示例
 
-### Turning off the LEDs during the night
-The status LEDs on the device can be quite bright.
-To tackle this, you can use this blueprint to easily automate the LEDs turning off when the sun goes down.
+### 夜间关闭LED灯
+设备上的状态LED灯可能会非常明亮。 
+为了解决这个问题，您可以使用这个蓝图轻松实现LED灯在日落时自动关闭。
 
-link to blueprint
+蓝图链接
 ```
 
-## Exceptions
+## 例外情况
 
-There are no exceptions to this rule.
+对此规则没有例外。

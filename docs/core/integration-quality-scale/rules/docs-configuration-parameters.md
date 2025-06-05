@@ -1,28 +1,28 @@
 ---
-title: "The documentation describes all integration configuration options"
+title: "文档描述了所有集成配置选项"
 ---
 
-## Reasoning
+## 理由
 
-Integrations can provide an options flow to allow users to change integration configuration.
-This rule ensures that all configuration options are documented so that users can understand what each option does and how to use it.
+集成可以提供选项流程，以允许用户更改集成配置。
+此规则确保所有配置选项都有文档记录，以便用户可以理解每个选项的功能及其使用方法。
 
-## Example implementation
+## 示例实现
 
-The following example is for an integration with multiple configuration options, using the `configuration_basic` tag.
+以下示例适用于具有多个配置选项的集成，使用 `configuration_basic` 标签。
 
 ```markdown showLineNumbers
 {% include integrations/option_flow.md %}
 
 {% configuration_basic %}
-Country code:
-  description: You can specify the country code (NL or BE) of the country to display on the camera.
-Timeframe:
-  description: Minutes to look ahead for precipitation forecast sensors (minimum 5, maximum 120).
+国家代码：
+  description: 您可以指定要在摄像头上显示的国家的国家代码（NL或BE）。
+时间范围：
+  description: 预测传感器前瞻降水的分钟数（最小5，最大120）。
 {% endconfiguration_basic %}
 
 ```
 
-## Exceptions
+## 例外情况
 
-There are no exceptions to this rule.
+此规则没有例外情况。

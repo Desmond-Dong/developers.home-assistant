@@ -1,49 +1,49 @@
 ---
-title: "Service actions raise exceptions when encountering failures"
+title: "服务操作在遇到失败时引发异常"
 related_rules:
   - exception-translations
   - action-setup
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+## 理由
 
-Things can go wrong when a service action is performed.
-When this happens, the integration should raise an exception to indicate that something went wrong.
-The exception message will be shown to the user in the UI, and can be used to help diagnose the issue.
-The message will either be generated from the attached translation string or from the exception argument.
+在执行服务操作时可能会出现问题。
+当这种情况发生时，集成应引发异常以指示发生了错误。
+异常消息将在用户界面中显示给用户，并可用于帮助诊断问题。
+该消息将从附加的翻译字符串生成或从异常参数生成。
 
-## Example implementation
+## 示例实现
 
-When the problem is caused by incorrect usage (for example incorrect input or referencing something that does not exist) we should raise a `ServiceValidationError`.
-When the problem is caused by an error in the service action itself (for example, a network error or a bug in the service), we should raise a `HomeAssistantError`.
+当问题由于不正确的使用造成时（例如输入不正确或引用不存在的内容），我们应该引发 `ServiceValidationError`。
+当问题由于服务操作本身的错误造成时（例如，网络错误或服务中的错误），我们应该引发 `HomeAssistantError`。
 
-In this example, we show a function that is registered as a service action in Home Assistant.
-If the input is incorrect (when the end date is before the start date), a `ServiceValidationError` is raised, and if we can't reach the service, we raise a `HomeAssistantError`.
+在这个示例中，我们展示了一个在 Home Assistant 中注册为服务操作的函数。
+如果输入不正确（当结束日期早于开始日期时），将引发 `ServiceValidationError`，如果我们无法连接到服务，则引发 `HomeAssistantError`。
 
 ```python {8,12} showLineNumbers
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 
 async def async_set_schedule(call: ServiceCall) -> ServiceResponse:
-    """Set the schedule for a day."""
+    """设置一天的日程表。"""
     start_date = call.data[ATTR_START_DATE]
     end_date = call.data[ATTR_END_DATE]
     if end_date < start_date:
-        raise ServiceValidationError("End date must be after start date")
+        raise ServiceValidationError("结束日期必须晚于开始日期")
     try:
         await client.set_schedule(start_date, end_date)
     except MyConnectionError as err:
-        raise HomeAssistantError("Could not connect to the schedule") from err
+        raise HomeAssistantError("无法连接到日程表") from err
 ```
 
-## Additional resources
+## 其他资源
 
-For more info on raising exceptions, check the [documentation](../../platform/raising_exceptions).
+有关引发异常的更多信息，请查看 [文档](../../platform/raising_exceptions)。
 
-## Exceptions
+## 异常
 
-There are no exceptions to this rule.
+对此规则没有例外。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

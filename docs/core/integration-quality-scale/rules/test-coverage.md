@@ -1,26 +1,26 @@
 ---
-title: "Above 95% test coverage for all integration modules"
+title: "所有集成模块的测试覆盖率超过95%"
 related_rules:
   - config-flow-test-coverage
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+## 理由
 
-Since we support a lot of different integrations, we don't have every device or service available for hands-on testing.
-To make sure that we don't break anything, when accepting a code change, we need to have a good test coverage for all integration modules.
-This prevents the introduction of bugs and regressions.
+由于我们支持许多不同的集成，我们并没有每个设备或服务可供实际测试。  
+为了确保我们不会破坏任何东西，在接受代码更改时，我们需要对所有集成模块有良好的测试覆盖率。  
+这可以防止引入错误和回归。
 
-It also allows new developers to understand the codebase and make changes without breaking any existing use case.
+这也使得新开发人员能够理解代码库并进行更改，而不会破坏任何现有用例。
 
-## Additional resources
+## 其他资源
 
-For more information about testing and how to calculate test coverage, see the [Testing your code](/docs/development_testing) page.
+有关测试和如何计算测试覆盖率的更多信息，请参见[测试您的代码](/docs/development_testing)页面。
 
-## Exceptions
+## 例外
 
-There are no exceptions to this rule.
+此规则没有例外。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

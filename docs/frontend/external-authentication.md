@@ -1,70 +1,69 @@
 ---
-title: "External authentication"
+title: "外部认证"
 ---
 
-By default, the frontend will take care of its own authentication tokens. If none are found, it will redirect the user to the login page and it will take care of updating the token.
+默认情况下，前端将处理自己的认证令牌。如果未找到任何令牌，它将重定向用户到登录页面，并负责更新令牌。
 
-If you want to embed the Home Assistant frontend in an external app, you will want to store the authentication inside the app but make it available to the frontend. To support this, Home Assistant exposes an external authentication API.
+如果您希望将 Home Assistant 前端嵌入到外部应用中，您需要在应用内存储认证信息，但也要使其对前端可用。为了支持这种情况，Home Assistant 暴露了一个外部认证 API。
 
-To activate this API, load the frontend with `?external_auth=1` appended to the URL. If this is passed in, Home Assistant will expect either `window.externalApp` (for Android) or `window.webkit.messageHandlers` (for iOS) to be defined containing the methods described below.
+要激活此 API，请在 URL 后附加 `?external_auth=1` 加载前端。如果传入此参数，Home Assistant 将期望定义 `window.externalApp`（用于 Android）或 `window.webkit.messageHandlers`（用于 iOS），并包含下面描述的方法。
 
-## Get access token
+## 获取访问令牌
 
-_This API has been introduced in Home Assistant 0.78._
+_此 API 在 Home Assistant 0.78 中引入。_
 
-When the frontend loads, it will request an access token from the external authentication. It does so by calling one of the following methods with an options object. The options object defines the callback method to be called with the response and an optional `force` boolean which is set to `true` if the access token should be refreshed, regardless if it has expired or not.
+当前端加载时，它将从外部认证请求一个访问令牌。它通过调用以下方法之一并传递一个选项对象来做到这一点。选项对象定义了用于处理响应的回调方法，以及一个可选的 `force` 布尔值，如果访问令牌应被刷新（无论是否已过期），则设置为 `true`。
 
-The `force` boolean has been introduced in Home Assistant 0.104 and might not always be available.
+`force` 布尔值在 Home Assistant 0.104 中引入，并可能并不总是可用。
 
 ```js
 window.externalApp.getExternalAuth({
   callback: "externalAuthSetToken",
   force: true
 });
-// or
+// 或
 window.webkit.messageHandlers.getExternalAuth.postMessage({
   callback: "externalAuthSetToken",
   force: true
 });
 ```
 
-The response should contain a boolean if it was successful and an object containing an access token and the number of seconds that it will remain valid. Pass the response to the function defined in the options object.
+响应应包含一个布尔值，指示请求是否成功以及一个包含访问令牌和其有效期（秒数）的对象。将响应传递给在选项对象中定义的函数。
 
 ```js
-// To be called by external app
+// 由外部应用调用
 window.externalAuthSetToken(true, {
   access_token: "qwere",
   expires_in: 1800
 });
 
-// If unable to get new access token
+// 如果无法获取新访问令牌
 window.externalAuthSetToken(false);
 ```
 
-The frontend will call this method when the page first loads and whenever it needs a valid token but the previous received token has expired.
+前端将在页面首次加载时以及每当需要有效令牌但先前接收到的令牌已过期时调用此方法。
 
-## Revoke token
+## 撤销令牌
 
-_This API has been introduced in Home Assistant 0.78._
+_此 API 在 Home Assistant 0.78 中引入。_
 
-When the user presses the logout button on the profile page, the external app will have to [revoke the refresh token](auth_api.md#revoking-a-refresh-token), and log the user out.
+当用户在个人资料页面按下注销按钮时，外部应用将必须 [撤销刷新令牌](auth_api.md#revoking-a-refresh-token)，并将用户注销。
 
 ```js
 window.externalApp.revokeExternalAuth({
   callback: "externalAuthRevokeToken"
 });
-// or
+// 或
 window.webkit.messageHandlers.revokeExternalAuth.postMessage({
   callback: "externalAuthRevokeToken"
 });
 ```
 
-When done, the external app has to call the function defined in the options object.
+完成后，外部应用必须调用选项对象中定义的函数。
 
 ```js
-// To be called by external app
+// 由外部应用调用
 window.externalAuthRevokeToken(true);
 
-// If unable to logout
+// 如果无法注销
 window.externalAuthRevokeToken(false);
-```

@@ -1,21 +1,21 @@
 ---
-title: "Developer playground"
-sidebar_label: "Developer playground"
+title: "开发者游乐场"
+sidebar_label: "开发者游乐场"
 ---
 
-## Why a developer playground?
+## 为什么需要开发者游乐场？
 
-The application relies heavily on the WebView and an active connection to a server, making it challenging to quickly test features during development. Often, you may need to rebuild the app multiple times to test specific behaviors. While the **Compose preview** capabilities can help with UI testing, they are sometimes insufficient, requiring you to go through the whole UX flow that can be tedious.
+该应用程序在很大程度上依赖于 WebView 和与服务器的活跃连接，这使得在开发过程中快速测试功能变得具有挑战性。通常情况下，您可能需要多次重建应用程序以测试特定行为。尽管 **Compose 预览** 功能可以帮助进行 UI 测试，但有时仍然不够，可能需要您经历整个用户体验流程，这可能是繁琐的。
 
-To save time during development, we’ve created a **developer playground**. This playground is accessible only in debug builds through an application [shortcut](https://developer.android.com/develop/ui/views/launch/shortcuts/creating-shortcuts#static). This ensures it does not interfere with the rest of the application.
+为了节省开发时间，我们创建了一个 **开发者游乐场**。此游乐场仅在调试构建中通过应用程序 [快捷方式](https://developer.android.com/develop/ui/views/launch/shortcuts/creating-shortcuts#static) 可访问。这确保它不会干扰应用程序的其他部分。
 
 :::note
-The playground code is located in the `app/src/debug` sourceSet.
+游乐场代码位于 `app/src/debug` sourceSet 中。
 :::
 
-You are free to use the playground as needed, but only commit changes if they provide value to other developers. When committing changes to the playground, ensure you follow the [codestyle](/docs/android/codestyle) and [best practices](/docs/android/best_practices.md). Translations, however, can be omitted.
+您可以根据需要使用游乐场，但只有在对其他开发者有价值时才提交更改。当提交游乐场的更改时，请确保遵循 [代码风格](/docs/android/codestyle) 和 [最佳实践](/docs/android/best_practices.md)。然而，翻译可以省略。
 
-### Examples of valuable contributions
+### 有价值贡献的示例
 
-- A method to intentionally crash the application to test error reporting in the cache folder.
-- A tool to display all components and themes used within the application.
+- 一种故意导致应用程序崩溃的方法，用于测试缓存文件夹中的错误报告。
+- 显示应用程序中使用的所有组件和主题的工具。

@@ -1,21 +1,21 @@
 ---
-title: "Integration platforms"
-sidebar_label: "Platforms"
+title: "集成平台"
+sidebar_label: "平台"
 ---
 
-Home Assistant has various built-in integrations that abstract device types. There are [lights](core/entity/light.md), [switches](core/entity/switch.md), [covers](core/entity/cover.md), [climate devices](core/entity/climate.md), and [many more](core/entity.md). Your integration can hook into these integrations by creating a platform. You will need a platform for each integration that you are integrating with.
+Home Assistant 有各种内置集成，可以抽象出设备类型。包括 [灯光](core/entity/light.md)、[开关](core/entity/switch.md)、[遮挡物](core/entity/cover.md)、[气候设备](core/entity/climate.md) 等 [更多](core/entity.md) 类型。您的集成可以通过创建平台来与这些集成连接。每个与您集成的集成都需要一个平台。
 
-To create a platform, you will need to create a file with the domain name of the integration that you are building a platform for. So if you are building a light, you will add a new file `light.py` to your integration folder.
+要创建一个平台，您需要创建一个以您所构建的集成的域名命名的文件。因此，如果您正在构建一个灯光，您需要在集成文件夹中添加一个新的文件 `light.py`。
 
-We have created two example integrations that should give you a look at how this works:
+我们创建了两个示例集成，以便您了解这是如何工作的：
 
-- [Example sensor platform](https://github.com/home-assistant/example-custom-config/tree/master/custom_components/example_sensor/): hello world of platforms.
-- [Example light platform](https://github.com/home-assistant/example-custom-config/tree/master/custom_components/example_light/): showing best practices.
+- [示例传感器平台](https://github.com/home-assistant/example-custom-config/tree/master/custom_components/example_sensor/): 平台的 hello world。
+- [示例灯光平台](https://github.com/home-assistant/example-custom-config/tree/master/custom_components/example_light/): 展示最佳实践。
 
-### Interfacing with devices
+### 与设备接口
 
-One Home Assistant rule is that the integration should never interface directly with devices. Instead, it should interact with a third-party Python 3 library. This way, Home Assistant can share code with the Python community and keep the project maintainable.
+Home Assistant 的一条规则是，集成不应直接与设备接口。相反，它应与第三方 Python 3 库进行交互。这样，Home Assistant 可以与 Python 社区共享代码，从而保持项目的可维护性。
 
-Once you have your Python library [ready and published to PyPI](api_lib_index.md), add it to the [manifest](creating_integration_manifest.md). It will now be time to implement the Entity base class that is provided by the integration that you are creating a platform for.
+一旦您有了 [准备好并发布到 PyPI 的 Python 库](api_lib_index.md)，请将其添加到 [清单](creating_integration_manifest.md) 中。现在是实现您所创建平台的集成所提供的实体基类的时候了。
 
-Find your integration at the [entity index](core/entity.md) to see what methods and properties are available to implement.
+在 [实体索引](core/entity.md) 中找到您的集成，以查看可实现的方法和属性。

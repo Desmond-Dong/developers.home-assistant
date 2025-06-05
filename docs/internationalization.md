@@ -1,19 +1,19 @@
 ---
-title: "Internationalization"
+title: "国际化"
 ---
 
-The Home Assistant internationalization project includes preparing platforms and the frontend for localization, as well as the actual translation of localized strings.
+Home Assistant 国际化项目包括为本地化准备平台和前端，以及实际翻译本地化字符串。
 
-Some components and platforms will have strings that need to be localized specifically for that platform. These strings are managed in the core [home-assistant](https://github.com/home-assistant/core) repository. The Home Assistant backend will serve strings to the clients based on the loaded components in the running instance.
+一些组件和平台将有需要为该平台特别本地化的字符串。这些字符串在核心 [home-assistant](https://github.com/home-assistant/core) 仓库中管理。Home Assistant 后端将根据正在运行的实例中加载的组件向客户端提供字符串。
 
-There are also localizable strings that exist only on the frontend. These strings are managed in the [home-assistant frontend](https://github.com/home-assistant/frontend) repository. These strings are stored with the frontend and don’t depend on the backend configuration.
+还有一些仅存在于前端的可本地化字符串。这些字符串在 [home-assistant frontend](https://github.com/home-assistant/frontend) 仓库中管理。这些字符串与前端存储在一起，不依赖于后端配置。
 
-| Type              | Location |
+| 类型              | 位置     |
 | ----------------- | -------- |
-| Entity states     | Core     |
-| Config flows      | Core     |
-| Options flows     | Core     |
-| Device automation | Core     |
-| Text in UI        | Frontend |
+| 实体状态         | 核心     |
+| 配置流程         | 核心     |
+| 选项流程         | 核心     |
+| 设备自动化       | 核心     |
+| UI中的文本       | 前端     |
 
-Our strings are translated by the community using the online translation tool [Lokalise](https://lokalise.co/).
+我们的字符串由社区使用在线翻译工具 [Lokalise](https://lokalise.co/) 翻译。

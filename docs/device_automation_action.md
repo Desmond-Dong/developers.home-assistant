@@ -1,38 +1,38 @@
 ---
-title: "Device actions"
-sidebar_label: Actions
+title: "设备操作"
+sidebar_label: 操作
 ---
 
-Device actions allow a user to have a device do something. Examples are to turn a light on or open a door.
+设备操作允许用户让设备执行某项操作。示例包括打开灯光或打开门。
 
-Device actions are defined as dictionaries. These dictionaries are created by your integration and are passed to your integration to create a function that performs the action.
+设备操作被定义为字典。这些字典由您的集成创建，并传递给您的集成以创建执行该操作的功能。
 
-Device actions can be provided by the integration that provides the device (e.g. ZHA, deCONZ) or the entity integrations that the device has entities with (e.g. light, switch).
-An example of the former could be to reboot the device, while an example of the latter could be to turn a light on.
+设备操作可以由提供设备的集成（例如 ZHA、deCONZ）或设备所拥有的实体的实体集成提供（例如灯、开关）。
+前者的一个例子可能是重启设备，而后者的一个例子则可能是打开灯光。
 
-If the action requires dynamic validation that the static `ACTION_SCHEMA` can't provide, it's possible to implement an `async_validate_action_config` function.
+如果操作需要动态验证而静态 `ACTION_SCHEMA` 无法提供，可以实现一个 `async_validate_action_config` 函数。
 
 ```py
 async def async_validate_action_config(hass: HomeAssistant, config: ConfigType) -> ConfigType:
-    """Validate config."""
+    """验证配置。"""
 ```
 
-Home Assistant includes a template to get started with device actions. To get started, run inside a development environment `python3 -m script.scaffold device_action`.
+Home Assistant 包含一个模板以便于开始设备操作。要开始，请在开发环境中运行 `python3 -m script.scaffold device_action`。
 
-The template will create a new file `device_action.py` in your integration folder and a matching test file. The file contains the following functions and constants:
+该模板将在您的集成文件夹中创建一个新的文件 `device_action.py` 和一个匹配的测试文件。该文件包含以下函数和常量：
 
 #### `ACTION_SCHEMA`
 
-This is the schema for actions. The base schema should be extended from `homeassistant.helpers.config_validation.DEVICE_ACTION_BASE_SCHEMA`. Do not apply the schema manually. The core will apply the schema if the action schema is defined as a constant in the `device_action.py` module of the integration.
+这是操作的模式。基础模式应扩展自 `homeassistant.helpers.config_validation.DEVICE_ACTION_BASE_SCHEMA`。请勿手动应用模式。如果操作模式在集成的 `device_action.py` 模块中被定义为常量，核心将自动应用该模式。
 
 #### `async_get_actions`
 
 ```py
 async def async_get_actions(hass: HomeAssistant, device_id: str) -> list[dict]:
-    """List device actions for devices."""
+    """列出设备支持的设备操作。"""
 ```
 
-Return a list of actions that this device supports.
+返回该设备支持的操作列表。
 
 #### `async_call_action_from_config`
 
@@ -40,7 +40,7 @@ Return a list of actions that this device supports.
 async def async_call_action_from_config(
     hass: HomeAssistant, config: dict, variables: dict, context: Context | None
 ) -> None:
-    """Execute a device action."""
+    """执行设备操作。"""
 ```
 
-Execute the passed in action.
+执行传入的操作。

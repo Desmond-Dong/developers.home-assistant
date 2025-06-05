@@ -1,21 +1,21 @@
 ---
-title: "The documentation describes known limitations of the integration (not to be confused with bugs)"
+title: "文档描述了集成的已知限制（不要与错误混淆）"
 ---
 
-## Reasoning
+## 理由
 
-Describing the known limitations of the integration in the documentation will allow users to know what to expect from the integration.
+在文档中描述集成的已知限制将使用户了解可以对集成的预期。
 
-We should refrain from noting down bugs, since we use the issue tracker at GitHub for that and we don't want to duplicate information.
+我们应避免记录错误，因为我们在 GitHub 使用问题跟踪器来处理此类问题，并且我们不希望重复信息。
 
-## Example implementation
+## 示例实现
 
 ```markdown showLineNumbers
-## Known limitations
+## 已知限制
 
-The integration does not provide the ability to reboot, which can instead be done via the manufacturer's app.
+该集成不提供重启功能，这可以通过制造商的应用程序来实现。
 ```
 
-## Exceptions
+## 例外情况
 
-There are no exceptions to this rule.
+此规则没有例外。

@@ -1,5 +1,5 @@
 ---
-title: "Full test coverage for the config flow"
+title: "配置流程的完整测试覆盖"
 related_rules:
   - config-flow
   - test-before-configure
@@ -10,27 +10,27 @@ related_rules:
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+## 理由
 
-The config flow is the first interaction a user has with your integration.
-It is important to ensure that the config flow is working as expected and that the user can set up the integration without any issues or (config flow related) errors.
+配置流程是用户与您的集成进行的第一次交互。
+确保配置流程按预期工作，并且用户能够顺利设置集成而不会遇到任何问题或（与配置流程相关的）错误是很重要的。
 
-This means that we want to have **100%** test coverage for the config flow.
-In those tests, we require verification that the flow is able to recover from an error to confirm that the user is able to finish the flow even if something goes wrong.
+这意味着我们希望配置流程的测试覆盖率达到 **100%**。
+在这些测试中，我们需要验证流程能够从错误中恢复，以确认用户能够完成流程，即使出现某些问题。
 
-Since we want the user to have a smooth experience using other integration flows, this rule also applies to the reconfigure, reauthentication, and options flows.
+由于我们希望用户在使用其他集成流程时有顺畅的体验，因此这个规则同样适用于重新配置、重新验证和选项流程。
 
-The extra added benefit of having tests for an integration is that it introduces the developer to testing, making it easier to write tests for other parts of the integration.
+拥有集成测试的额外好处是它使开发人员接触到测试，从而更容易为集成的其他部分编写测试。
 
 :::warning
-Even though the code used to check the uniqueness of a config entry is most likely touched by the happy flow tests, make sure to also test that the flow doesn't allow adding more than one unique configuration entry to reach complete coverage.
+尽管用于检查配置条目唯一性的代码很可能会被愉快流程测试触及，但请确保还测试该流程不允许添加多个唯一配置条目，以达到完全覆盖。
 :::
 
-## Example implementation
+## 示例实现
 
-We need to test the following scenarios for each way the config flow can be initiated, either by the user, by discovery, or by an import flow.
+我们需要对配置流程的每种启动方式进行以下场景的测试，启动方式可以是用户、发现或导入流程。
 
-The example below shows a basic happy flow initiated by the user.
+下面的示例展示了由用户启动的基本愉快流程。
 
 `test_config_flow.py`:
 ```python showLineNumbers
@@ -39,7 +39,7 @@ async def test_full_flow(
     mock_my_client: AsyncMock,
     mock_setup_entry: AsyncMock,
 ) -> None:
-    """Test full flow."""
+    """测试完整流程。"""
     result = await hass.config_entries.flow.async_init(
         DOMAIN,
         context={"source": SOURCE_USER},
@@ -52,21 +52,21 @@ async def test_full_flow(
         {CONF_HOST: "10.0.0.131"},
     )
     assert result["type"] is FlowResultType.CREATE_ENTRY
-    assert result["title"] == "My integration"
+    assert result["title"] == "我的集成"
     assert result["data"] == {
         CONF_HOST: "10.0.0.131",
     }
 ```
 
-## Additional resources
+## 额外资源
 
-More information about config flows can be found in the [config flow documentation](/docs/config_entries_config_flow_handler).
-More information about testing integrations can be found in the [testing documentation](/docs/development_testing).
+有关配置流程的更多信息，请参阅 [配置流程文档](/docs/config_entries_config_flow_handler)。
+有关集成测试的更多信息，请参阅 [测试文档](/docs/development_testing)。
 
-## Exceptions
+## 例外情况
 
-There are no exceptions to this rule.
+此规则没有例外情况。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

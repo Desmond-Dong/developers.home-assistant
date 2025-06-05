@@ -1,11 +1,11 @@
 ---
-title: "Built-in intents"
+title: "内置意图"
 toc_max_heading_level: 2
 ---
 
 import intents from '!!yaml-loader!../intents/intents.yaml';
 
-The following intents are **supported**:
+以下意图是**支持**的：
 
 <ul>
 <li>
@@ -20,28 +20,27 @@ The following intents are **supported**:
 </li>
 </ul>
 
-The following intents are **deprecated**:
+以下意图是**已弃用**的：
 
  * HassOpenCover, HassCloseCover, HassToggle, HassHumidifierSetpoint, HassHumidifierMode, HassShoppingListLastItems
 
-**Slots**
+**槽位**
 
-For *HassTurnOn* and *HassTurnOff*, the *slots* are optional. 
+对于 *HassTurnOn* 和 *HassTurnOff*，*槽位*是可选的。
 
-Possible slot combinations are:
+可能的槽位组合是：
+
+| 槽位组合               | 示例                             |
+| --------------------- | ---------------------------------|
+| 仅名称                 | 餐桌灯                           |
+| 仅区域                 | 厨房                             |
+| 区域和名称             | 客厅阅读灯                       |
+| 区域和域               | 厨房灯                           |
+| 区域和设备类型         | 浴室湿度                         |
+| 设备类型和域           | 二氧化碳传感器                   |
 
 
-| Slot combination        | Example                          |
-| ----------------------- | ---------------------------------|
-| name only               | table light                      |
-| area only               | kitchen                          |
-| area and name           | living room reading light        |
-| area and domain         | kitchen lights                   |
-| area and device class   | bathroom humidity                |
-| device class and domain | carbon dioxide sensors           |
-
-
-## Supported intents
+## 支持的意图
 
 <>
 {
@@ -53,80 +52,80 @@ Possible slot combinations are:
         <h3>{intent}</h3>
         <p>{info.description}</p>
         {info.slots &&
-          (<b>Slots</b>) && (
+          (<b>槽位</b>) && (
           <ul>
             {Object.entries(info.slots).map(([slot, slotInfo]) => (
               <li>
-                <b>{slot}</b> - {slotInfo.description + (slotInfo.required ? " (required)" : "")}
+                <b>{slot}</b> - {slotInfo.description + (slotInfo.required ? " (必填)" : "")}
               </li>
             ))}
           </ul>
         )}
         <p><small>
-          <a href={`https://www.home-assistant.io/integrations/${info.domain}`}>Provided by the <code>{info.domain}</code> integration.</a>
+          <a href={`https://www.home-assistant.io/integrations/${info.domain}`}>由 <code>{info.domain}</code> 集成提供。</a>
         </small></p>
       </>
   )
 }
 </>
 
-## Deprecated intents
+## 已弃用的意图
 
-These are old intents that are not supported by template matching sentences and are planned to be removed or replaced.
+这些是旧意图，不支持模板匹配句子，并计划被移除或替换。
 
 
 ### HassOpenCover
 
-_Deprecated; use `HassTurnOn` instead._
+_已弃用；请改用 `HassTurnOn`。_
 
-Open a cover.
+打开遮盖。
 
-| Slot name | Type | Required | Description
-| --------- | ---- | -------- | -----------
-| name | string | Yes | Name of the cover entity to open.
+| 槽位名称 | 类型 | 必填 | 描述
+| --------- | ---- | ---- | -----------
+| name      | string | 是   | 要打开的遮盖实体的名称。
 
 ### HassCloseCover
 
-_Deprecated; use `HassTurnOff` instead._
+_已弃用；请改用 `HassTurnOff`。_
 
-Close a cover.
+关闭遮盖。
 
-| Slot name | Type | Required | Description
-| --------- | ---- | -------- | -----------
-| name | string | Yes | Name of the cover entity to close.
+| 槽位名称 | 类型 | 必填 | 描述
+| --------- | ---- | ---- | -----------
+| name      | string | 是   | 要关闭的遮盖实体的名称。
 
 ### HassToggle
 
-Toggle the state of an entity.
+切换实体的状态。
 
-| Slot name | Type | Required | Description
-| --------- | ---- | -------- | -----------
-| name | string | Yes | Name of the entity to toggle.
+| 槽位名称 | 类型 | 必填 | 描述
+| --------- | ---- | ---- | -----------
+| name      | string | 是   | 要切换的实体的名称。
 
 ### HassHumidifierSetpoint
 
-Set target humidity.
+设置目标湿度。
 
-| Slot name | Type | Required | Description
-| --------- | ---- | -------- | -----------
-| name | string | Yes | Name of the entity to control.
-| humidity | integer, 0-100 | Yes | Target humidity to set.
+| 槽位名称 | 类型           | 必填 | 描述
+| --------- | -------------- | ---- | -----------
+| name      | string         | 是   | 要控制的实体的名称。
+| humidity  | integer, 0-100 | 是   | 要设置的目标湿度。
 
 ### HassHumidifierMode
 
-Set humidifier mode if supported by the humidifier.
+如果加湿器支持，设置加湿器模式。
 
-| Slot name | Type | Required | Description
-| --------- | ---- | -------- | -----------
-| name | string | Yes | Name of the entity to control.
-| mode | string | Yes | The mode to switch to.
+| 槽位名称 | 类型   | 必填 | 描述
+| --------- | ------ | ---- | -----------
+| name      | string | 是   | 要控制的实体的名称。
+| mode      | string | 是   | 要切换到的模式。
 
 ### HassShoppingListLastItems
 
-List the last 5 items on the shopping list.
+列出购物清单上的最后 5 个项目。
 
-_This intent has no slots._
+_此意图没有槽位。_
 
 
 
-[This page is automatically generated based on the Intents repository.](https://github.com/home-assistant/intents/blob/main/intents.yaml)
+[该页面是基于意图库自动生成的。](https://github.com/home-assistant/intents/blob/main/intents.yaml)

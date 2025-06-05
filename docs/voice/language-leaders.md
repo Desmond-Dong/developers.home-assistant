@@ -1,23 +1,23 @@
 ---
-title: "Language leaders"
+title: "语言负责人"
 ---
 
-Home Assistant is a global project. We want to make sure that everyone can use Home Assistant in their native language. For that reason, we have language leaders for each language to lead the maintenance.
+Home Assistant是一个全球性的项目。我们希望确保每个人都能使用他们的母语来使用Home Assistant。为此，我们为每种语言指定了语言负责人，负责维护工作。
 
-Language leaders are responsible for reviewing the contributions in their language and making sure that they are grammatically correct.
+语言负责人负责审核他们所负责语言的贡献，确保其语法正确。
 
-Language leaders will be automatically notified of any new contribution to the language that they maintain. It's their responsibility to review the contribution and accept it.
+语言负责人会自动收到任何新贡献的通知，他们负责审核这些贡献并接受它。
 
-Anyone can apply to become a language leader if they meet the following requirements:
+任何人都可以申请成为语言负责人，只要满足以下要求：
 
-- Be a native speaker of the language they want to lead
-- Make 2+ pull requests to the intents repository
-- Be involved with reviewing pull requests for the language
+- 是他们想要负责语言的母语者
+- 向意图库提交2个以上的拉取请求
+- 参与审核该语言的拉取请求
 
-If you want to apply to be a language leader, join us in `#developers` on Discord or [open a discussion topic](https://github.com/home-assistant/intents/discussions).
+如果你想申请成为语言负责人，请在Discord的`#developers`频道与我们联系或[打开讨论主题](https://github.com/home-assistant/intents/discussions)。
 
-## Losing language leader status
+## 失去语言负责人资格
 
-A language leader is a gatekeeper for a language and its quality. If they are inactive, contributions for that language are not processed. If they accept low-quality contributions, it will not generate the correct matching sentences that it needs to process.
+语言负责人是语言及其质量的守门人。如果他们不活跃，该语言的贡献将不会被处理。如果他们接受低质量的贡献，将无法生成处理所需的正确匹配句子。
 
-If the inactivity of the language leader becomes a bottle neck, or if the quality is not up to par, the language leader will be removed. If they want to regain their status, they can apply again.
+如果语言负责人的不活跃性成为瓶颈，或者质量未达标，将会解除其语言负责人资格。如果他们想要恢复资格，可以再次申请。

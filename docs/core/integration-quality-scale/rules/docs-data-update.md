@@ -1,26 +1,26 @@
 ---
-title: "The documentation describes how data is updated"
+title: "文档描述了数据是如何更新的"
 ---
 
-## Reasoning
+## 推理
 
-For the user to know how the integration works, we should describe how the data of the integration is updated.
-Because this will help users create an expectation on how well the integration works for their use case.
-A motion sensor that only polls every 5 minutes is less usable than a motion sensor that actively pushes updates.
+为了让用户了解集成的工作原理，我们应该描述集成的数据是如何更新的。
+因为这将帮助用户对集成在其用例中的效果产生期望。
+每5分钟只能轮询一次的运动传感器比主动推送更新的运动传感器可用性差。
 
-Since users can define their own polling interval for polling integrations, we should add at what rate we poll now and describe any limitations.
-For example if the device we connect to has known problems handling too many requests, we should describe that in the documentation.
+由于用户可以为轮询集成定义自己的轮询间隔，我们应该添加当前的轮询速率并描述任何限制。
+例如，如果我们连接的设备已知存在处理过多请求的问题，我们应该在文档中描述这一点。
 
-## Example implementation
+## 示例实现
 
 ```markdown showLineNumbers
-## Data updates
+## 数据更新
 
-My integration fetches data from the device every 5 minutes by default.
-Newer devices (the ones running MyOS) have the possibility to {% term push %} data.
-At the start of the integration we try to enable that, and if it fails we fall back to {% term polling %}.
+我的集成默认每5分钟从设备获取一次数据。
+较新的设备（运行MyOS的设备）可以{% term push %}数据。
+在集成开始时，我们尝试启用该功能，如果失败则退回到{% term polling %}。
 ```
 
-## Exceptions
+## 例外情况
 
-There are no exceptions to this rule.
+对此规则没有例外。

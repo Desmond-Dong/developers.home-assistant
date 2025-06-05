@@ -1,24 +1,24 @@
 ---
-title: "The documentation provides removal instructions"
+title: "文档提供了移除说明"
 ---
 
-## Reasoning
+## 理由
 
-Removing a device or service from Home Assistant isn't always straightforward.
-The documentation should provide clear instructions on how to remove the device or service.
+从 Home Assistant 中移除设备或服务并不总是简单明了的。  
+文档应该提供清晰的说明，告诉用户如何移除设备或服务。
 
-## Example implementation
+## 示例实现
 
 ```markdown showLineNumbers
-## Removing the integration
+## 移除集成
 
-This integration follows standard integration removal. No extra steps are required.
+该集成遵循标准的集成移除流程。无需额外的步骤。
 
 {% include integrations/remove_device_service.md %}
 
-After deleting the integration, go to the app of the manufacturer and remove the Home Assistant integration from there as well.
+在删除集成后，请进入制造商的应用程序，并在那里也移除 Home Assistant 集成。
 ```
 
-## Exceptions
+## 例外情况
 
-There are no exceptions to this rule.
+此规则没有例外情况。

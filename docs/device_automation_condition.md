@@ -1,29 +1,29 @@
 ---
-title: "Device conditions"
-sidebar_label: Conditions
+title: "设备条件"
+sidebar_label: 条件
 ---
 
-Device conditions allow a user to check if a certain condition is met. Examples are is a light on or is the floor wet.
+设备条件允许用户检查某个条件是否满足。例如，灯是否亮着或地板是否潮湿。
 
-Device conditions are defined as dictionaries. These dictionaries are created by your integration and are passed to your integration to create a function that checks the condition.
+设备条件被定义为字典。这些字典由您的集成创建，并传递给您的集成以创建一个检查条件的函数。
 
-Device conditions can be provided by the integration that provides the device (e.g. ZHA, deCONZ) or the entity integrations that the device has entities with (e.g. light, humidity sensor).
-An example of the latter could be to check if a light is on or the floor is wet.
+设备条件可以由提供设备的集成提供（例如，ZHA、deCONZ），或者设备拥有实体的实体集成提供（例如，灯、湿度传感器）。
+后者的一个例子可以是检查灯是否亮着或地板是否潮湿。
 
-If the condition requires dynamic validation that the static `CONDITION_SCHEMA` can't provide, it's possible to implement an `async_validate_condition_config` function.
+如果条件需要动态验证，而静态的 `CONDITION_SCHEMA` 无法提供，则可以实现 `async_validate_condition_config` 函数。
 
 ```py
 async def async_validate_condition_config(hass: HomeAssistant, config: ConfigType) -> ConfigType:
-    """Validate config."""
+    """验证配置。"""
 ```
 
-Home Assistant includes a template to get started with device conditions. To get started, run inside a development environment `python3 -m script.scaffold device_condition`.
+Home Assistant 包含一个模板以开始使用设备条件。要开始，请在开发环境中运行 `python3 -m script.scaffold device_condition`。
 
-The template will create a new file `device_condition.py` in your integration folder and a matching test file. The file contains the following functions and constants:
+该模板将在您的集成文件夹中创建一个新的文件 `device_condition.py` 及一个匹配的测试文件。该文件包含以下函数和常量：
 
 #### `CONDITION_SCHEMA`
 
-This is the schema for conditions. The base schema should be extended from `homeassistant.helpers.config_validation.DEVICE_CONDITION_BASE_SCHEMA`.
+这是条件的模式。基本模式应从 `homeassistant.helpers.config_validation.DEVICE_CONDITION_BASE_SCHEMA` 扩展。
 
 #### `async_get_conditions`
 
@@ -31,10 +31,10 @@ This is the schema for conditions. The base schema should be extended from `home
 async def async_get_conditions(
     hass: HomeAssistant, device_id: str
 ) -> list[dict[str, str]]:
-    """List device conditions for devices."""
+    """列出设备的设备条件。"""
 ```
 
-Return a list of conditions that this device supports.
+返回该设备支持的条件列表。
 
 #### `async_condition_from_config`
 
@@ -43,9 +43,9 @@ Return a list of conditions that this device supports.
 def async_condition_from_config(
     config: ConfigType, config_validation: bool
 ) -> condition.ConditionCheckerType:
-    """Create a function to test a device condition."""
+    """创建一个函数以测试设备条件。"""
 ```
 
-Create a condition function from a function. The condition functions should be an async-friendly callback that evaluates the condition and returns a `bool`.
+从一个函数创建一个条件函数。条件函数应为一个异步友好的回调，以评估条件并返回 `bool`。
 
-The `config_validation` parameter will be used by the core to apply config validation conditionally with the defined `CONDITION_SCHEMA`.
+`config_validation` 参数将由核心用于有条件地应用定义的 `CONDITION_SCHEMA` 的配置验证。

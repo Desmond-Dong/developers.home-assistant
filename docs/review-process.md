@@ -1,324 +1,178 @@
 ---
-title: "Pull request review process"
+title: "拉取请求审查流程"
 ---
 
-The Home Assistant project consists of many smaller projects in many GitHub
-repositories that (all together) make the amazing Home Assistant we all
-know and love.
+Home Assistant 项目由许多较小的项目组成，这些项目分布在多个 GitHub
+代码库中，共同构成了我们大家所知道和喜爱的神奇的 Home Assistant。
 
-We get many contributions offered to us via GitHub Pull Requests, which
-is absolutely amazing. We are very grateful for that. This page describes
-our review process, so you know what to expect when you submit a PR.
+我们通过 GitHub 拉取请求收到许多贡献，这真是太棒了。我们对此非常感激。此页面描述了我们的审查流程，以便您在提交 PR 时了解可以期待什么。
 
-This page provides general tips and guidelines for creating pull requests
-and how to handle those. It is not a complete guide on creating a PR; However,
-most of this page applies to contributing to any open source project
-in general.
+本页面提供了创建拉取请求的常规提示和指南，以及如何处理这些请求。它不是创建 PR 的完整指南；然而，本页面的大部分内容适用于为任何开源项目做贡献。
 
-## Who is responsible for reviewing PRs?
+## 谁负责审查 PR？
 
-Home Assistant is an open source project. Most of everything happening in
-our project is done by volunteers. We have a core team of developers that
-are responsible for the overall architecture of Home Assistant, and they
-are responsible for merging PRs (also volunteers). However, they are not
-the only ones reviewing PRs.
+Home Assistant 是一个开源项目。我们项目中的大多数工作都是由志愿者完成的。我们有一个核心开发团队，负责 Home Assistant 的整体架构，并负责合并 PR（也是志愿者）。然而，他们并不是唯一审查 PR 的人。
 
-Everybody can help out reviewing PRs, and we encourage anyone to do so. 🙏
+每个人都可以帮助审查 PR，我们鼓励任何人这样做。🙏
 
-So, when you have opened a PR, please consider checking out if there is an
-open PR you can help out with. Any review comment, improvement suggestion,
-or even just a "I tested this using ... and it works" is very much appreciated.
-Besides, looking at code of others is a great way to learn more about
-Home Assistant.
+因此，当您打开 PR 时，请考虑查看是否有开放的 PR 您可以帮助。任何审查评论、改进建议，甚至只是 "我使用...进行了测试并且它能工作" 都会受到非常感激。此外，查看他人的代码是学习更多有关 Home Assistant 的绝佳方式。
 
-## Before creating your PR
+## 在创建 PR 之前
 
-**Comply with architectural decisions.**
+**遵守架构决策。**
 
-All architectural decisions around the Home Assistant project are recorded in
-the [ADR folder](https://github.com/home-assistant/architecture/tree/master/adr).
-Ensure these rules and guidelines are followed before creating your PR
-to avoid later adjustments based on your PR not following these rules.
-If needed a new [discussion](https://github.com/home-assistant/architecture/discussions) can take place to make the necessary decision prior to submitting a PR for review.
+与 Home Assistant 项目相关的所有架构决策都记录在 [ADR 文件夹](https://github.com/home-assistant/architecture/tree/master/adr) 中。在创建 PR 之前，请确保遵循这些规则和指南，以避免因您的 PR 未遵循这些规则而导致的后续调整。如有需要，可以进行新的 [讨论](https://github.com/home-assistant/architecture/discussions)，以便在提交 PR 进行审查之前做出必要的决策。
 
-## Creating the perfect PR
+## 创建完美的 PR
 
-There is no such thing as a perfect PR, but there are some things you can
-do to make it easier to review your PR. This will not only help reviewers
-but also you as a contributor to having your change merged quicker, and
-the end-user getting your improvement faster.
+没有完美的 PR，但您可以采取一些措施使审查您的 PR 更容易。这不仅会帮助审阅者，也会帮助您作为贡献者更快地合并更改，并使最终用户更快获得您的改进。
 
-1. **Make your PRs as small as possible.**
-   A PR should only refactor one thing, fix one thing, add one feature, or
-   adjust a single subject in the documentation. If you want to change multiple
-   things, please create multiple PRs. Smaller PRs have a smaller scope, need
-   less time to review, conflict less often, and generally need fewer review
-   iterations.
+1. **使您的 PR 尽可能小。**
+   PR 应仅重构一件事，修复一件事，添加一项功能，或调整文档中的单个主题。如果您想更改多个内容，请创建多个 PR。较小的 PR 范围较小，审查所需时间更少，发生冲突的可能性更小，并且通常需要更少的审查迭代。
 
-2. **Only change one thing at a time.**
-   This is the same as the previous point but a bit more specific. It is
-   tempting to improve those one or two lines you've noticed nearby,
-   but please don't. Put those in a separate PR. Unrelated changes in
-   your PR are distracting and often lead to questions. In contrast, in an
-   independent PR, it would be a quick and simple review and merge.
+2. **一次只更改一件事。**
+   这与之前的观点相同，但更具体。改善您附近注意到的那一两行代码是很诱人的，但请不要这样做。将这些放在一个单独的 PR 中。在您的 PR 中的无关更改会分散注意力，通常会导致问题。相比之下，在独立的 PR 中，这将是快速且简单的审查和合并。
 
-3. **Test your changes _before_ creating a PR**.
-   This sounds obvious, but we often see PRs that contain impossible code
-   that could never have worked or documentation changes that aren't visible
-   on the resulting page. Of course, a waste of energy for both you and the
-   reviewer; it adds an unneeded review iteration. Make sure you at least run
-   and physically test your changes. Ensure they work (or, in the case
-   of documentation: look) as intended.
+3. **在创建 PR 之前测试您的更改。**
+   这听起来很明显，但我们经常看到包含不可能工作的代码或在生成页面上不可见的文档更改的 PR。对于您和审阅者来说，当然这是件浪费精力的事情；这增加了一次不必要的审查迭代。确保您至少运行并实际测试您的更改。确保它们按预期工作（或者在文档的情况下：外观）。
 
-4. **Ensure your PR is based on the latest version of the main upstream branch.**
-   Make sure to pull in the latest upstream changes before creating your PR.
-   While you wrote your changes, upstream may have changed. This can lead to
-   merge conflicts, failing tests, or your changes not working as expected.
+4. **确保您的 PR 基于最新的主上游分支版本。**
+   在创建 PR 之前，请确保拉取最新的上游更改。在您编写更改时，上游可能已经发生变化。这可能会导致合并冲突、测试失败，或者您的更改无法正常工作。
 
-5. **Create a (feature) branch.**
-   When you create a PR, it is based on a branch (usually the main branch).
-   You must create a new feature branch for each PR you create. This
-   makes it easier to keep your main branch up to date with the upstream
-   branch, and it makes it easier to delete the branch after the PR
-   has been merged.
+5. **创建一个（功能）分支。**
+   当您创建 PR 时，它是基于一个分支（通常是主分支）。您必须为每个创建的 PR 创建一个新功能分支。这使得更新主分支与上游分支更容易，并且在 PR 被合并后更容易删除该分支。
 
-6. **Follow the PR template and add a clear title & an extensive description.**
-   When you open up a PR, you will be provided with a PR template. Use the template and fill out as many fields as possible. Take your time to write a good,
-   clear, and concise title, and add an extensive description of your change.
-   Be sure to add a motivation (or use case) to your PR, so the reviewer can
-   understand why you are making this change (or why you make certain decisions).
-   
-7. **Update dependency in a standalone PR.**
-   When you need to bump a dependency, try to do so in a standalone PR. Only
-   compatibility code adjustments or small related bug fixes should be included in the
-   PR. If you have new features that depend on the updated dependency, these can be
-   added in a follow-up. This will also make CI iterations run a lot faster when reviewing
-   the new features or larger bug fixes, as it restricts the tests to a single integration.
-   Ensure that the PR description contains at least one (or multiple) of the following:
-   - A link to the release notes of this package version, and all versions in between.
-   - A link to the changelog of this package.
-   - A link to a Git(Hub) diff/compare view from the current version to the bumped version.
-   This allows us to review upstream changes, which is needed to decide if this change is
-   working as intended and/or if we can include it in, for example, a patch release of
-   Home Assistant.
+6. **遵循 PR 模板并添加清晰的标题和详细的描述。**
+   当您打开 PR 时，将提供一个 PR 模板。使用模板并尽可能多地填写字段。花时间写一个好的、清晰的、简明的标题，并添加您更改的详细描述。务必在 PR 中添加动机（或用例），以便审阅者能理解您为什么进行此更改（或为什么做出某些决策）。
 
-## Receiving review comments
+7. **在单独的 PR 中更新依赖项。**
+   当您需要提升依赖项时，请尝试在单独的 PR 中进行。仅应在 PR 中包括兼容性代码调整或小的相关 bug 修复。有关更新依赖项的新功能，可以在后续中添加。这也将使 CI 迭代在审查新功能或较大的 bug 修复时运行得更快，因为它将测试限制为单个集成。确保 PR 描述中包含以下至少一个（或多个）内容：
+   - 该软件包版本的发行说明链接，以及所有之间的版本。
+   - 该软件包的变更日志链接。
+   - 从当前版本到提升版本的 Git(Hub) diff/比较视图链接。
+   这使我们可以审查上游更改，这对于决定此更改是否按预期工作和/或是否可以将其包含在 Home Assistant 的补丁发布中是必要的。
 
-When your PR is open, someone will look at your code at some point. The
-reviewer likely has some comments on your code or even some requests for
-changes to your code.
+## 接收审查评论
 
-**Be very aware these review comments are not personal.** The reviewer is not
-trying to insult you or make you feel bad. They are trying to help you improve
-your PR, so it can be merged. Just like you, they are a volunteer, and they are
-trying to work on making Home Assistant the best it can be. We all have the
-same goals.
+当您的 PR 打开时，某人会在某个时刻查看您的代码。审阅者可能会对您的代码有一些评论，甚至会提出一些更改请求。
 
-No matter how experienced you are, there is always something to learn from
-others, so don't hate it, embrace it. 😄 Don't be afraid to ask questions,
-or ask for clarification. If you don't understand something, ask!
+**请非常注意，这些审查评论不是针对个人的。** 审阅者并不是为了侮辱您或让您感到不好。他们是为了帮助您改善您的 PR，以便它能够被合并。就像您一样，他们也是志愿者，他们试图帮助使 Home Assistant 成为最佳。我们都有相同的目标。
 
-## PRs are being drafted when changes are needed
+无论您的经验如何，总有从他人那里学习的东西，所以不要讨厌它，而要接受它。😄 不要害怕提问或要求澄清。如果您不理解某事，请询问！
 
-If there have been changes requested to your PR, our bot will automatically
-mark your PR as a draft. This means that the PR is not ready to be merged
-or further reviewed for the moment.
+## 当需要更改时 PR 被标记为草稿
 
-Draft PRs tell other reviewers that look at the list of all PRs that this
-PR is currently in progress and doesn't require their attention yet.
+如果已经请求对您的 PR 进行更改，我们的机器人会自动将您的 PR 标记为草稿。这意味着该 PR 当前尚未准备好合并或进一步审查。
 
-Once you have made the requested changes, you can mark the PR as ready for
-review again by clicking the "Ready for review button":
+草稿 PR 会告诉其他审阅者查看所有 PR 列表时，该 PR 目前正在进行中，尚未需要他们的注意。
 
-![The ready for review button in the bottom of a PR in draft mode](/img/en/blog/2023-02-07-introducing-PR-drafting-in-reviews/ready-for-review.png)
+一旦您做出了请求的更改，可以通过单击 “准备好审查” 按钮再次将 PR 标记为准备审查：
 
-Before you click the "Ready for review" button, ensure you have addressed
-all requested changes and that all our CI jobs and checks are passing
-successfully.
+![草稿模式下 PR 底部的准备好审查按钮](/img/en/blog/2023-02-07-introducing-PR-drafting-in-reviews/ready-for-review.png)
 
-Once you've clicked the "Ready for review" button, the PR will return to a
-normal state again, and our bot will automatically notify the reviewers who
-requested the changes that the PR is ready to go!
+在点击 “准备好审查” 按钮之前，请确保您已经解决了所有请求的更改，并且我们所有的 CI 作业和检查都成功通过。
 
-## Speeding up the review process
+一旦您点击了 “准备好审查” 按钮，PR 将恢复到正常状态，我们的机器人将自动通知请求更改的审阅者，该 PR 已准备就绪！
 
-1. **Build/CI failure? Draft your PR!**
-   Opened up the PR, and the build failed? Don't worry, this happens to all of
-   us. If you are sure the failure is not related to your changes, you can
-   leave your PR open. However, if the failure is related to your changes,
-   you should mark your PR as a draft while you resolve it. This will prevent
-   reviewers from looking at your PR until it is ready.
+## 加快审查流程
 
-   ![Putting a PR in draft is something you can do too](/img/en/blog/2023-02-07-introducing-PR-drafting-in-reviews/convert-to-draft.png)
+1. **构建/CI 失败？将您的 PR 标记为草稿！**
+   打开 PR 后，构建失败？别担心，这对我们所有人来说都是常有的事。如果您确定失败与您的更改无关，您可以保持 PR 打开。然而，如果失败与您的更改相关，您应该在解决它时将 PR 标记为草稿。这将防止审阅者在该 PR 准备好之前查看它。
 
-2. **Monitor your PR and keep it up to date.**
-   Even if your PR is not reviewed, you should actively monitor it. Be sure no
-   merge conflicts have been introduced in the meantime (GitHub
-   will tell you if that is the case), and maybe rebase it onto the latest
-   development branch after a week of inactivity. This ensures your PR is
-   ready to go once the review process starts.
+   ![将 PR 标记为草稿是您也可以做的事情](/img/en/blog/2023-02-07-introducing-PR-drafting-in-reviews/convert-to-draft.png)
 
-3. **Add tests.**
-   If you are adding new features, make sure to add tests. If you are fixing
-   a bug, make sure to add a test that would have caught the bug. If you are
-   refactoring code, add tests to make sure your refactoring didn't break
-   anything. Tests help with showing your code works as expected,
-   but more importantly, ensures everything keeps working in the future.
-   While tests add more code to review, it also helps reviewers understand
-   the issue you've been solving differently.
+2. **监控您的 PR 并保持其最新。**
+   即使您的 PR 未被审查，您也应积极监控它。确保在此期间没有引入合并冲突（如果是这样，GitHub 会告诉您），并且在一周不活动后，可能需要将其重置到最新的开发分支。这确保了您的 PR 在审查流程开始时已准备就绪。
 
-4. **Revisit, tweak, and tune to perfection.**
-   Sometimes, looking back at your own code a little later teaches you new
-   things and help you spot imperfections or issues yourself. While waiting for review
-   it is always the perfect time to ensure your PR is as good as it can be.
+3. **添加测试。**
+   如果您添加新功能，请确保添加测试。如果您修复了 bug，请确保添加一个可以捕捉到该 bug 的测试。如果您正在重构代码，请添加测试以确保重构没有破坏任何东西。测试有助于显示您的代码按预期工作，但更重要的是，确保未来一切保持正常工作。尽管测试会增加更多代码供审查，但它也有助于审阅者以不同的方式理解您正在解决的问题。
 
-5. **Help out reviewing the queue.**
-   The best way to help speed up the review process is by helping out
-   with the review process! Any review work you pick up contributes to
-   speeding up the review process for everyone. Besides, someone else
-   might notice your reviews and return the favor.
+4. **重新审视、调整并优化到完美。**
+   有时，稍后回顾自己的代码会教会您新事物并帮助您发现不完美或问题。在等待审查时，确保您的 PR 尽可能好是个不错的时机。
 
-## What not to do
+5. **帮助审查队列。**
+   加快审查流程的最佳方法就是帮助其他人进行审查！您所做的任何审查工作都有助于加快每个人的审查流程。此外，其他人可能会注意到您的审查并回报帮助。
 
-- Don't contact contributors, code owners, core team members, or other
-  reviewers directly about a PR, or ping/mention them in a PR to ask for
-  a review. While you probably mean this in a friendly way, it can be
-  perceived as annoying or demanding. Instead, our bots will handle the
-  pinging of the right people, and: have a bit of patience :)
+## 不要做的事情
 
-- Don't ask for a review in the PR description. It would be redundant, as
-  the PR itself already makes that clear 😉. Our bots will notify the
-  appropriate people if that is needed; please avoid doing that yourself.
+- 请不要直接联系贡献者、代码所有者、核心团队成员或其他审阅者，或在 PR 中标记/提及他们以请求审查。虽然您可能是以友好的方式进行的，但这可能被视为令人烦恼或要求过高。相反，我们的机器人将处理相关人员的提醒，并且：请多点耐心 :)
 
-- Do not submit new pull requests that depend on other pull requests that are
-  still open/unmerged. This will create unneeded pull requests in the queue
-  that are not actionable.
+- 请不要在 PR 描述中请求审查。这是多余的，因为 PR 本身已经很清楚这一点 😉。我们的机器人会在需要时通知适当的人；请避免自己这样做。
 
-- Limit the number of open pull requests you have. We have no hard rule on
-  this, but we recommend limiting it to 5. If you have more than 5 open
-  PRs, we may ask you to close some of them until some others have been merged.
+- 请勿提交依赖于仍处于开放/未合并状态的其他拉取请求的新拉取请求。这会在队列中创建不必要的拉取请求，无法处理。
 
-- Don't open a PR if you are not going to work on it. If you cannot
-  continue working on a PR after you have opened it, let us know and close it.
-  There is no shame in closing a PR; however, if it is because you are stuck,
-  don't hesitate to ask for help in our
-  [#devs channel in our Discord chat](https://www.home-assistant.io/join-chat).
+- 限制您拥有的开放拉取请求数量。我们没有严格的规定，但建议将其限制为 5。如果您有超过 5 个开放的 PR，我们可能会要求您关闭其中一些，直到一些其他的被合并。
 
-## My PR has been merged!
+- 如果您打算不再继续处理一个 PR，请不要打开它。如果您在打开 PR 后无法继续处理，请告诉我们并关闭它。关闭 PR 并没有什么可耻的；但是，如果是因为您被卡住了，请随时在我们的 [Discord 聊天中的 #devs 频道](https://www.home-assistant.io/join-chat) 请求帮助。
 
-Congratulations! 🎉
+## 我的 PR 已合并！
 
-**And above all: A massive thank you! ❤️**
+恭喜！🎉
 
-You have just made Home Assistant a better place. You have helped us to
-improve the code, the documentation, the tests, the user experience, or
-the community. You have helped us to make Home Assistant better for everyone.
+**最重要的是：非常感谢！❤️**
 
-Keep the momentum going! 🚀 Feel free to open up another PR, or help out
-with reviewing other PRs.
+您刚刚让 Home Assistant 成为一个更好的地方。您帮助我们改善了代码、文档、测试、用户体验或社区。您帮助我们为每个人提升了 Home Assistant 的质量。
 
-If this was your first PR, don't worry, we promise, it will become easier
-each time you go through the process.
+保持这一势头！🚀 随时打开另一个 PR 或帮助审查其他 PR。
 
-## Frequently asked questions
+如果这是您的第一个 PR，请不要担心，我们保证，每次经过这个过程都会变得更容易。
 
-1. **How do I get my PR merged?**
-   There is no guarantee that your PR will be merged. We have a lot of
-   contributors, and we have to make sure that we don't break anything.
-   We will try to review your PR as soon as possible, but please be patient.
-   If you want to speed up the process, please read the sections above on
-   how to speed up the review process.
+## 常见问题
 
-2. **My PR has been awaiting review for days now, when will it be reviewed?**
-   Depending on the repository, it might take a while before your PR is
-   reviewed. It depends on a lot of things. For example, PRs that fix bugs,
-   improve code quality, are small, or provide tests (and combinations of those)
-   are generally prioritized over PRs that add new features. The size and
-   complexity of a PR can also be a factor, as it means that lesser reviewers
-   are willing or capable of picking up your PR. You can always consider trying
-   to make your PRs smaller and more focused to speed up the review process.
-   Some other PRs may require or need someone with specific knowledge to review
-   it (like an architectural change or change that needs approval
-   by a code owner), which may cause a longer wait time.
+1. **我怎么才能让我的 PR 被合并？**
+   没有保证您的 PR 会被合并。我们有很多贡献者，我们必须确保不破坏任何东西。我们会尽快审查您的 PR，但请保持耐心。如果您想加快这个过程，请阅读上面的部分，了解如何加速审查流程。
 
-3. **All those small PRs are super inefficient, aren't they?**
-   This is a common misconception. While it might seem like a lot of work
-   to review a lot of small PRs, it is actually more efficient. Smaller PRs
-   are easier to review for a larger group of people, meaning more people can
-   jump in to help with the reviews. They can be picked up quicker in less
-   time and are less likely to conflict with other PRs. In general,
-   reviewing a smaller PR gets a better review and is less likely to cause
-   new bugs, as it is easier to overlook something in a large PR.
+2. **我的 PR 已经等待审查几天了，什么时候会被审查？**
+   根据代码库的不同，审查您的 PR 可能需要一些时间。这取决于许多因素。例如，修复 bug、改善代码质量、较小的 PR，或提供测试的 PR（以及这些的组合）通常优先于添加新特性的 PR。PR 的大小和复杂性也可能是一个因素，因为这意味着较少的审阅者愿意或能够接手您的 PR。您始终可以考虑尝试将您的 PR 制作得更小、更专注，以加快审查流程。一些其他的 PR 可能需要或需要某个具有特定知识的人来进行审查（例如架构更改或需要代码所有者批准的更改），这可能会导致更长的等待时间。
 
-4. **The bot is saying my PR is going stale, what does that mean?**
-   The bot will automatically mark a PR as stale after some time of inactivity.
-   The bot will close the PR if it remains inactive. This can either mean the PR is
-   awaiting a change from you or a review from our project. Please make sure
-   the first one isn't the case, in case you are awaiting a review,
-   just comment that. By responding to the bot, it will know things are not
-   stale and will back off. In the mean time, it might be a good idea to rebase
-   your PR on the latest development branches to ensure you are fully
-   caught up with recent changes.
+3. **所有这些小 PR 不是超级低效吗？**
+   这是一种常见的误解。虽然审查很多小 PR 可能似乎是一项庞大的工作，但实际上这是更有效的。较小的 PR 对更大群体的人来说更容易审查，这意味着更多的人可以参与审查的帮助。它们在较短时间内被提取的可能性更大，也更不可能与其他 PR 冲突。一般来说，审查较小的 PR 会获得更好的审查，并且不太可能导致新的 bug，因为在大的 PR 中更容易忽视某些东西。
 
-5. **I have a PR that should go into a hotfix/patch release, how do I do that?**
-   Just create the PR as normal, and make it very clear in the PR description
-   that the PR is a hotfix that needs to be included in a patch release. The
-   reviewer will then double-check that, and make sure it is included in
-   the next patch release by tagging the PR with the next patch milestone.
+4. **机器人说我的 PR 正在变成陈旧，那么这意味着什么？**
+   该机器人将在一段时间的不活动后自动将 PR 标记为陈旧。如果 PR 仍然不活动，它将关闭该 PR。这可以意味着该 PR 正在等待您的更改或我们项目的审查。请确保不是前一种情况，如果您正在等待审查，只需评论一下。在回应机器人时，机器人将知道事情并未陈旧并将放慢速度。与此同时，可能是一个好主意，将您的 PR 重新基于最新的开发分支，以确保您与最近的变化完全同步。
 
-## Repository specific information
+5. **我有一个 PR 应该包含在热修复/补丁发布中，我该怎么办？**
+   就像正常创建 PR 一样创建，并在 PR 描述中明确说明该 PR 是需要包含在补丁发布中的热修复。审阅者将对此进行二次检查，并确保在下一个补丁发布中通过为 PR 标记下一个补丁里程碑来包含它。
 
-Some of our respositories have specific requirements or guidelines that are
-applied on top of this general guide.
+## 仓库特定信息
+
+我们的一些仓库有特定的要求或指南，这些要求或指南适用于此一般指南之上。
 
 ### Home Assistant Core
 
-The [Home Assistant Core](https://github.com/home-assistant/core) repository
-has quite a few requirements and guidelines to ensure the quality of the code.
-The following pages in our developer documentation might be helpful when
-creating contributions to our Core repository:
+[Home Assistant Core](https://github.com/home-assistant/core) 仓库有很多要求和指南，以确保代码的质量。以下我们开发者文档中的页面可能在为我们的 Core 仓库创建贡献时有帮助：
 
-- [Development checklist](/docs/development_checklist)
-- [Development checklist for integrations](/docs/creating_component_code_review)
-- [Submitting your work](/docs/development_submitting)
-- [Style guidelines](/docs/development_guidelines)
-- [Testing your code](/docs/development_testing)
-- [Catching up with reality](/docs/development_catching_up)
-- [Tips and Tricks](/docs/development_tips)
+- [开发检查列表](/docs/development_checklist)
+- [集成的开发检查列表](/docs/creating_component_code_review)
+- [提交您的工作](/docs/development_submitting)
+- [风格指南](/docs/development_guidelines)
+- [测试您的代码](/docs/development_testing)
+- [追赶现实](/docs/development_catching_up)
+- [技巧和窍门](/docs/development_tips)
 
-### Home Assistant Documentation
+### Home Assistant 文档
 
-The [documentation](https://github.com/home-assistant/home-assistant.io) has
-additional guidelines to take into account when contributing. We mainly
-follow the Microsoft Writing Style Guide and have some additional guidelines
-for styling YAML configuration.
+[文档](https://github.com/home-assistant/home-assistant.io) 在贡献时还有额外的指南需要考虑。我们主要遵循微软写作风格指南，并对 YAML 配置样式有一些额外的指导。
 
-- [Documentation standards](/docs/documenting/standards)
-- [Microsoft Writing Style Guide](https://learn.microsoft.com/en-us/style-guide/welcome/)
-- [YAML Style Guide](/docs/documenting/yaml-style-guide)
+- [文档标准](/docs/documenting/standards)
+- [微软写作风格指南](https://learn.microsoft.com/en-us/style-guide/welcome/)
+- [YAML 风格指南](/docs/documenting/yaml-style-guide)
 
-### Home Assistant Frontend
+### Home Assistant 前端
 
-The [Home Assistant Frontend](https://github.com/home-assistant/frontend) has 
-guidance on developing and contributing to the frontend on the
-[Frontend development page](/docs/frontend/development#creating-pull-requests).
+[Home Assistant 前端](https://github.com/home-assistant/frontend) 对于在前端开发和贡献的指导可参见 [前端开发页面](/docs/frontend/development#creating-pull-requests)。
 
-### Home Assistant Intents
+### Home Assistant 意图
 
-Building a voice assistant is a complex task. It requires a lot of different
-technologies to work together, so there are some guidelines to look at:
+构建语音助手是一项复杂的任务。它需要很多不同的技术协同工作，因此有一些指南需要查看：
 
-- [Contributing template sentences](/docs/voice/intent-recognition/contributing)
-- [Response Style Guide](/docs/voice/intent-recognition/style-guide)
+- [贡献模板句子](/docs/voice/intent-recognition/contributing)
+- [响应风格指南](/docs/voice/intent-recognition/style-guide)
 
-## Help?! I have more questions!
+## 帮助？！我还有更多问题！
 
-The developer documentation has a lot of information, even more information
-on contributing and pull requests, so be sure to use the search function
-on the top right of the page to find what you are looking for.
+开发者文档有很多信息，甚至更多有关贡献和拉取请求的信息，因此请务必使用页面右上角的搜索功能查找您所需的内容。
 
-However, it might be you are still stuck or you have a question that is
-not answered in the documentation. In that case, feel free to ask in the
-[#devs channel in our Discord chat](https://www.home-assistant.io/join-chat).
+然而，您可能仍然卡住了或有问题未在文档中回答。在这种情况下，欢迎在我们的 [Discord 聊天的 #devs 频道](https://www.home-assistant.io/join-chat) 中提问。
 
-Many of us hang out there, and there is always someone willing to help you out.
+我们许多人都在那里，永远有人愿意帮助您。

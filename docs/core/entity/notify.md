@@ -1,43 +1,42 @@
 ---
-title: Notify entity
-sidebar_label: Notify
+title: 通知实体
+sidebar_label: 通知
 ---
 
-A notify entity is an entity that can send a message towards a device or service but remains stateless from the Home Assistant perspective.
+通知实体是一个能够向设备或服务发送消息的实体，但从 Home Assistant 的角度来看，它保持无状态。
 
-A notify entity is derived from the  [`homeassistant.components.notify.NotifyEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/notify/__init__.py),
-and can be helpful to send notification messages as (but not limited to):
+通知实体派生自 [`homeassistant.components.notify.NotifyEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/notify/__init__.py)，
+可以用于发送通知消息，例如（但不限于）：
 
-- an SMS
-- an email
-- a direct message or chat
-- a screen message on a device's LCD display
+- 短信
+- 电子邮件
+- 直接消息或聊天
+- 在设备的 LCD 显示屏上显示的屏幕消息
 
-## States
+## 状态
 
-The state of a notify entity is a timestamp, representing the date and time of the last message sent.
-Unlike a `text` entity, the `notify` entity has no state that can be set.
+通知实体的状态是一个时间戳，表示最后发送的消息的日期和时间。
+与 `text` 实体不同，`notify` 实体没有可以设置的状态。
 
-If you want to represent something that has a text value that can be changed (and thus has an actual state), you should use a `text` entity instead.
+如果您想表示某种可以改变的文本值（因此具有实际状态），您应该使用 `text` 实体。
 
-## Properties
+## 属性
 
-As this integration is stateless, it doesn't provide any specific properties for itself.
-Other properties that are common to all entities such as `icon` and `name` etc are still applicable.
+由于此集成是无状态的，因此它没有为自身提供任何特定的属性。
+所有实体共有的其他属性，如 `icon` 和 `name` 等仍然适用。
 
-## Methods
+## 方法
 
-### Send message
+### 发送消息
 
-The send message method is used to send a message to a device or service.
+发送消息方法用于向设备或服务发送消息。
 
 ```python
 class MyNotifier(NotifyEntity):
-    # Implement one of these methods.
+    # 实现以下方法之一。
 
     def send_message(self, message: str, title: str | None = None) -> None:
-        """Send a message."""
+        """发送消息。"""
 
     async def async_send_message(self, message: str, title: str | None = None) -> None:
-        """Send a message."""
-```
+        """发送消息。"""

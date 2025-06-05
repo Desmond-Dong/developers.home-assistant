@@ -1,16 +1,16 @@
 ---
-title: "Extending the WebSocket API"
+title: "扩展 WebSocket API"
 ---
 
-As a component you might have information that you want to make available to the frontend. For example, the media player will want to make album covers available for the frontend to show. Our frontend is communicating with the backend over the websocket API, which can be extended with custom commands.
+作为一个组件，你可能有一些信息希望能够提供给前端。例如，媒体播放器会希望将专辑封面提供给前端展示。我们的前端通过 websocket API 与后端进行通信，该 API 可以通过自定义命令进行扩展。
 
-## Registering a command (Python)
+## 注册一个命令 (Python)
 
-To register a command, you need to have a message type, a message schema and a message handler. Your component does not have to add the websocket API as a dependency. You register your command, and if the user is using the websocket API, the command will be made available.
+要注册一个命令，你需要有一个消息类型、一个消息架构和一个消息处理器。你的组件不需要将 websocket API 作为依赖添加。你注册你的命令，如果用户正在使用 websocket API，该命令将可用。
 
-### Defining your command schema
+### 定义你的命令架构
 
-A command schema is made up of a message type and what type of data we expect when the command is invoked. You define both the command type and the data schema via a decorator on your command handler. Message handlers are callback functions that are run inside the event loop.
+命令架构由消息类型和我们期望在命令被调用时接收到的数据类型组成。你通过装饰器在命令处理器上定义命令类型和数据架构。消息处理器是运行在事件循环中的回调函数。
 
 ```python
 from homeassistant.components import websocket_api
@@ -25,14 +25,14 @@ from homeassistant.components import websocket_api
 def ws_get_panels(
     hass: HomeAssistant, connection: websocket_api.ActiveConnection, msg: dict
 ) -> None:
-    """Handle the websocket command."""
+    """处理 websocket 命令."""
     panels = ...
     connection.send_result(msg["id"], {"panels": panels})
 ```
 
-#### Doing I/O or sending a delayed response
+#### 进行 I/O 或发送延迟响应
 
-If your command needs to interact with the network, a device or needs to compute information, you will need to queue a job to do the work and send the response. To do this, make your function async and decorate with `@websocket_api.async_response`.
+如果你的命令需要与网络、设备交互或需要计算信息，你将需要排队一个作业来完成工作并发送响应。为此，使你的函数为异步并用 `@websocket_api.async_response` 装饰。
 
 ```python
 from homeassistant.components import websocket_api
@@ -47,23 +47,23 @@ from homeassistant.components import websocket_api
 async def ws_handle_thumbnail(
     hass: HomeAssistant, connection: ActiveConnection, msg: dict
 ) -> None:
-    """Handle get media player cover command."""
-    # Retrieve media player using passed in entity id.
+    """处理获取媒体播放器封面命令."""
+    # 使用传入的实体 ID 获取媒体播放器。
     player = hass.data[DOMAIN].get_entity(msg["entity_id"])
 
-    # If the player does not exist, send an error message.
+    # 如果播放器不存在，发送错误消息。
     if player is None:
         connection.send_error(
-                msg["id"], "entity_not_found", "Entity not found"
+                msg["id"], "entity_not_found", "实体未找到"
         )
         return
 
     data, content_type = await player.async_get_media_image()
 
-    # No media player thumbnail available
+    # 没有媒体播放器缩略图可用
     if data is None:
         connection.send_error(
-            msg["id"], "thumbnail_fetch_failed", "Failed to fetch thumbnail"
+            msg["id"], "thumbnail_fetch_failed", "获取缩略图失败"
         )
         return
 
@@ -76,22 +76,22 @@ async def ws_handle_thumbnail(
     )
 ```
 
-### Registering with the Websocket API
+### 在 Websocket API 中注册
 
-With all pieces defined, it's time to register the command. This is done inside your setup method.
+所有部分定义完毕，现在是时候注册命令了。这在你的设置方法中完成。
 
 ```python
 from homeassistant.components import websocket_api
 
 async def async_setup(hass, config):
-    """Setup of your component."""
+    """设置你的组件."""
     websocket_api.async_register_command(hass, ws_get_panels)
     websocket_api.async_register_command(hass, ws_handle_thumbnail)
 ```
 
-## Calling the command from the frontend (JavaScript)
+## 从前端调用命令 (JavaScript)
 
-With your command defined, it's time to call it from the frontend! This is done using JavaScript. You will need access to the `hass` object which holds the WebSocket connection to the backend. Then just call `hass.connection.sendMessagePromise`. This will return a promise that will resolve if the command succeeds and errors if the command fails.
+定义完命令后，现在是时候从前端调用它了！这可以通过 JavaScript 完成。你需要访问 `hass` 对象，该对象保存与后端的 WebSocket 连接。然后只需调用 `hass.connection.sendMessagePromise`。如果命令成功，该方法将返回一个解析的 Promise，如果命令失败，则返回错误。
 
 ```js
 hass.connection.sendMessagePromise({
@@ -99,12 +99,12 @@ hass.connection.sendMessagePromise({
     entity_id: 'media_player.living_room_tv',
 }).then(
     (resp) => {
-        console.log('Message success!', resp.result);
+        console.log('消息成功!', resp.result);
     },
     (err) => {
-        console.error('Message failed!', err);
+        console.error('消息失败!', err);
     }
 );
 ```
 
-If your command is not sending a response, you can use `hass.connection.sendMessage`.
+如果你的命令没有发送响应，你可以使用 `hass.connection.sendMessage`。

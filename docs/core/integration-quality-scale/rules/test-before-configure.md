@@ -1,5 +1,5 @@
 ---
-title: "Test a connection in the config flow"
+title: "在配置流中测试连接"
 related_rules:
   - config-flow
   - unique-config-entry
@@ -10,46 +10,46 @@ related_rules:
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+## 理由
 
-Apart from being very easy to use, config flows are also a great way to let the user know that something is not going to work when the configuration has been completed.
-This can catch issues like:
-- DNS issues
-- Firewall issues
-- Wrong credentials
-- Wrong IP address or port
-- Unsupported devices
+除了使用非常方便外，配置流还是让用户知道在配置完成后某些事情无法正常工作的一种好方法。
+这可以捕捉到如下问题：
+- DNS 问题
+- 防火墙问题
+- 错误的凭据
+- 错误的 IP 地址或端口
+- 不支持的设备
 
-Issues like this are often hard to debug once the integration is set up, so it's better to catch them early so users are not stuck with an integration that doesn't work.
+像这样的支持问题在集成设置完成后通常很难调试，因此最好早期捕捉这些问题，以避免用户面临无法正常工作的集成。
 
-Since this improves the user experience, it's required to test the connection in the config flow.
+由于这改善了用户体验，因此在配置流中测试连接是必需的。
 
-## Example implementation
+## 示例实现
 
-To validate the user input, you can call your library with the data as you normally would and do a test call.
-If the call fails, you can return an error message to the user.
+要验证用户输入，可以像往常一样使用数据调用您的库，并进行测试调用。
+如果调用失败，可以向用户返回错误消息。
 
-In the following example, if the `client.get_data()` call raises a `MyException`, the user will see an error message that the integration is unable to connect.
+在以下示例中，如果 `client.get_data()` 调用引发 `MyException`，用户将看到一条错误消息，告知集成无法连接。
 
 `config_flow.py`:
 ```python {10-17} showLineNumbers
 class MyConfigFlow(ConfigFlow, domain=DOMAIN):
-    """My config flow."""
+    """我的配置流。"""
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Handle a flow initialized by the user."""
+        """处理由用户初始化的流。"""
         errors: dict[str, str] = {}
         if user_input:
             client = MyClient(user_input[CONF_HOST])
             try:
                 await client.get_data()
             except MyException:
-                errors["base"] = "cannot_connect"
+                errors["base"] = "无法连接"
             except Exception:  # noqa: BLE001
-                LOGGER.exception("Unexpected exception")
-                errors["base"] = "unknown"
+                LOGGER.exception("意外异常")
+                errors["base"] = "未知"
             else:
                 return self.async_create_entry(
                     title="MyIntegration",
@@ -62,15 +62,15 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
         )
 ```
 
-## Additional resources
+## 其他资源
 
-More information about config flows can be found in the [config flow documentation](/docs/config_entries_config_flow_handler).
+有关配置流的更多信息，请参阅 [配置流文档](/docs/config_entries_config_flow_handler)。
 
-## Exceptions
+## 排除条款
 
-Integrations that don't have a connection to a device or service (for example helpers) don't need to test a connection in the config flow and are exempt from this rule.
-Integrations that rely on auto-discovery on runtime (like Google Cast) are also exempt from this rule.
+与设备或服务（例如辅助工具）没有连接的集成不需要在配置流中测试连接，并且免于此规则。
+依赖运行时自动发现的集成（如 Google Cast）也免于此规则。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

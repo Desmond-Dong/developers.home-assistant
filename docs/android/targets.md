@@ -1,24 +1,24 @@
 ---
-title: "Android targets"
-sidebar_label: "Targets"
+title: "Android 目标"
+sidebar_label: "目标"
 ---
 
-## Android targets
+## Android 目标
 
-This document outlines the various Android targets supported by the Home Assistant application. Each target has its own specific requirements and considerations.
+本文档概述了 Home Assistant 应用程序所支持的各种 Android 目标。每个目标都有其特定的要求和考虑事项。
 
-## 📱 Application (main target)
+## 📱 应用程序（主要目标）
 
-The main target is based on the Gradle `:app` module. It supports a **minimum API level of 21**. This is the primary application used by most users.
+主要目标基于 Gradle `:app` 模块。它支持 **最低 API 级别 21**。这是大多数用户使用的主要应用程序。
 
-## 🚗 Automotive
+## 🚗 汽车
 
-The Automotive target is also based on the `:app` module but includes specific manifest entries tailored for automotive use cases. It shares the same source code as the main application and supports a **minimum API level of 29**.
+汽车目标同样基于 `:app` 模块，但包含特定于汽车用例的清单条目。它与主要应用程序共享相同的源代码，并支持 **最低 API 级别 29**。
 
-## 📺 TV
+## 📺 电视
 
-The application can be installed on Android TV, although the navigation experience is currently suboptimal. To provide a better experience, a dedicated Gradle module and improved navigation support are needed.
+该应用程序可以安装在 Android TV 上，尽管当前的导航体验并不理想。为了提供更好的体验，需要一个专用的 Gradle 模块和改进的导航支持。
 
 ## ⌚ Wear OS
 
-The Wear OS target brings Home Assistant functionality to wearable devices. It supports a **minimum API level of 26**. It is a **dedicated application** however it requires the mobile application for onboarding and connecting to a server.
+Wear OS 目标将 Home Assistant 功能引入可穿戴设备。它支持 **最低 API 级别 26**。这是一个 **专用应用程序**，但需要移动应用程序进行引导和连接到服务器。

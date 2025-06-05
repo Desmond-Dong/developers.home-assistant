@@ -1,5 +1,5 @@
 ---
-title: "Integrations should have a reconfigure flow"
+title: "集成应该有重新配置流程"
 related_rules:
   - config-flow
   - test-before-configure
@@ -9,39 +9,35 @@ related_rules:
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+## 理由
 
-It can happen that a user changes something to a device or service, like changing passwords or changing the IP address.
-Ideally, Home Assistant catches those events and lets the user know that it requires a reauthentication or attention.
-A reconfigure flow gives users the power to trigger a reconfiguration and allows them to update the configuration of the device or service, without the need to remove and re-add the device or service.
+用户可能会更改设备或服务的某些内容，例如更改密码或更改IP地址。 理想情况下，Home Assistant 捕获这些事件，并让用户知道需要重新认证或需要注意。 重新配置流程使用户能够触发重新配置，并允许他们更新设备或服务的配置，而无需移除和重新添加设备或服务。
 
-This gives users more ways to try and fix their issues, without the need for the software to be restarted or reauthentication to be triggered.
+这为用户提供了更多解决问题的方法，而无需重新启动软件或触发重新认证。
 
-## Example implementation
+## 示例实现
 
-In the `config_flow.py` file, add a new step called `reconfigure` that allows users to reconfigure the integration.
-In the following example, we check if the new api token is valid.
-We also double-check if the user is not trying to reconfigure the integration with a different account, since the account used for the integration should not change.
+在 `config_flow.py` 文件中，添加一个名为 `reconfigure` 的新步骤，允许用户重新配置集成。 在以下示例中，我们检查新的 api token 是否有效。 我们还仔细检查用户是否没有尝试用不同的帐户重新配置集成，因为用于集成的帐户不应更改。
 
 `config_flow.py`:
 ```python {4-31} showLineNumbers
 class MyConfigFlow(ConfigFlow, domain=DOMAIN):
-    """My config flow."""
+    """我的配置流程。"""
 
     async def async_step_reconfigure(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Handle reconfiguration of the integration."""
+        """处理集成的重新配置。"""
         errors: dict[str, str] = {}
         if user_input:
             client = MyClient(user_input[CONF_HOST], user_input[CONF_API_TOKEN])
             try:
                 user_id = await client.check_connection()
             except MyException as exception:
-                errors["base"] = "cannot_connect"
+                errors["base"] = "无法连接"
             else:
                 await self.async_set_unique_id(user_id)
-                self._abort_if_unique_id_mismatch(reason="wrong_account")
+                self._abort_if_unique_id_mismatch(reason="帐户错误")
                 return self.async_update_reload_and_abort(
                     self._get_reconfigure_entry(),
                     data_updates=user_input,
@@ -60,14 +56,14 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Handle a flow initialized by the user."""
+        """处理用户初始化的流程。"""
         errors: dict[str, str] = {}
         if user_input:
             client = MyClient(user_input[CONF_HOST], user_input[CONF_API_TOKEN])
             try:
                 user_id = await client.check_connection()
             except MyException as exception:
-                errors["base"] = "cannot_connect"
+                errors["base"] = "无法连接"
             else:
                 await self.async_set_unique_id(user_id)
                 self._abort_if_unique_id_configured()
@@ -87,14 +83,14 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
         )
 ```
 
-## Additional resources
+## 其他资源
 
-For more information on the reconfiguration flow, see the [reconfigure flow documentation](/docs/config_entries_config_flow_handler#reconfigure).
+有关重新配置流程的更多信息，请参见 [重新配置流程文档](/docs/config_entries_config_flow_handler#reconfigure)。
 
-## Exceptions
+## 例外情况
 
-Integrations that don't have settings in their configuration flow are exempt from this rule.
+在其配置流程中没有设置的集成不受此规则的限制。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

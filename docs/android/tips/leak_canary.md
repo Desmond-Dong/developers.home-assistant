@@ -3,36 +3,36 @@ title: "LeakCanary 🐤"
 sidebar_label: "LeakCanary"
 ---
 
-## How to disable LeakCanary in debug builds
+## 如何在调试构建中禁用 LeakCanary
 
-[LeakCanary](https://square.github.io/leakcanary/) is a powerful tool for detecting memory leaks in Android applications. However, there are scenarios where you might want to disable it, such as when preparing a debug build for performance testing or when it's not needed.
+[LeakCanary](https://square.github.io/leakcanary/) 是一个强大的工具，用于检测 Android 应用程序中的内存泄漏。然而，在某些情况下，您可能希望禁用它，例如在准备性能测试的调试构建时，或者当不需要它时。
 
-### Disabling LeakCanary via Gradle command
+### 通过 Gradle 命令禁用 LeakCanary
 
-You can disable LeakCanary manually by passing the `-PnoLeakCanary` flag in the Gradle command. For example:
+您可以通过在 Gradle 命令中传递 `-PnoLeakCanary` 标志手动禁用 LeakCanary。例如：
 
 ```bash
 ./gradlew app:assembleFullDebug -PnoLeakCanary
 ```
 
-This flag ensures that LeakCanary is excluded from the build.
+此标志确保 LeakCanary 被排除在构建之外。
 
-### Disabling LeakCanary via properties file
+### 通过属性文件禁用 LeakCanary
 
-Alternatively, you can disable LeakCanary by setting the noLeakCanary property in the gradle.properties file. This can be done at either the project level or the home level.
+或者，您可以通过在 gradle.properties 文件中设置 noLeakCanary 属性来禁用 LeakCanary。这可以在项目级别或主目录级别完成。
 
 ```properties
 noLeakCanary=true
 ```
 
 ::::warning
-If you disable LeakCanary, you need to update the lockfile; otherwise, Gradle will complain about an issue with the dependencies.
+如果您禁用 LeakCanary，需要更新锁定文件；否则，Gradle 会对依赖性问题发出警告。
 
-[How to update lockfiles](/docs/android/tips/dependencies#updating-dependencies-and-lockfiles).
+[如何更新锁定文件](/docs/android/tips/dependencies#updating-dependencies-and-lockfiles).
 ::::
 
-## Best practices for using LeakCanary
+## 使用 LeakCanary 的最佳实践
 
-- **Regularly monitor memory leaks**: Use LeakCanary during development to identify and fix memory leaks early.
-- **Document known leaks**: If a memory leak is caused by a third-party library and cannot be fixed immediately, document it for future reference.
-- **Report leaks**: If a leak is reported by LeakCanary, open a GitHub issue.
+- **定期监测内存泄漏**：在开发过程中使用 LeakCanary 以尽早识别和修复内存泄漏。
+- **记录已知泄漏**：如果内存泄漏是由第三方库引起并且无法立即修复，请记录以备将来参考。
+- **报告泄漏**：如果 LeakCanary 报告了泄漏，请打开 GitHub 问题。

@@ -1,33 +1,33 @@
 ---
-title: "Stale devices are removed"
+title: "过时设备被移除"
 related_rules:
   - dynamic-devices
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+## 推理
 
-When a device is removed from a hub or account, it should also be removed from Home Assistant.
-This way, the user interface will not show devices that are no longer available.
+当设备从中心或账户中移除时，它也应该从 Home Assistant 中移除。
+这样，用户界面就不会显示不再可用的设备。
 
-We should only remove devices that we are sure are no longer available.
-If you can't be sure if a device is still available, be sure to implement `async_remove_config_entry_device`.
-This allows the user to delete the device from the device registry manually.
+我们应该只移除我们确信不再可用的设备。
+如果你不能确定一个设备是否仍然可用，请确保实现 `async_remove_config_entry_device`。
+这允许用户手动从设备注册表中删除设备。
 
-## Example implementation
+## 示例实现
 
-In this example, we have a coordinator that fetches data from a service.
-When the data is updated, we check if any devices have been removed.
-If so, we remove them from the device registry.
-This also causes all entities associated with the device to be removed.
+在这个示例中，我们有一个协调器从服务中获取数据。
+当数据更新时，我们检查是否有任何设备被移除。
+如果有，我们将它们从设备注册表中移除。
+这还会导致与设备关联的所有实体被移除。
 
 `coordinator.py`
 ```python {13,20-30} showLineNumbers
 class MyCoordinator(DataUpdateCoordinator[dict[str, MyDevice]]):
-    """Class to manage fetching data."""
+    """管理收集数据的类。"""
 
     def __init__(self, hass: HomeAssistant, client: MyClient) -> None:
-        """Initialize coordinator."""
+        """初始化协调器。"""
         super().__init__(
             hass,
             logger=LOGGER,
@@ -41,7 +41,7 @@ class MyCoordinator(DataUpdateCoordinator[dict[str, MyDevice]]):
         try:
             data = await self.client.get_data()
         except MyException as ex:
-            raise UpdateFailed(f"The service is unavailable: {ex}")
+            raise UpdateFailed(f"服务不可用: {ex}")
         current_devices = set(data)
         if (stale_devices := self.previous_devices - current_devices):
             device_registry = dr.async_get(self.hass)
@@ -56,19 +56,19 @@ class MyCoordinator(DataUpdateCoordinator[dict[str, MyDevice]]):
         return data
 ```
 
-To show a second example where someone can delete the device from the device registry manually, we implement `async_remove_config_entry_device` in `__init__.py`.
-Having this function defined will enable the delete button on the device page in the UI.
-In this example, the integration is only able to get updates for a device and not get a full list of connected devices, hence it can't automatically delete devices.
-In `async_remove_config_entry_device`, we should implement a function that checks if the device is still available.
-If it is not, we return `True` to allow the user to delete the device manually.
-Here, we assume that the device is not working if we haven't got any updates for it in a while.
+为了展示第二个示例，其中用户可以手动从设备注册表中删除设备，我们在 `__init__.py` 中实现 `async_remove_config_entry_device`。
+定义这个函数将启用用户界面的设备页面上的删除按钮。
+在这个示例中，集成仅能够获取设备的更新，而无法获取连接设备的完整列表，因此它无法自动删除设备。
+在 `async_remove_config_entry_device` 中，我们应该实现一个检查设备是否仍然可用的函数。
+如果不可用，我们返回 `True` 以允许用户手动删除设备。
+在此，我们假设如果我们一段时间没有收到设备的更新，则设备不可用。
 
 `__init__.py`
 ```python showLineNumbers
 async def async_remove_config_entry_device(
     hass: HomeAssistant, config_entry: MyConfigEntry, device_entry: dr.DeviceEntry
 ) -> bool:
-    """Remove a config entry from a device."""
+    """从设备中移除配置条目。"""
     return not any(
         identifier
         for identifier in device_entry.identifiers
@@ -77,14 +77,14 @@ async def async_remove_config_entry_device(
     )
 ```
 
-## Additional resources
+## 额外资源
 
-For more info on devices, checkout the [device registry documentation](/docs/device_registry_index).
+有关设备的更多信息，请查看 [设备注册表文档](/docs/device_registry_index)。
 
-## Exceptions
+## 异常
 
-There are no exceptions to this rule.
+此规则没有例外。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

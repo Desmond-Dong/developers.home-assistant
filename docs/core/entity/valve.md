@@ -1,114 +1,110 @@
 ---
-title: Valve entity
-sidebar_label: Valve
+title: 阀门实体
+sidebar_label: 阀门
 ---
 
-A valve entity controls valve devices such as the water or gas valves in your home. Derive a platform entity from [`homeassistant.components.valve.ValveEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/valve/__init__.py).
+阀门实体控制诸如家中的水阀或燃气阀之类的阀门设备。从 [`homeassistant.components.valve.ValveEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/valve/__init__.py) 派生一个平台实体。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应始终仅从内存返回信息，而不执行 I/O（如网络请求）。实现 `update()` 或 `async_update()` 来获取数据。
 :::
 
-| Name | Type | Default | Description
+| 名称 | 类型 | 默认值 | 描述
 | ----------------------- | ---- | ------- | -----------
-| current_valve_position | <code>int &#124; None</code> | `None` | The current position of the valve where 0 means closed and 100 is fully open. This attribute is required on valves with `reports_position = True`, where it's used to determine state.
-| is_closed | <code>bool &#124; None</code> | `None` | If the valve is closed or not. Used to determine `state` for valves that don't report position.
-| is_closing | <code>bool &#124; None</code> | `None` | If the valve is closing or not. Used to determine `state`.
-| is_opening | <code>bool &#124; None</code> | `None` | If the valve is opening or not. Used to determine `state`.
-| reports_position | <code>bool</code> | **Required** | If the valve knows its position or not.
+| current_valve_position | <code>int &#124; None</code> | `None` | 阀门的当前位置，0表示关闭，100表示完全打开。该属性是具有 `reports_position = True` 的阀门所必需的，用于确定状态。
+| is_closed | <code>bool &#124; None</code> | `None` | 阀门是否关闭。用于确定不报告位置的阀门的 `state`。
+| is_closing | <code>bool &#124; None</code> | `None` | 阀门是否正在关闭。用于确定 `state`。
+| is_opening | <code>bool &#124; None</code> | `None` | 阀门是否正在打开。用于确定 `state`。
+| reports_position | <code>bool</code> | **必需** | 阀门是否知道其位置。
 
-### Device classes
+### 设备分类
 
-| Constant | Description
+| 常量 | 描述
 |----------|-----------------------|
-| `ValveDeviceClass.WATER` | Control of a water valve.
-| `ValveDeviceClass.GAS` | Control of a gas valve.
+| `ValveDeviceClass.WATER` | 控制水阀。
+| `ValveDeviceClass.GAS` | 控制燃气阀。
 
-### States
+### 状态
 
-The state is defined by setting it's properties. The resulting state is using the `ValveState` enum to return one of the below members.
+状态通过设置其属性来定义。结果状态使用 `ValveState` 枚举返回以下成员之一。
 
-| Value    | Description                                                        |
+| 值      | 描述                                                        |
 |----------|--------------------------------------------------------------------|
-| `OPENING`| The valve is in the process of opening to reach a set position.    |
-| `OPEN`   | The valve has reached the open position.                           |
-| `CLOSING`| The valve is in the process of closing to reach a set position.    |
-| `CLOSED` | The valve has reached the closed position.                         |
+| `OPENING`| 阀门正在打开以达到设定位置的过程。    |
+| `OPEN`   | 阀门已达开的位置。                           |
+| `CLOSING`| 阀门正在关闭以达到设定位置的过程。    |
+| `CLOSED` | 阀门已达闭的位置。                         |
 
-## Supported features
+## 支持的功能
 
-Supported features are defined by using values in the `ValveEntityFeature` enum
-and are combined using the bitwise or (`|`) operator.
+支持的功能通过在 `ValveEntityFeature` 枚举中使用值定义，并使用按位或 (`|`) 运算符组合。
 
-| Value               | Description                                                                      |
+| 值               | 描述                                                                      |
 | ------------------- | -------------------------------------------------------------------------------- |
-| `OPEN`              | The valve supports being opened.                                                 |
-| `CLOSE`             | The valve supports being closed.                                                 |
-| `SET_POSITION`      | The valve supports moving to a specific position between opened and closed.      |
-| `STOP`              | The valve supports stopping the current action (open, close, set position)       |
+| `OPEN`              | 阀门支持打开。                                                 |
+| `CLOSE`             | 阀门支持关闭。                                                 |
+| `SET_POSITION`      | 阀门支持移动到打开和关闭之间的特定位置。      |
+| `STOP`              | 阀门支持停止当前操作（打开、关闭、设置位置）       |
 
-## Methods
+## 方法
 
-### Open valve
+### 打开阀门
 
-Only implement this method if the flag `SUPPORT_OPEN` is set. For valves that
-can set position, this method should be left unimplemented and only `set_valve_position` is required.
+仅在标志 `SUPPORT_OPEN` 被设置时实现此方法。对于可以设置位置的阀门，此方法应保持未实现，仅需 `set_valve_position`。
 
 ```python
 class MyValve(ValveEntity):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def open_valve(self) -> None:
-        """Open the valve."""
+        """打开阀门。"""
 
     async def async_open_valve(self) -> None:
-        """Open the valve."""
+        """打开阀门。"""
 ```
 
-### Close valve
+### 关闭阀门
 
-Only implement this method if the flag `SUPPORT_CLOSE` is set.  For valves that
-can set position, this method should be left unimplemented and only `set_valve_position` is required.
+仅在标志 `SUPPORT_CLOSE` 被设置时实现此方法。对于可以设置位置的阀门，此方法应保持未实现，仅需 `set_valve_position`。
 
 ```python
 class MyValve(ValveEntity):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def close_valve(self) -> None:
-        """Close valve."""
+        """关闭阀门。"""
 
     async def async_close_valve(self) -> None:
-        """Close valve."""
+        """关闭阀门。"""
 ```
 
-### Set valve position
+### 设置阀门位置
 
-Only implement this method if the flag `SUPPORT_SET_POSITION` is set. This method must be implemented in valves that can set position.
+仅在标志 `SUPPORT_SET_POSITION` 被设置时实现此方法。此方法必须在可以设置位置的阀门中实现。
 
 ```python
 class MyValve(ValveEntity):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def set_valve_position(self, position: int) -> None:
-        """Move the valve to a specific position."""
+        """将阀门移动到特定位置。"""
 
     async def async_set_valve_position(self, position: int) -> None:
-        """Move the valve to a specific position."""
+        """将阀门移动到特定位置。"""
 ```
 
-### Stop valve
+### 停止阀门
 
-Only implement this method if the flag `SUPPORT_STOP` is set.
+仅在标志 `SUPPORT_STOP` 被设置时实现此方法。
 
 ```python
 class MyValve(ValveEntity):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def stop_valve(self) -> None:
-        """Stop the valve."""
+        """停止阀门。"""
 
     async def async_stop_valve(self) -> None:
-        """Stop the valve."""
-```
+        """停止阀门。"""

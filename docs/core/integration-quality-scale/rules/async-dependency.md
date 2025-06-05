@@ -1,25 +1,25 @@
 ---
-title: "Dependency is async"
+title: "依赖是异步的"
 related_rules:
   - inject-websession
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+## 推理
 
-Home Assistant works with asyncio to be efficient when handling tasks.
-To avoid switching context between the asyncio event loop and other threads, which is costly performance wise, ideally, your library should also use asyncio.
+Home Assistant 使用 asyncio 来高效处理任务。
+为了避免在 asyncio 事件循环和其他线程之间切换上下文，这在性能上是很昂贵的，理想情况下，您的库也应该使用 asyncio。
 
-This results not only in a more efficient system but the code is also more neat.
+这不仅会导致更高效的系统，而且代码也更加整洁。
 
-## Additional resources
+## 其他资源
 
-More information on how to create a library can be found in the [documentation](/docs/api_lib_index).
+有关如何创建库的更多信息，请查看 [文档](/docs/api_lib_index)。
 
-## Exceptions
+## 例外
 
-There are no exceptions to this rule.
+此规则没有例外。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

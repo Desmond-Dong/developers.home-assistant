@@ -1,56 +1,56 @@
 ---
-title: "The integration creates devices"
+title: "集成创建设备"
 related_rules:
   - has-entity-name
 ---
 import RelatedRules from './_includes/related_rules.jsx'
 
-## Reasoning
+## 理由
 
-Devices, in Home Assistant, are used to group entities to represent either a single physical device or a service.
-This is useful, since users usually think they add a device or a service to their system, not a single entity.
-Home Assistant stores the device information in the device registry.
-In order for the user to have the best experience, the information about the device should be as complete as possible.
+在 Home Assistant 中，设备用于将实体分组，以表示单一物理设备或服务。
+这是有用的，因为用户通常认为他们是将设备或服务添加到他们的系统中，而不是单个实体。
+Home Assistant 将设备信息存储在设备注册表中。
+为了让用户拥有最佳体验，设备的信息应该尽可能完整。
 
-## Example implementation
+## 示例实现
 
-In this example, there is a sensor entity that defines which device it should be added to in the device registry, together with some metadata about the device.
-This will provide a rich device info page, where the user can recognize the device by its name, serial number, and other fields.
+在这个示例中，有一个传感器实体，定义了它应该添加到设备注册表中的哪个设备，以及一些关于设备的元数据。
+这将提供一个丰富的设备信息页面，用户可以通过设备的名称、序列号和其他字段来识别设备。
 
 `sensor.py`:
 ```python {8-18} showLineNumbers
 class MySensor(SensorEntity):
-    """Representation of a sensor."""
+    """传感器的表示。"""
 
     _attr_has_entity_name = True
 
     def __init__(self, device: MyDevice) -> None:
-        """Initialize the sensor."""
+        """初始化传感器。"""
         self._attr_device_info = DeviceInfo(
             connections={(CONNECTION_NETWORK_MAC, device.mac)},
             name=device.name,
             serial_number=device.serial,
             hw_version=device.rev,
             sw_version=device.version,
-            manufacturer="My Company",
-            model="My Sensor",
+            manufacturer="我的公司",
+            model="我的传感器",
             model_id="ABC-123",
             via_device=(DOMAIN, device.hub_id),
         )
 ```
 
 :::info
-If the device represents a service, be sure to add `entry_type=DeviceEntryType.SERVICE` to the `DeviceInfo` object to mark the device as such.
+如果设备表示服务，请务必在 `DeviceInfo` 对象中添加 `entry_type=DeviceEntryType.SERVICE` 以标记该设备为服务类型。
 :::
 
-## Additional resources
+## 其他资源
 
-More information about devices can be found in the [device](/docs/device_registry_index) documentation.
+有关设备的更多信息，请参阅 [device](/docs/device_registry_index) 文档。
 
-## Exceptions
+## 例外
 
-There are no exceptions to this rule.
+对此规则没有例外。
 
-## Related rules
+## 相关规则
 
 <RelatedRules relatedRules={frontMatter.related_rules}></RelatedRules>

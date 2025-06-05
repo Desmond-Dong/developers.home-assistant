@@ -1,32 +1,32 @@
 ---
-title: Home Assistant Supervisor
-sidebar_label: Introduction
+title: Home Assistant 监督者
+sidebar_label: 介绍
 ---
 
-The Supervisor allows the user to manage their Home Assistant installation from Home Assistant. The Supervisor has the following responsibilities:
+监督者允许用户从 Home Assistant 管理他们的 Home Assistant 安装。监督者具有以下职责：
 
-- Run Home Assistant Core
-- Update Home Assistant Core. Automatically roll back if the update fails.
-- Make and restore backups
-- Add-ons
-- Unified audio system
-- Update the Home Assistant operating system (disabled in a Supervised installation)
+- 运行 Home Assistant Core
+- 更新 Home Assistant Core。如果更新失败，自动回滚。
+- 进行和恢复备份
+- 附加组件
+- 统一音频系统
+- 更新 Home Assistant 操作系统（在监督安装中禁用）
 
-## Architecture
+## 架构
 
 <img class='invertDark' src='/img/en/architecture/ha_architecture_2020.png'
-  alt='Architecture Overview of Home Assistant' />
+  alt='Home Assistant 的架构概述' />
 
 <!--
   https://docs.google.com/drawings/d/13-72kr05yK31HrQEMpt7Y45jPqKsMxBeFYX1PUatTuE/edit?usp=sharing
 -->
 
-- **Home Assistant Core**: home automation platform
-- **Add-ons**: extra applications that the user wants to run on their server
-- **DNS**: allows core and add-ons to communicate among one another
-- **Audio**: allows core and add-ons to play audio
-- **mDNS**: help discover and connect to devices and services in the network
-- **Supervisor**: manages all parts of the system and keeps it up to date
-- **Docker**: container service to run applications.
-- **Operating System**: Linux based operating system
-- **D-Bus**: communication system to control parts of the operating system like the network manager
+- **Home Assistant Core**: 家庭自动化平台
+- **附加组件**: 用户希望在其服务器上运行的额外应用程序
+- **DNS**: 允许核心和附加组件之间进行通信
+- **音频**: 允许核心和附加组件播放音频
+- **mDNS**: 帮助发现和连接网络中的设备和服务
+- **监督者**: 管理系统的所有部分并保持其更新
+- **Docker**: 运行应用程序的容器服务。
+- **操作系统**: 基于 Linux 的操作系统
+- **D-Bus**: 控制操作系统中部分内容（如网络管理） 的通信系统

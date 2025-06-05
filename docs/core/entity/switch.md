@@ -1,74 +1,74 @@
 ---
-title: Switch entity
-sidebar_label: Switch
+title: 切换实体
+sidebar_label: 切换
 ---
 
-A switch entity turns on or off something, for example a relay. Derive a platform entity from [`homeassistant.components.switch.SwitchEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/switch/__init__.py).
-To represent something which has an on or off state but can't be controlled, for example a wall switch which transmits its state but can't be turned on or off from Home Assistant, a Binary Sensor is a better choice.
-To represent something which doesn't have a state, for example a door bell push button, a custom event or a Device Trigger is a better choice.
+切换实体用于打开或关闭某些内容，例如继电器。从 [`homeassistant.components.switch.SwitchEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/switch/__init__.py) 派生一个平台实体。
+要表示有开或关状态但无法控制的东西，例如一个能传输其状态但无法从 Home Assistant 打开或关闭的墙壁开关，二进制传感器是一个更好的选择。
+要表示没有状态的东西，例如门铃按钮，自定义事件或设备触发器是一个更好的选择。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应始终仅从内存返回信息，而不进行 I/O（例如网络请求）。实现 `update()` 或 `async_update()` 来获取数据。
 :::
 
-| Name | Type | Default | Description
+| 名称 | 类型 | 默认值 | 描述
 | ---- | ---- | ------- | -----------
-| is_on | boolean | `None` | If the switch is currently on or off.
+| is_on | 布尔值 | `None` | 切换当前是否处于开启或关闭状态。
 
-## Methods
+## 方法
 
-### Turn on
+### 打开
 
-Turn the switch on.
+打开开关。
 
 ```python
 class MySwitch(SwitchEntity):
-    # Implement one of these methods.
+    # 实现以下方法之一。
 
     def turn_on(self, **kwargs) -> None:
-        """Turn the entity on."""
+        """打开实体。"""
 
     async def async_turn_on(self, **kwargs):
-        """Turn the entity on."""
+        """打开实体。"""
 ```
 
-### Turn off
+### 关闭
 
-Turn the switch off.
+关闭开关。
 
 ```python
 class MySwitch(SwitchEntity):
-    # Implement one of these methods.
+    # 实现以下方法之一。
 
     def turn_off(self, **kwargs):
-        """Turn the entity off."""
+        """关闭实体。"""
 
     async def async_turn_off(self, **kwargs):
-        """Turn the entity off."""
+        """关闭实体。"""
 ```
 
-### Toggle
+### 切换
 
-Optional. If not implemented will default to checking what method to call using the `is_on` property.
+可选。如果未实现，将默认检查使用 `is_on` 属性调用哪个方法。
 
 ```python
 class MySwitch(SwitchEntity):
-    # Implement one of these methods.
+    # 实现以下方法之一。
 
     def toggle(self, **kwargs):
-        """Toggle the entity."""
+        """切换实体。"""
 
     async def async_toggle(self, **kwargs):
-        """Toggle the entity."""
+        """切换实体。"""
 ```
 
-### Available device classes
+### 可用设备类别
 
-Optional. What type of device this. It will possibly map to google device types.
+可选。这种类型的设备是什么。它可能会映射到 Google 设备类型。
 
-| Constant | Description
+| 常量 | 描述
 | ----- | -----------
-| `SwitchDeviceClass.OUTLET` | Device is an outlet for power.
-| `SwitchDeviceClass.SWITCH` | Device is switch for some type of entity.
+| `SwitchDeviceClass.OUTLET` | 设备是用于供电的插座。
+| `SwitchDeviceClass.SWITCH` | 设备是某种类型实体的开关。

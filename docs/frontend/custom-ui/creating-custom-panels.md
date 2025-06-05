@@ -1,14 +1,14 @@
 ---
-title: "Creating custom panels"
+title: "创建自定义面板"
 ---
 
-Panels are pages that show information within Home Assistant and can allow controlling it. Panels are linked from the sidebar and rendered full screen. They have real-time access to the Home Assistant object via JavaScript. Examples of panels in the app are dashboards, Map, Logbook and History.
+面板是显示Home Assistant信息的页面，并允许控制它。面板从侧边栏链接并全屏渲染。它们通过JavaScript实时访问Home Assistant对象。该应用程序中的面板示例包括仪表板、地图、日志簿和历史记录。
 
-Besides components registering panels, users can also register panels using the `panel_custom` component. This allows users to quickly build their own custom interfaces for Home Assistant.
+除了组件注册面板，用户还可以使用`panel_custom`组件注册面板。这允许用户快速构建自己用于Home Assistant的自定义界面。
 
-## Introduction
+## 介绍
 
-Panels are defined as custom elements. You can use any framework that you want, as long as you wrap it up as a custom element. To quickly get started with a panel, create a new file `<config>/www/example-panel.js` with this content
+面板被定义为自定义元素。您可以使用任何框架，只要将其封装为自定义元素即可。要快速开始创建面板，请创建一个名为`<config>/www/example-panel.js`的新文件，内容如下
 
 ```js
 import "https://unpkg.com/wired-card@2.1.0/lib/wired-card.js?module";
@@ -31,11 +31,11 @@ class ExamplePanel extends LitElement {
   render() {
     return html`
       <wired-card elevation="2">
-        <p>There are ${Object.keys(this.hass.states).length} entities.</p>
-        <p>The screen is${this.narrow ? "" : " not"} narrow.</p>
-        Configured panel config
+        <p>共有 ${Object.keys(this.hass.states).length} 个实体。</p>
+        <p>该屏幕是${this.narrow ? "" : "不"}狭窄的。</p>
+        配置的面板配置
         <pre>${JSON.stringify(this.panel.config, undefined, 2)}</pre>
-        Current route
+        当前路由
         <pre>${JSON.stringify(this.route, undefined, 2)}</pre>
       </wired-card>
     `;
@@ -62,39 +62,38 @@ class ExamplePanel extends LitElement {
 customElements.define("example-panel", ExamplePanel);
 ```
 
-Then add to your `configuration.yaml`:
+然后添加到您的`configuration.yaml`中：
 
 ```yaml
 panel_custom:
   - name: example-panel
-    # url_path needs to be unique for each panel_custom config
+    # url_path需要对每个panel_custom配置唯一
     url_path: redirect-server-controls
-    sidebar_title: Example Panel
+    sidebar_title: 示例面板
     sidebar_icon: mdi:server
     module_url: /local/example-panel.js
     config:
-      # Data you want to make available to panel
+      # 您想要提供给面板的数据
       hello: world
 ```
 
-## API reference
+## API参考
 
-The Home Assistant frontend will pass information to your panel by setting properties on your custom element. The following properties are set:
+Home Assistant前端将通过设置您的自定义元素的属性向您的面板传递信息。设置以下属性：
 
-| Property | Type | Description
-| -------- | ---- | -----------
-| hass     | object | Current state of Home Assistant
-| narrow   | boolean | if the panel should render in narrow mode
-| panel    | object | Panel information. Config is available as `panel.config`.
+| 属性      | 类型      | 描述
+| --------- | --------- | -----------
+| hass      | 对象      | Home Assistant的当前状态
+| narrow    | 布尔值    | 面板是否应该以狭窄模式渲染
+| panel     | 对象      | 面板信息。配置可作为`panel.config`获得。
 
-## JavaScript versions
+## JavaScript版本
 
-The Home Assistant user interface is currently served to browsers in modern JavaScript and older JavaScript (ES5). The older version has a wider browser support but that comes at a cost of size and performance.
+Home Assistant用户界面目前以现代JavaScript和旧版JavaScript（ES5）的形式提供给浏览器。旧版具有更广泛的浏览器支持，但这带来了尺寸和性能的损失。
 
-If you do need to run with ES5 support, you will need to load the ES5 custom elements adapter before defining your element:
+如果您确实需要以ES5支持运行，则必须在定义元素之前加载ES5自定义元素适配器：
 
 ```javascript
 window.loadES5Adapter().then(function() {
   customElements.define('my-panel', MyCustomPanel)
 });
-```

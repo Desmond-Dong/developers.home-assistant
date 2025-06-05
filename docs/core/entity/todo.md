@@ -1,46 +1,43 @@
 ---
-title: To-do list entity
-sidebar_label: To-do list
+title: 待办事项实体
+sidebar_label: 待办事项
 ---
 
-A To-do list entity is an entity that represents a To-do list. A To-do list contains
-To-do items which are ordered and have a status (complete or in progress). A To-do list entity is derived from the [`homeassistant.components.todo.TodoListEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/todo/__init__.py).
+待办事项实体是一个表示待办事项列表的实体。待办事项列表包含已排序且具有状态（完成或进行中）的待办事项。待办事项实体源自 [`homeassistant.components.todo.TodoListEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/todo/__init__.py)。
 
-## Properties
+## 属性
 
 :::tip
-Properties should only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应该仅从内存中返回信息，而不进行 I/O（如网络请求）。实现 `update()` 或 `async_update()` 来获取数据。
 :::
 
-| Name  | Type          | Default               | Description                                             |
-| ----- | ------------- | --------------------- | ------------------------------------------------------- |
-| todo_items | <code>list[TodoItem] &#124; None</code> | `None` | **Required.** The ordered contents of the To-do list. |
+| 名称         | 类型                             | 默认               | 描述                                                 |
+| ------------ | -------------------------------- | ------------------ | ---------------------------------------------------- |
+| todo_items   | <code>list[TodoItem] &#124; None</code> | `None`             | **必填。** 待办事项列表的有序内容。                  |
 
-### States
+### 状态
 
-A `TodoListEntity` state is the count of incomplete items in the To-do list.
+`TodoListEntity` 状态是待办事项列表中未完成项目的计数。
 
-## Supported features
+## 支持的特性
 
-Supported features are defined by using values in the `TodoListEntityFeature` enum
-and are combined using the bitwise or (`|`) operator.
+支持的特性通过使用 `TodoListEntityFeature` 枚举中的值定义，并使用按位或 (`|`) 运算符合并。
 
-| Value                      | Description                                                        |
-| -------------------------- | ------------------------------------------------------------------ |
-| `CREATE_TODO_ITEM`         | Entity implements the methods to allow creation of to-do items.  |
-| `DELETE_TODO_ITEM`         | Entity implements the methods to allow deletion of to-do items.  |
-| `UPDATE_TODO_ITEM`         | Entity implements the methods to allow update of to-do items.  |
-| `MOVE_TODO_ITEM`           | Entity implements the methods to re-order to-do items.  |
-| `SET_DUE_DATE_ON_ITEM`     | Entity implements setting the `due` field of an item to a `datetime.date` when creating or updating a to-do item. |
-| `SET_DUE_DATETIME_ON_ITEM` | Entity implements setting the `due` field of an item to a `datetime.datetime` when creating or updating a to-do item. |
-| `SET_DESCRIPTION_ON_ITEM`  | Entity implements setting the `description` field of an item when creating or updating a to-do item.  |
+| 值                       | 描述                                                         |
+| ------------------------ | ------------------------------------------------------------ |
+| `CREATE_TODO_ITEM`      | 实体实现了允许创建待办事项的方法。                          |
+| `DELETE_TODO_ITEM`      | 实体实现了允许删除待办事项的方法。                          |
+| `UPDATE_TODO_ITEM`      | 实体实现了允许更新待办事项的方法。                          |
+| `MOVE_TODO_ITEM`        | 实体实现了允许重新排序待办事项的方法。                      |
+| `SET_DUE_DATE_ON_ITEM`  | 实体在创建或更新待办事项时实现将项目的 `due` 字段设置为 `datetime.date`。 |
+| `SET_DUE_DATETIME_ON_ITEM` | 实体在创建或更新待办事项时实现将项目的 `due` 字段设置为 `datetime.datetime`。 |
+| `SET_DESCRIPTION_ON_ITEM` | 实体在创建或更新待办事项时实现设置项目的 `description` 字段。  |
 
-## Methods
+## 方法
 
-### Create to-do items
+### 创建待办事项
 
-A to-do list entity may support creating to-do items by specifying the `CREATE_TODO_ITEM`
-supported feature.
+待办事项实体可以通过指定支持的特性 `CREATE_TODO_ITEM` 来支持创建待办事项。
 
 ```python
 from homeassistant.components.todo import TodoListEntity
@@ -48,13 +45,12 @@ from homeassistant.components.todo import TodoListEntity
 class MyTodoListEntity(TodoListEntity):
 
     async def async_create_todo_item(self, item: TodoItem) -> None:
-        """Add an item to the To-do list."""
+        """将项目添加到待办事项列表中。"""
 ```
 
-### Delete to-do items
+### 删除待办事项
 
-A To-do list entity may support deleting to-do items by specifying the `DELETE_TODO_ITEM`
-supported feature. Integrations must support deleting multiple items.
+待办事项实体可以通过指定支持的特性 `DELETE_TODO_ITEM` 来支持删除待办事项。集成必须支持删除多个项目。
 
 ```python
 from homeassistant.components.todo import TodoListEntity
@@ -62,15 +58,12 @@ from homeassistant.components.todo import TodoListEntity
 class MyTodoListEntity(TodoListEntity):
 
     async def async_delete_todo_items(self, uids: list[str]) -> None:
-        """Delete an item from the to-do list."""
+        """从待办事项列表中删除项目。"""
 ```
 
-### Update to-do items
+### 更新待办事项
 
-A to-do list entity may support updating to-do items by specifying the `UPDATE_TODO_ITEM`
-supported feature. The `TodoItem` field `uid` is always present and indicates
-which item should be updated. The item passed to update is a copy of the original
-item with fields updated or cleared.
+待办事项实体可以通过指定支持的特性 `UPDATE_TODO_ITEM` 来支持更新待办事项。`TodoItem` 字段 `uid` 始终存在，并指示应该更新哪个项目。传递给更新的项目是原始项目的副本，字段已更新或清空。
 
 ```python
 from homeassistant.components.todo import TodoListEntity
@@ -78,15 +71,12 @@ from homeassistant.components.todo import TodoListEntity
 class MyTodoListEntity(TodoListEntity):
 
     async def async_update_todo_item(self, item: TodoItem) -> None:
-        """Add an item to the To-do list."""
+        """将项目添加到待办事项列表中。"""
 ```
 
-### Move to-do items
+### 移动待办事项
 
-A to-do list entity may support re-ordering to-do items in the list by specifying
-the `MOVE_TODO_ITEM` supported feature. The to-do item with the specified `uid`
-should be moved to the position in the list after the one specified by `previous_uid` (`None` means move to the first
-position in the to-do list).
+待办事项实体可以通过指定支持的特性 `MOVE_TODO_ITEM` 来支持在列表中重新排序待办事项。具有指定 `uid` 的待办事项应移动到指定 `previous_uid` 之后的位置（`None` 表示移动到待办事项列表的第一位）。
 
 ```python
 from homeassistant.components.todo import TodoListEntity
@@ -98,19 +88,17 @@ class MyTodoListEntity(TodoListEntity):
         uid: str,
         previous_uid: str | None = None
     ) -> None:
-        """Move an item in the To-do list."""
+        """在待办事项列表中移动项目。"""
 ```
 
 ## TodoItem
 
-A `TodoItem` represents an individual item on a To-do list. The methods
-above describe any differences about which fields are optional on create or
-update.
+`TodoItem` 表示待办事项列表中的单个项目。上述方法描述了在创建或更新时哪些字段是可选的差异。
 
-| Name        | Type             | Default      | Description                                                                                                                                     |
-| ----------- | ---------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| uid | <code>string &#124; None</code> | `None` | A unique identifier for the to-do item. This field is required for updates and the entity state.
-| summary | <code>string &#124; None</code>  | `None` | A title or summary of the to-do item. This field is required for the entity state.
-| status | <code>TodoItemStatus &#124; None</code> | `None` | Defines the overall status for the to-do item, either `NEEDS_ACTION` or `COMPLETE`. This field is required for the entity state.
-| due | <code>datetime.date &#124; datetime.datetime &#124; None</code> | `None` | The date and time that a to-do is expected to be completed. As a datetime, must have a timezone.
-| description | <code>string &#124; None</code>  | `None` | A more complete description of the to-do item than that provided by the summary.
+| 名称        | 类型                             | 默认          | 描述                                                                                                                                  |
+| ----------- | -------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| uid         | <code>string &#124; None</code> | `None`       | 待办事项的唯一标识符。此字段在更新时是必需的，并且在实体状态中。                                                                   |
+| summary     | <code>string &#124; None</code> | `None`       | 待办事项的标题或摘要。此字段在实体状态中是必需的。                                                                                 |
+| status      | <code>TodoItemStatus &#124; None</code> | `None`       | 定义待办事项的整体状态，可以是 `NEEDS_ACTION` 或 `COMPLETE`。此字段在实体状态中是必需的。                                          |
+| due         | <code>datetime.date &#124; datetime.datetime &#124; None</code> | `None`       | 预计完成待办事项的日期和时间。作为 datetime，必须具有时区。                                                                         |
+| description | <code>string &#124; None</code>  | `None`       | 相比摘要，待办事项的更完整描述。                                                                                                      |

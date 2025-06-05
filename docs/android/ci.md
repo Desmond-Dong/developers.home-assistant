@@ -1,111 +1,111 @@
 ---
-title: "Android continuous integration and delivery"
-sidebar_label: "Continuous integration and delivery"
+title: "Android持续集成和交付"
+sidebar_label: "持续集成和交付"
 ---
 
-## Android Continuous Integration and Delivery
+## Android持续集成和交付
 
-This document outlines the Continuous Integration (CI) and Continuous Delivery (CD) processes for the Android project. We use **GitHub Actions** as our CI/CD platform, with multiple workflows configured to ensure code quality, automate builds, and streamline deployments.
+本文档概述了Android项目的持续集成（CI）和持续交付（CD）过程。我们使用**GitHub Actions**作为我们的CI/CD平台，配置多个工作流以确保代码质量、自动化构建和简化部署。
 
-## Overview
+## 概述
 
-The main goals of our CI/CD process are:
+我们的CI/CD过程的主要目标是：
 
-- ✅ Validate that everything is working as expected.
-- 🚨 Notify relevant people if something breaks.
-- 🚀 Enable fully automated continuous delivery of applications.
-- 🔄 Avoid duplication by extracting common code into reusable local actions under `.github/actions`.
+- ✅ 验证一切是否按预期工作。
+- 🚨 如果出现故障，通知相关人员。
+- 🚀 实现应用程序的完全自动化持续交付。
+- 🔄 通过将公共代码提取到`.github/actions`下的可重用本地操作中来避免重复。
 
-## Versioning
+## 版本管理
 
-We follow the same versioning convention as the core project, using [CalVer] (Calendar Versioning). This ensures consistency across all releases.
+我们遵循与核心项目相同的版本管理惯例，使用[CalVer]（日历版本ing）。这确保了所有发布版本的一致性。
 
-## Workflows
+## 工作流
 
-### On pull request
+### 在拉取请求时
 
-When a pull request (PR) is opened or updated, the `pr.yml` workflow is triggered. Its goals are:
+当拉取请求（PR）被打开或更新时，`pr.yml`工作流被触发。其目标是：
 
-- 🧹 Validate code compliance with our [linters](/docs/android/linter).
-- 🔨 Ensure the code builds successfully.
-- ✅ Run all tests to verify correctness.
-- 📦 Persist generated APKs in the GitHub Actions tab for review.
+- 🧹 验证代码是否符合我们的[代码检查工具](/docs/android/linter)。
+- 🔨 确保代码成功构建。
+- ✅ 运行所有测试以验证正确性。
+- 📦 在GitHub Actions标签中持久化生成的APK以供审查。
 
-If any step fails:
+如果任何步骤失败：
 
-- The CI notifies the PR owner.
-- The PR is blocked from being merged until the issues are resolved.
-- Fixes must be committed, which automatically restarts the workflow.
-
-:::note
-Only one workflow runs at a time for a given PR. If multiple commits are pushed in quick succession, the CI cancels ongoing builds and processes only the latest commit.
-:::
-
-#### Debug builds
-
-To build the application in debug on CI, we use a mock Google services file located at `/.github/mock-google-services.json`.
-
-### On push to `main`
-
-When a commit is pushed to the `main` branch, the `onPush.yml` workflow is triggered. Its goals are:
-
-- 🌐 Download translations from [Lokalise](/docs/translations).
-- 📝 Generate release notes.
-- 🔧 Build release variants of all applications.
-- 📤 Deploy applications to Firebase.
-- 🛒 Deploy to the internal track of the Play Store.
-- 📦 Persist generated APKs in the GitHub Actions tab.
-- 🔐 Inject secrets and files required for publishing.
-
-We use [Fastlane](https://fastlane.tools/) to simplify deployment to different stores. All Fastlane configurations can be found in the `fastlane` folder.
+- CI通知PR所有者。
+- PR被阻止合并，直到问题解决。
+- 修复必须提交，从而自动重新启动工作流。
 
 :::note
-This workflow can also be manually triggered with the `beta` flag to promote a build to the beta track on the stores.
+对于给定的PR，一次只运行一个工作流。如果快速连续推送多个提交，CI会取消正在进行的构建，并仅处理最新的提交。
 :::
 
-### Weekly builds
+#### 调试构建
 
-Every Sunday at 4:00 AM UTC, the `weekly.yml` workflow is triggered automatically. Its goals are:
+要在CI中调试构建应用程序，我们使用位于 `/.github/mock-google-services.json` 的模拟Google服务文件。
 
-- 🛠 Create a weekly GitHub pre-release.
-- 🚀 Invoke the `onPush.yml` workflow with the `beta` flag set to `true`.
+### 在推送到`main`时
 
-This ensures that a new version of the applications is pushed to the beta track on the Play Store every week.
+当一个提交被推送到`main`分支时，`onPush.yml`工作流被触发。其目标是：
 
-### Monthly version tags
+- 🌐 从[Lokalise](/docs/translations)下载翻译。
+- 📝 生成发布说明。
+- 🔧 构建所有应用程序的发布版本。
+- 📤 将应用程序部署到Firebase。
+- 🛒 部署到Play商店的内部测试版。
+- 📦 在GitHub Actions标签中持久化生成的APK。
+- 🔐 注入发布所需的机密和文件。
 
-On the first day of every month, the `monthly.yml` workflow runs to create an initial version tag in the format `YYYY.MM.0`. This aligns with our [CalVer] versioning strategy.
+我们使用[Fastlane](https://fastlane.tools/)简化对不同商店的部署。所有Fastlane配置都可以在`fastlane`文件夹中找到。
 
-### Releases
+:::note
+此工作流也可以手动触发，并使用`beta`标志将构建推广到商店的beta轨道。
+:::
 
-The `release.yml` workflow is triggered manually to promote the latest beta build to production. This ensures that only stable and tested builds are released to end users.
+### 每周构建
 
-#### Release on F-Droid
+每周日凌晨4:00 UTC，`weekly.yml`工作流会自动触发。其目标是：
 
-The [F-Droid](https://f-droid.org) store builds the applications themselves when we push a GitHub release. This process uses [metadata](https://gitlab.com/fdroid/fdroiddata/-/blob/master/metadata/io.homeassistant.companion.android.minimal.yml).
+- 🛠 创建每周的GitHub预发布。
+- 🚀 调用`onPush.yml`工作流并将`beta`标志设置为`true`。
 
-They use the `version_code.txt` file, which is created on every release from the `main` branch, for the app's versioning.
+这确保每周将新版本的应用程序推送到Play商店的beta轨道。
+
+### 每月版本标签
+
+在每个月的第一天，`monthly.yml`工作流运行以创建格式为`YYYY.MM.0`的初始版本标签。这与我们的[CalVer]版本策略保持一致。
+
+### 发布
+
+`release.yml`工作流被手动触发，以将最新的beta构建推广到生产。这确保只有经过稳定测试的构建才会发布给最终用户。
+
+#### 在F-Droid上发布
+
+[F-Droid](https://f-droid.org)商店在我们推送GitHub发布时会自行构建应用程序。此过程使用[metadata](https://gitlab.com/fdroid/fdroiddata/-/blob/master/metadata/io.homeassistant.companion.android.minimal.yml)。
+
+他们使用名为`version_code.txt`的文件，该文件在每次从`main`分支发布时创建，用于应用程序的版本控制。
 
 :::warning
-We do not guarantee when the applications will be available on F-Droid after a release. You can find the app [here](https://f-droid.org/packages/io.homeassistant.companion.android.minimal/).
+我们不能保证应用程序在发布后何时会在F-Droid上可用。您可以在[此处](https://f-droid.org/packages/io.homeassistant.companion.android.minimal/)找到该应用。
 :::
 
-## Summary of workflows
+## 工作流摘要
 
-| Workflow         | Trigger                     | Goals                                                                 |
-|-------------------|-----------------------------|----------------------------------------------------------------------|
-| `pr.yml`         | On PR open or update        | Lint, build, test, and persist APKs.                                |
-| `onPush.yml`     | On push to `main`         | Build, deploy, and publish to Firebase and the Play Store.              |
-| `weekly.yml`     | Every Sunday at 4:00 AM     | Create a pre-release and push the beta build to the Play Store.              |
-| `monthly.yml`    | First day of the month      | Create an initial version tag (`YYYY.MM.0`).                           |
-| `release.yml`    | Manual trigger              | Promote the beta build to production.                                  |
+| 工作流             | 触发                       | 目标                                                               |
+|---------------------|----------------------------|--------------------------------------------------------------------|
+| `pr.yml`           | 在PR打开或更新时          | 代码检查、构建、测试并持久化APK。                                 |
+| `onPush.yml`       | 在推送到`main`时         | 构建、部署并发布到Firebase和Play商店。                              |
+| `weekly.yml`       | 每周日凌晨4:00            | 创建预发布并将beta构建推送到Play商店。                             |
+| `monthly.yml`      | 每月第一天                | 创建初始版本标签（`YYYY.MM.0`）。                                  |
+| `release.yml`      | 手动触发                  | 将beta构建推广到生产。                                          |
 
 ---
 
-## Notes and best practices
+## 注意事项和最佳实践
 
-- 🛠 Extract common code into reusable actions under `.github/actions` to avoid duplication.
-- 🕒 Be mindful of workflow triggers to avoid unnecessary resource usage.
-- 🔒 Ensure secrets and sensitive files are properly managed and injected during workflows.
+- 🛠 将公共代码提取到`.github/actions`下的可重用操作中，以避免重复。
+- 🕒 注意工作流触发器，以避免不必要的资源使用。
+- 🔒 确保在工作流中妥善管理和注入机密及敏感文件。
 
 [CalVer]: https://calver.org/

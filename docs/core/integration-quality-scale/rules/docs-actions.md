@@ -1,28 +1,28 @@
 ---
-title: "The documentation describes the provided service actions that can be used"
+title: "文档描述了可以使用的服务操作"
 ---
 
-## Reasoning
+## 理由
 
-Integrations can register service actions to provide functionality that is not possible with standard entities.
-These service actions can be harder to use than the standard service actions, so we want to make sure that the documentation describes both what they do, and what the parameters are.
+集成可以注册服务操作，以提供标准实体无法实现的功能。  
+这些服务操作可能比标准服务操作更难使用，因此我们希望确保文档描述它们的功能以及参数是什么。
 
-## Example implementation
+## 示例实现
 
 ```markdown showLineNumbers
-## Actions
+## 操作
 
-The integration provides the following actions.
+集成提供以下操作。
 
-### Action: Get schedule
+### 操作: 获取时间表
 
-The `my_integration.get_schedule` service is used to fetch a schedule from the integration.
+`my_integration.get_schedule` 服务用于从集成中获取时间表。
 
-- **Data attribute**: `config_entry_id`
-    - **Description**: The ID of the config entry to get the schedule from.
-    - **Optional**: No
+- **数据属性**: `config_entry_id`
+    - **描述**: 获取时间表的配置条目的ID。
+    - **可选**: 否
 ```
 
-## Exceptions
+## 例外
 
-There are no exceptions to this rule.
+对此规则没有例外。

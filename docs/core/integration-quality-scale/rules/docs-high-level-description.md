@@ -1,20 +1,20 @@
 ---
-title: "The documentation includes a high-level description of the integration brand, product, or service"
+title: "文档包括集成品牌、产品或服务的高级描述"
 ---
 
-## Reasoning
+## 理由
 
-User documentation for an integration should provide a high-level description of the integration brand, product, or service.
-This information might help users decide whether an integration suits them and their use case.
-The documentation should also contain a link to the brand, product, or service website for further information, if possible.
+集成的用户文档应提供集成品牌、产品或服务的高级描述。
+这些信息可能帮助用户决定集成是否适合他们及其用例。
+文档还应包含指向品牌、产品或服务网站的链接以获取更多信息（如果可能）。
 
-## Example implementation
+## 示例实现
 
 ```markdown showLineNumbers
-The **my integration** {% term integration %} is used to integrate with the devices of [MyCompany](https://www.mycompany.com).
-They create various smart home appliances and devices and are known for their MyProduct.
+**我的集成** {% term integration %} 用于与 [MyCompany](https://www.mycompany.com) 的设备集成。
+他们创建各种智能家居电器和设备，以其 MyProduct 而闻名。
 ```
 
-## Exceptions
+## 例外
 
-Integrations that do not integrate with a device or service, such as internal integrations, can't include a description of the device or service, and are exempt.
+不与设备或服务集成的集成，例如内部集成，不能包含设备或服务的描述，并且被豁免。

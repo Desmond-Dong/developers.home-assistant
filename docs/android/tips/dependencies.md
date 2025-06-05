@@ -1,67 +1,67 @@
 ---
-title: "Android dependencies"
-sidebar_label: "Dependencies"
+title: "Android 依赖"
+sidebar_label: "依赖"
 ---
 
-## Version catalog
+## 版本目录
 
-We use the [version catalog](https://docs.gradle.org/current/userguide/version_catalogs.html) to manage all libraries directly used in the project. This is the **only allowed method** for adding dependencies. Adding a dependency outside of the catalog is strictly forbidden to maintain consistency and traceability.
+我们使用 [版本目录](https://docs.gradle.org/current/userguide/version_catalogs.html) 来管理项目中直接使用的所有库。这是添加依赖的 **唯一允许方法**。在目录之外添加依赖是严格禁止的，以保持一致性和可追溯性。
 
-### Benefits of using a version catalog
+### 使用版本目录的好处
 
-- **Centralized management**: All dependencies are defined in one place (`gradle/libs.versions.toml`), making it easier to track and update them.
-- **Consistency**: Ensures that all modules use the same versions of shared dependencies.
-- **Simplified updates**: Makes it easier to update dependencies across the entire project.
+- **集中管理**：所有依赖都定义在一个地方（`gradle/libs.versions.toml`），使追踪和更新变得更加容易。
+- **一致性**：确保所有模块使用相同版本的共享依赖。
+- **简化更新**：使整个项目中的依赖更新变得更加容易。
 
-## Managing dependencies and lockfiles
+## 管理依赖和锁定文件
 
-This project utilizes Gradle's [dependency locking](https://docs.gradle.org/current/userguide/dependency_locking.html) feature to ensure consistent and reproducible builds by tracking the precise versions of all libraries used.
+本项目利用 Gradle 的 [依赖锁定](https://docs.gradle.org/current/userguide/dependency_locking.html) 功能，通过追踪所有使用库的精确版本，以确保构建的一致性和可重现性。
 
-### Why use dependency locking
+### 为什么使用依赖锁定
 
-- **Reproducible builds**: Ensures that builds are consistent across different environments by locking the exact versions of all dependencies.
-- **Avoids surprises**: Prevents unexpected updates to transitive dependencies that could break the build.
+- **可重现的构建**：通过锁定所有依赖的确切版本，确保不同环境中的构建一致。
+- **避免意外**：防止意外更新会破坏构建的传递依赖。
 
-### Updating dependencies and lockfiles
+### 更新依赖和锁定文件
 
-When adding or updating a dependency in `gradle/libs.versions.toml`, it's crucial to also update the corresponding lockfiles. The lockfiles capture the exact versions of all direct and transitive dependencies.
+在 `gradle/libs.versions.toml` 中添加或更新依赖时，重要的是要同时更新相应的锁定文件。锁定文件捕获所有直接和传递依赖的确切版本。
 
-To update the lockfiles, run the following command from the project root:
+要更新锁定文件，请从项目根目录运行以下命令：
 
 ```bash
 ./gradlew alldependencies --write-locks
 ```
 
-This command resolves all dependencies and updates the gradle.lockfile in each module.
+该命令解析所有依赖并更新每个模块中的 gradle.lockfile。
 
 :::info
-If the version catalog is updated but the lockfiles are not updated, the CI pipeline will fail.
+如果版本目录被更新但锁定文件未更新，CI 管道将会失败。
 :::
 
-## Automated dependency updates with Renovate
+## 使用 Renovate 自动化依赖更新
 
-To streamline dependency management, we've integrated [Renovate](https://docs.renovatebot.com/) into the repository. Renovate automatically creates pull requests to update dependencies and the lockfiles.
+为简化依赖管理，我们将 [Renovate](https://docs.renovatebot.com/) 集成到存储库中。Renovate 自动创建拉取请求以更新依赖和锁定文件。
 
-### How Renovate works
+### Renovate 的工作原理
 
-- **Automated updates**: Renovate scans the project for outdated dependencies and creates pull requests to update them.
-- **Lockfile updates**: Renovate ensures that lockfiles are updated alongside the dependencies.
-- **Custom configuration**: Renovate is configured to respect the project's versioning policies and update strategies.
+- **自动更新**：Renovate 扫描项目中的过时依赖，并创建拉取请求以更新它们。
+- **锁定文件更新**：Renovate 确保锁定文件与依赖一起更新。
+- **自定义配置**：Renovate 被配置为遵循项目的版本策略和更新策略。
 
 :::note
-Renovate is configured to wait 3 days after a new release of a library is published before opening a pull request. This delay allows early adopters to identify and report any obvious issues.
+Renovate 被配置为在库的新版本发布后等待 3 天再打开拉取请求。这个延迟允许早期采用者识别和报告任何明显的问题。
 :::
 
-### Benefits of using Renovate
+### 使用 Renovate 的好处
 
-- **Saves time**: Automates the tedious process of checking for and updating dependencies.
-- **Reduces risk**: Ensures that updates are applied consistently and tested through the CI pipeline.
-- **Improves security**: Keeps dependencies up-to-date, reducing the risk of vulnerabilities.
+- **节省时间**：自动化检查和更新依赖的繁琐过程。
+- **降低风险**：确保更新一致地应用并通过 CI 管道进行测试。
+- **提高安全性**：保持依赖更新，降低漏洞风险。
 
-## Using non-stable versions
+## 使用非稳定版本
 
-While we aim to stay up to date with the libraries we use, we prioritize stability. Therefore, we avoid using `alpha`, `beta`, `rc`, or other non-stable versions.
+尽管我们希望与所使用的库保持最新，但我们优先考虑稳定性。因此，我们避免使用 `alpha`、`beta`、`rc` 或其他非稳定版本。
 
 :::note
-In very specific cases, we have agreed on a PR to use an `alpha` version to access new features. However, this comes with the cost of addressing issues after each update, as the API is not stable. A notable example is the `wear-compose-material` library.
+在非常特定的情况下，我们已经同意通过拉取请求使用 `alpha` 版本来获取新特性。然而，这将伴随在每次更新后解决问题的成本，因为 API 不稳定。一个显著的例子是 `wear-compose-material` 库。
 :::

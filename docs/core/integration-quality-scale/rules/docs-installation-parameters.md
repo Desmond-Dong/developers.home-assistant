@@ -1,41 +1,39 @@
 ---
-title: "The documentation describes all integration installation parameters"
+title: "文档描述了所有集成安装参数"
 ---
 
-## Reasoning
+## 理由
 
-When setting up an integration, there's nothing more frustrating than not knowing what information is asked for.
-To improve the user experience, the documentation should describe all the parameters that are required during the installation process.
-This should help the user to gather all the necessary information before starting the installation process.
+在设置集成时，没有什么比不知道需要什么信息更令人沮丧的了。为了改善用户体验，文档应该描述在安装过程中所需的所有参数。这应该帮助用户在开始安装过程之前收集所有必要的信息。
 
-## Example implementation
+## 示例实现
 
-In case an integration is used via a config flow:
+如果通过配置流程使用集成：
 
 ```markdown showLineNumbers
 {% configuration_basic %}
 Host:
-    description: "The IP address of your bridge. You can find it in your router or in the Integration app under **Bridge Settings** > **Local API**."
+    description: "您的桥接设备的IP地址。您可以在路由器中找到它，或在集成应用程序中的 **桥接设置** > **本地API** 下找到。"
 Local access token:
-    description: "The local access token for your bridge. You can find it in the Integration app under **Bridge Settings** > **Local API**."
+    description: "您的桥接设备的本地访问令牌。您可以在集成应用程序中的 **桥接设置** > **本地API** 下找到。"
 {% endconfiguration_basic %}
 ```
 
-In case an integration is set up via YAML in the `configuration.yaml`:
+如果通过 `configuration.yaml` 中的 YAML 设置集成：
 
 ```markdown showLineNumbers
 {% configuration %}
 Host:
-    description: "The IP address of your bridge. You can find it in your router or in the Integration app under **Bridge Settings** -> **Local API**."
+    description: "您的桥接设备的IP地址。您可以在路由器中找到它，或在集成应用程序中的 **桥接设置** -> **本地API** 下找到。"
     required: false
     type: string
 Local access token:
-    description: "The local access token for your bridge. You can find it in the Integration app under **Bridge Settings** -> **Local API**."
+    description: "您的桥接设备的本地访问令牌。您可以在集成应用程序中的 **桥接设置** -> **本地API** 下找到。"
     required: false
     type: string
 {% endconfiguration %}
 ```
 
-## Exceptions
+## 例外
 
-There are no exceptions to this rule.
+此规则没有例外。

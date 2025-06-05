@@ -1,114 +1,114 @@
 ---
-title: "Android get started"
-sidebar_label: "Get started"
+title: "Android 开始使用"
+sidebar_label: "开始使用"
 ---
 
-## Getting started with Home Assistant Android development
+## 开始使用 Home Assistant Android 开发
 
-Welcome to the Home Assistant Android development guide! This document will help you set up your environment, fork the repository, and build your first app.
+欢迎来到 Home Assistant Android 开发指南！本文档将帮助您设置您的环境、分叉仓库，并构建您的第一个应用程序。
 
-## Setting up your development environment
+## 设置开发环境
 
-To get started, install the latest stable version of [Android Studio](https://developer.android.com/studio). This is the only tool you need to build the applications.
+要开始，安装最新的稳定版 [Android Studio](https://developer.android.com/studio)。这是构建应用程序所需的唯一工具。
 
-## Fork, clone, and create a branch
+## 分叉、克隆和创建分支
 
-### Fork the repository
+### 分叉仓库
 
-1. Open the [Home Assistant Android repository](https://github.com/home-assistant/android).
-2. Click **Fork** to create your own copy of the repository.
+1. 打开 [Home Assistant Android 仓库](https://github.com/home-assistant/android)。
+2. 点击 **Fork** 创建您自己的仓库副本。
 
 :::tip
-If you encounter any issues, refer to the [GitHub documentation on forking a repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo).
+如果您遇到任何问题，请参考 [GitHub 关于分叉仓库的文档](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo)。
 :::
 
-### Clone your forked repository
+### 克隆您的分叉仓库
 
-Once you've forked the repository, clone it to your local machine using the following command:
+一旦您分叉了仓库，使用以下命令将其克隆到本地机器上：
 
 ```bash
 git clone https://github.com/<your-github-username>/android.git
 ```
 
-Alternatively, you can use Android Studio:
+或者，您可以使用 Android Studio：
 
-1. Go to `File -> New -> Project from Version Control...`.
-2. Enter your repository URL and clone it.
+1. 前往 `File -> New -> Project from Version Control...`。
+2. 输入您的仓库 URL 并克隆它。
 
-### Create a branch
+### 创建分支
 
-Before making any changes, create a new branch with a meaningful name that reflects the work you are doing. For example:
+在进行任何更改之前，请创建一个有意义的名称的新分支，以反映您正在进行的工作。例如：
 
 ```bash
 git checkout -b feature/add-new-feature
 ```
 
 :::tip
-If you're new to Git, check out the [Git Branching Guide](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging). You can also create branches directly in Android Studio.
+如果您是 Git 新手，请查看 [Git 分支指南](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging)。您也可以直接在 Android Studio 中创建分支。
 :::
 
-## Build the Home Assistant applications
+## 构建 Home Assistant 应用程序
 
-Once you have the repository cloned locally, you can build the app using Android Studio or the terminal.
+一旦您在本地克隆了仓库，您可以使用 Android Studio 或终端构建应用程序。
 
-### From Android Studio
+### 从 Android Studio
 
-1. Open the project in Android Studio.
-2. Sync the Gradle files.
-3. Click the green **Play** button in the top bar. Android Studio will automatically create an emulator and run the app for you.
+1. 在 Android Studio 中打开项目。
+2. 同步 Gradle 文件。
+3. 点击顶部的绿色 **Play** 按钮。Android Studio 将自动创建一个模拟器并为您运行应用程序。
 
-### From the terminal
+### 从终端
 
 :::info
-You will need the `JAVA_HOME` environment variable set to a JDK. We are currently using the JDK 21.
+您需要将 `JAVA_HOME` 环境变量设置为 JDK。我们当前使用 JDK 21。
 :::
 
-#### On macOS/Linux
+#### 在 macOS/Linux 上
 
 ```bash
 ./gradlew assembleDebug
 ```
 
-#### On Windows
+#### 在 Windows 上
 
 ```powershell
 gradlew.bat assembleDebug
 ```
 
 :::info
-If you need to create a release build, follow the [release build instructions](/docs/android/tips/release).
+如果您需要创建发布版本，请按照 [发布版本说明](/docs/android/tips/release) 操作。
 :::
 
-## Firebase setup
+## Firebase 设置
 
-Firebase is used for notifications. If you don't need these features, you should use a mocked Firebase configuration.
+Firebase 用于通知。如果您不需要这些功能，您应该使用模拟的 Firebase 配置。
 
 :::info
-You can still send notifications through the WebSocket without using Firebase.
+您仍然可以通过 WebSocket 发送通知，而不使用 Firebase。
 :::
 
-### Setting up a mock Firebase project
+### 设置模拟 Firebase 项目
 
-If you don't need real Firebase functionality, you can use the mock configuration:
+如果您不需要真实的 Firebase 功能，可以使用模拟配置：
 
-1. Copy the file located at `/.github/mock-google-services.json`.
-2. Rename and place a copy of this file as `google-services.json` in each of the following folders:
+1. 复制位于 `/.github/mock-google-services.json` 的文件。
+2. 重命名并将该文件的副本放置为 `google-services.json` 在以下每个文件夹中：
    - `/app`
    - `/automotive`
    - `/wear`
-3. After completing this step, you should have the following files in your project:
+3. 完成此步骤后，您的项目中应包含以下文件：
    - `/app/google-services.json`
    - `/automotive/google-services.json`
    - `/wear/google-services.json`
 
-### Setting up a real Firebase project
+### 设置真实的 Firebase 项目
 
-Follow our [Push notification guide](/docs/android/tips/fcm_push_notification) for additional setup instructions.
+请遵循我们的 [推送通知指南](/docs/android/tips/fcm_push_notification)，以获取其他设置说明。
 
-## What's next?
+## 接下来是什么？
 
-Now that you've built the app, explore the rest of the documentation to deepen your understanding of the project. A good starting point is the [Architecture guide](/docs/android/architecture), which explains the general structure of the codebase.
+现在您已经构建了应用程序，请浏览其余文档以加深对项目的理解。一个好的起点是 [架构指南](/docs/android/architecture)，其中解释了代码库的一般结构。
 
-## Need help?
+## 需要帮助？
 
-If you get stuck, don't hesitate to ask for help! **[Join our Discord community](https://discord.gg/c5DvZ4e)**, make sure you select the developer role and head to the **[Android](https://discord.com/channels/330944238910963714/1346948551892009101)** project thread to connect with other contributors for assistance.
+如果您遇到困难，请随时寻求帮助！**[加入我们的 Discord 社区](https://discord.gg/c5DvZ4e)**，确保选择开发者角色并前往 **[Android](https://discord.com/channels/330944238910963714/1346948551892009101)** 项目线程以与其他贡献者联系以获得帮助。

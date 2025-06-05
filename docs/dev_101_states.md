@@ -1,26 +1,26 @@
 ---
-title: "States"
+title: "状态"
 ---
 
-Home Assistant keeps track of the states of entities in a state machine. The state machine has very few requirements:
+Home Assistant 跟踪状态机中实体的状态。状态机的要求非常少：
 
-- Each state is related to an entity identified by an entity id. This id is made up of a domain and an object id. For example `light.kitchen_ceiling`. You can make up any combination of domain and object id, even overwriting existing states.
-- Each state has a primary attribute that describes the state of the entity. In the case of a light this could be for example "on" and "off". You can store anything you want in the state, as long as it's a string (will be converted if it's not).
-- You can store more information about an entity by setting attributes. Attributes is a dictionary that can contain any data that you want. The only requirement is that it's JSON serializable, so you're limited to numbers, strings, dictionaries and lists.
+- 每个状态与通过实体 ID 识别的实体相关。这个 ID 由一个域和一个对象 ID 组成。例如 `light.kitchen_ceiling`。您可以随意组合域和对象 ID，甚至可以覆盖现有状态。
+- 每个状态都有一个主要属性描述实体的状态。对于灯来说，这个状态可以是“开”和“关”。您可以在状态中存储任何您想要的内容，只要它是字符串（如果不是，将被转换）。
+- 您可以通过设置属性存储更多关于实体的信息。属性是一个字典，可以包含您想要的任何数据。唯一的要求是它必须是 JSON 可序列化的，因此您只能使用数字、字符串、字典和列表。
 
-[Description of the state object.](https://www.home-assistant.io/docs/configuration/state_object/)
+[状态对象的描述。](https://www.home-assistant.io/docs/configuration/state_object/)
 
-## Using states in your component
+## 在组件中使用状态
 
-This is a simple tutorial/example on how to create and set states. We will do our work in a component called "hello_state". The purpose of this component is to display a given text in the frontend.
+这是一个关于如何创建和设置状态的简单教程/示例。我们将在一个叫做 "hello_state" 的组件中进行工作。此组件的目的是在前端显示给定的文本。
 
-To get started, create the file `<config dir>/custom_components/hello_state.py` and copy the below example code.
+要开始，请创建文件 `<config dir>/custom_components/hello_state.py` 并复制以下示例代码。
 
 ```python
 """
-Support for showing text in the frontend.
+支持在前端显示文本。
 
-For more details about this component, please refer to the documentation at
+有关此组件的更多详细信息，请参考文档：
 https://developers.home-assistant.io/docs/dev_101_states
 """
 import logging
@@ -31,17 +31,17 @@ DOMAIN = "hello_state"
 
 
 def setup(hass, config):
-    """Setup the Hello State component. """
-    _LOGGER.info("The 'hello state' component is ready!")
+    """设置 Hello State 组件。 """
+    _LOGGER.info("‘hello state’ 组件已经准备好！")
 
     return True
 ```
 
-1. In the file header we decided to add some details: A short description and the link to the documentation.
-2. We want to do some logging. This means that we import the Python logging module and create an alias.
-3. The component name is equal to the domain name.
-4. The `setup` function will take care of the initialization of our component.
-   The component will only write a log message. Keep in mind for later that you have several options for the severity:
+1. 在文件头部，我们决定添加一些细节：一个简短的描述和文档的链接。
+2. 我们希望进行一些日志记录。这意味着我们导入 Python 的日志模块并创建一个别名。
+3. 组件名称等同于域名。
+4. `setup` 函数将负责初始化我们的组件。
+   该组件只会写一条日志消息。请记住，以后您有多个严重程度的选项：
 
    - `_LOGGER.info(msg)`
    - `_LOGGER.warning(msg)`
@@ -49,21 +49,21 @@ def setup(hass, config):
    - `_LOGGER.critical(msg)`
    - `_LOGGER.exception(msg)`
 
-5. We return `True` if everything is ok.
+5. 如果一切正常，我们返回 `True`。
 
-Add the component to your `configuration.yaml` file.
+将组件添加到您的 `configuration.yaml` 文件中。
 
 ```yaml
 hello_state:
 ```
 
-After a start or a restart of Home Assistant the component will create an entry in the log.
+在启动或重启 Home Assistant 后，组件将在日志中创建一个条目。
 
 ```log
-16-03-12 14:16:42 INFO (MainThread) [custom_components.hello_state] The 'hello state' component is ready!
+16-03-12 14:16:42 INFO (MainThread) [custom_components.hello_state] ‘hello state’ 组件已经准备好！
 ```
 
-The next step is the introduction of configuration options. A user can pass configuration options to our component via `configuration.yaml`. To use them we'll use the passed in `config` variable to our `setup` method.
+下一步是引入配置选项。用户可以通过 `configuration.yaml` 向我们的组件传递配置选项。为了使用它们，我们将使用传入的 `config` 变量到我们的 `setup` 方法中。
 
 ```python
 import logging
@@ -73,28 +73,28 @@ _LOGGER = logging.getLogger(__name__)
 DOMAIN = "hello_state"
 
 CONF_TEXT = "text"
-DEFAULT_TEXT = "No text!"
+DEFAULT_TEXT = "没有文本！"
 
 
 def setup(hass, config):
-    """Set up the Hello State component. """
-    # Get the text from the configuration. Use DEFAULT_TEXT if no name is provided.
+    """设置 Hello State 组件。 """
+    # 从配置中获取文本。如果未提供名称，则使用 DEFAULT_TEXT。
     text = config[DOMAIN].get(CONF_TEXT, DEFAULT_TEXT)
 
-    # States are in the format DOMAIN.OBJECT_ID
+    # 状态格式为 DOMAIN.OBJECT_ID
     hass.states.set("hello_state.Hello_State", text)
 
     return True
 ```
 
-To use the latest feature of our component, update the entry in your `configuration.yaml` file.
+要使用我们组件的最新功能，请更新您的 `configuration.yaml` 文件中的条目。
 
 ```yaml
 hello_state:
-  text: 'Hello, World!'
+  text: '你好，世界！'
 ```
 
-Thanks to `DEFAULT_TEXT` variable the component will launch even if no `text:` field is used in the `configuration.yaml` file. Quite often there are variables which are required. It's important to check if all mandatory configuration variables are provided. If not, the setup should fail. We will use `voluptuous` as a helper to achieve this. The next listing shows the essential parts.
+由于 `DEFAULT_TEXT` 变量，即使在 `configuration.yaml` 文件中未使用 `text:` 字段，组件仍然会启动。通常会有一些必需的变量。检查是否提供了所有的强制配置变量很重要。如果没有，设置应该失败。我们将使用 `voluptuous` 作为辅助工具来实现这一点。下一段列出了重要部分。
 
 ```python
 import voluptuous as vol
@@ -106,25 +106,25 @@ CONFIG_SCHEMA = vol.Schema(
 )
 ```
 
-Now, when `text:` is missing from the config, Home Assistant will alert the user and not setup your component.
+现在，当配置中缺少 `text:` 时，Home Assistant 会提醒用户并不会设置您的组件。
 
-After a start or a restart of Home Assistant the component will be visible in the frontend if the `configuration.yaml` file is up-to-date.
+在启动或重启 Home Assistant 后，如果 `configuration.yaml` 文件是最新的，组件将在前端可见。
 
 <p class='img'>
 <img src='/img/en/development/create-component01.png' />
 </p>
 
-In order to expose attributes for a platform, you will need to define a property called `extra_state_attributes` on the entity class, which will return a dictionary of attributes:
+为了在一个平台上暴露属性，您需要在实体类中定义一个名为 `extra_state_attributes` 的属性，该属性将返回一个属性字典：
 
 ```python
 @property
 def extra_state_attributes(self):
-    """Return entity specific state attributes."""
+    """返回实体特定的状态属性。"""
     return self._attributes
 ```
 
 :::tip
-Entities also have a similar property `state_attributes`, which should not be overridden by integrations. This property is used by base entity components to add standard sets of attributes to a state. Example: The light component uses `state_attributes` to add brightness to the state dictionary. If you are designing a new integration, you should define `extra_state_attributes` instead.
+实体还有一个类似的属性 `state_attributes`，该属性不应被集成覆盖。此属性由基础实体组件用于向状态添加标准属性集。示例：灯光组件使用 `state_attributes` 将亮度添加到状态字典中。如果您正在设计一个新的集成，您应该定义 `extra_state_attributes`。
 :::
 
-To get your integration included in the Home Assistant releases, follow the steps described in the [Submit your work](development_submitting.md) section. Basically you only need to move your integration into the `homeassistant/component/` directory of your fork and create a Pull Request.
+要让您的集成包含在 Home Assistant 发布中，请按照 [提交您的工作](development_submitting.md) 部分中描述的步骤进行操作。基本上，您只需将您的集成移动到您的分叉的 `homeassistant/component/` 目录中并创建一个拉取请求。

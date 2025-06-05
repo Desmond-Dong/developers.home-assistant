@@ -1,62 +1,58 @@
 ---
-title: Update entity
-sidebar_label: Update
+title: 更新实体
+sidebar_label: 更新
 ---
 
-An update entity is an entity that indicates if an update is available for a
-device or service. This can be any update, including update of a firmware
-for a device like a light bulb or router, or software updates for things like
-add-ons or containers.
+更新实体是指示设备或服务是否有可用更新的实体。这可以是任何更新，包括对设备（如灯泡或路由器）的固件更新，或对附加组件或容器等的软件下载更新。
 
-It can be used for:
+它可以用于：
 
-- Providing an indicator if an update is available for a device or service.
-- An install method to allow installing an update or a specific version
-  of the software.
-- Allow for offering backups before installing a new update.
+- 提供指示，如果设备或服务有可用更新。
+- 一种安装方法，用于允许安装更新或特定版本的软件。
+- 允许在安装新更新之前提供备份。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应始终只从内存返回信息，而不执行 I/O（如网络请求）。实现 `update()` 或 `async_update()` 来获取数据。
 :::
 
-| Name | Type | Default | Description
+| 名称 | 类型 | 默认值 | 描述
 | ---- | ---- | ------- | -----------
-| auto_update | bool | `False` | The device or service that the entity represents has auto update logic. When this is set to `True` you can not skip updates.
-| display_precision | int | `0` | Number of decimal digits for display of update progress.
-| in_progress | bool | `None` | Update installation progress. Should return a boolean (True if in progress, False if not).
-| installed_version | str | `None` | The currently installed and used version of the software.
-| latest_version | str | `None` | The latest version of the software available.
-| release_summary | str | `None` | Summary of the release notes or changelog. This is not suitable for long changelogs but merely suitable for a short excerpt update description of max 255 characters.
-| release_url | str | `None` | URL to the full release notes of the latest version available.
-| title | str | `None` | Title of the software. This helps to differentiate between the device or entity name versus the title of the software installed.
-| update_percentage | int, float | `None` | Update installation progress. Can either return a number to indicate the progress from 0 to 100% or None.
+| auto_update | bool | `False` | 实体所代表的设备或服务具有自动更新逻辑。当此项设置为 `True` 时，您不能跳过更新。
+| display_precision | int | `0` | 更新进度显示的小数位数。
+| in_progress | bool | `None` | 更新安装进度。应返回一个布尔值（如果正在进行则为 True，否则为 False）。
+| installed_version | str | `None` | 当前安装并使用的软件版本。
+| latest_version | str | `None` | 可用的软件的最新版本。
+| release_summary | str | `None` | 发布说明或变更日志的摘要。这不适合较长的变更日志，而只是适合最多 255 个字符的简短更新描述。
+| release_url | str | `None` | 可用最新版本的完整发布说明的 URL。
+| title | str | `None` | 软件的标题。这有助于区分设备或实体名称与已安装软件的标题。
+| update_percentage | int, float | `None` | 更新安装进度。可以返回一个数字以指示从 0 到 100% 的进度或返回 None。
 
-Other properties that are common to all entities such as `device_class`, `entity_category`, `icon`, `name` etc are still applicable.
+其他所有实体通用的属性，如 `device_class`、`entity_category`、`icon`、`name` 等，仍然适用。
 
-## Supported features
+## 支持的功能
 
-Supported features are defined by using values in the `UpdateEntityFeature` enum.
+支持的功能通过使用 `UpdateEntityFeature` 枚举中的值来定义。
 
-| Value | Description |
+| 值 | 描述 |
 |----------|--------------------------------------|
-| 'BACKUP' | A backup can be made automatically, before installing an update.
-| 'INSTALL' | The update can be installed from Home Assistant.
-| 'PROGRESS' | This integration is able to provide progress information. If omitted, Home Assistant will try to provide a progress status; although it is better if the progress can be extracted from the device or service API.
-| 'SPECIFIC_VERSION' | A specific version of an update can be installed using the `update.install` service action.
-| 'RELEASE_NOTES' | The entity provides methods to fetch a complete changelog.
+| 'BACKUP' | 更新前可以自动进行备份。
+| 'INSTALL' | 可以从 Home Assistant 安装更新。
+| 'PROGRESS' | 此集成能够提供进度信息。如果省略，Home Assistant 将尝试提供进度状态；虽然如果可以从设备或服务 API 中提取进度，则更好。
+| 'SPECIFIC_VERSION' | 可以使用 `update.install` 服务操作安装特定版本的更新。
+| 'RELEASE_NOTES' | 实体提供方法来获取完整的变更日志。
 
-## Methods
+## 方法
 
-### Compare versions
+### 比较版本
 
-This method should be implemented when needed to override the default version comparison logic.
-Here's an example:
+当需要覆盖默认的版本比较逻辑时，应实现此方法。
+以下是一个示例：
 
 ```python
 def version_is_newer(self, latest_version: str, installed_version: str) -> bool:
-    """Return True if latest_version is newer than installed_version."""
+    """如果 latest_version 比 installed_version 新则返回 True。"""
     return AwesomeVersion(
         latest_version,
         find_first_match=True,
@@ -68,65 +64,59 @@ def version_is_newer(self, latest_version: str, installed_version: str) -> bool:
     )
 ```
 
-It allows developers to specify custom logic for determining if one version is newer than another. First attempt should be based on the strategies provided by the [AwesomeVersion library](https://github.com/ludeeus/awesomeversion?tab=readme-ov-file#awesomeversion-class).
+它允许开发人员指定自定义逻辑，以确定一个版本是否比另一个版本更新。首次尝试应基于 [AwesomeVersion 库](https://github.com/ludeeus/awesomeversion?tab=readme-ov-file#awesomeversion-class) 提供的策略。
 
-### Install
+### 安装
 
-This method can be implemented so users can install an offered update directly
-from within Home Assistant.
+可以实现此方法，以便用户可以直接从 Home Assistant 安装提供的更新。
 
-This method requires `UpdateEntityFeature.INSTALL` to be set. Additionally, if this
-integration supports installing specific version or is capable of backing up
-before starting the update installation process, `UpdateEntityFeature.SPECIFIC_VERSION` and
-`UpdateEntityFeature.BACKUP` can be set respectively.
+此方法需要设置 `UpdateEntityFeature.INSTALL`。此外，如果此集成支持安装特定版本或能够在开始更新安装过程之前进行备份，可以分别设置 `UpdateEntityFeature.SPECIFIC_VERSION` 和 `UpdateEntityFeature.BACKUP`。
 
 ```python
 class MyUpdate(UpdateEntity):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def install(
         self, version: str | None, backup: bool, **kwargs: Any
     ) -> None:
-        """Install an update."""
+        """安装更新。"""
 
     async def async_install(
         self, version: str | None, backup: bool, **kwargs: Any
     ) -> None:
-        """Install an update.
+        """安装更新。
 
-        Version can be specified to install a specific version. When `None`, the
-        latest version needs to be installed.
+        可以指定版本以安装特定版本。当 `None` 时，需要安装最新版本。
 
-        The backup parameter indicates a backup should be taken before
-        installing the update.
+        备份参数表示在安装更新之前应进行备份。
         """
 ```
 
-### Release notes
+### 发布说明
 
-This method can be implemented so users can can get the full release notes in the more-info dialog of the Home Assistant Frontend before they install the update.
+可以实现此方法，以便用户可以在安装更新之前在 Home Assistant 前端的更多信息对话框中获取完整的发布说明。
 
-The returned string can contain markdown, and the frontend will format that correctly.
+返回的字符串可以包含 markdown，前端将正确格式化它。
 
-This method requires `UpdateEntityFeature.RELEASE_NOTES` to be set.
+此方法需要设置 `UpdateEntityFeature.RELEASE_NOTES`。
 
 ```python
 class MyUpdate(UpdateEntity):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def release_notes(self) -> str | None:
-        """Return the release notes."""
+        """返回发布说明。"""
         return "Lorem ipsum"
 
     async def async_release_notes(self) -> str | None:
-        """Return the release notes."""
+        """返回发布说明。"""
         return "Lorem ipsum"
 ```
 
-### Available device classes
+### 可用设备类别
 
-Optionally specifies what type of entity it is.
+可选地指定它是什么类型的实体。
 
-| Constant | Description
+| 常量 | 描述
 | ----- | -----------
-| `UpdateDeviceClass.FIRMWARE` | The update is a firmware update for a device.
+| `UpdateDeviceClass.FIRMWARE` | 该更新是设备的固件更新。

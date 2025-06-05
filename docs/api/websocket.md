@@ -2,30 +2,30 @@
 title: "WebSocket API"
 ---
 
-Home Assistant hosts a WebSocket API at `/api/websocket`. This API can be used to stream information from a Home Assistant instance to any client that implements WebSockets. We maintain a [JavaScript library](https://github.com/home-assistant/home-assistant-js-websocket) which we use in our frontend.
+Home Assistant 在 `/api/websocket` 处托管一个 WebSocket API。这个 API 可以用来将信息从 Home Assistant 实例流式传输到任何实现 WebSockets 的客户端。我们维护一个 [JavaScript 库](https://github.com/home-assistant/home-assistant-js-websocket)，我们在我们的前端中使用。
 
-## Server states
+## 服务器状态
 
-1. Client connects.
-1. Authentication phase starts.
-    - Server sends `auth_required` message.
-    - Client sends `auth` message.
-    - If `auth` message correct: go to 3.
-    - Server sends `auth_invalid`. Go to 6.
-1. Send `auth_ok` message
-1. Authentication phase ends.
-1. Command phase starts.
-    1. Client can send commands.
-    1. Server can send results of previous commands.
-1. Client or server disconnects session.
+1. 客户端连接。
+1. 认证阶段开始。
+    - 服务器发送 `auth_required` 消息。
+    - 客户端发送 `auth` 消息。
+    - 如果 `auth` 消息正确：进入第 3 步。
+    - 服务器发送 `auth_invalid`。进入第 6 步。
+1. 发送 `auth_ok` 消息
+1. 认证阶段结束。
+1. 命令阶段开始。
+    1. 客户端可以发送命令。
+    1. 服务器可以发送先前命令的结果。
+1. 客户端或服务器断开会话。
 
-During the command phase, the client attaches a unique identifier to each message. The server will add this identifier to each message so that the client can link each message to its origin.
+在命令阶段，客户端会为每条消息附加一个唯一标识符。服务器将把这个标识符添加到每条消息中，以便客户端可以将每条消息与其来源关联起来。
 
-## Message format
+## 消息格式
 
-Each API message is a JSON serialized object containing a `type` key. After the authentication phase messages also must contain an `id`, an integer that the caller can use to correlate messages to responses.
+每个 API 消息都是一个包含 `type` 键的 JSON 序列化对象。在认证阶段之后，消息还必须包含一个 `id`，这是一个整数，调用者可以用它来关联消息和响应。
 
-Example of an auth message:
+认证消息示例：
 
 ```json
 {
@@ -47,9 +47,9 @@ Example of an auth message:
 }
 ```
 
-## Authentication phase
+## 认证阶段
 
-When a client connects to the server, the server sends out `auth_required`.
+当客户端连接到服务器时，服务器会发送 `auth_required`。
 
 ```json
 {
@@ -58,7 +58,7 @@ When a client connects to the server, the server sends out `auth_required`.
 }
 ```
 
-The first message from the client should be an auth message. You can authorize with an access token.
+客户端的第一条消息应该是认证消息。您可以使用访问令牌进行身份验证。
 
 ```json
 {
@@ -67,7 +67,7 @@ The first message from the client should be an auth message. You can authorize w
 }
 ```
 
-If the client supplies valid authentication, the authentication phase will complete by the server sending the `auth_ok` message:
+如果客户端提供了有效的身份验证，认证阶段将通过服务器发送 `auth_ok` 消息而完成：
 
 ```json
 {
@@ -76,18 +76,18 @@ If the client supplies valid authentication, the authentication phase will compl
 }
 ```
 
-If the data is incorrect, the server will reply with `auth_invalid` message and disconnect the session.
+如果数据不正确，服务器将回复 `auth_invalid` 消息并断开会话。
 
 ```json
 {
   "type": "auth_invalid",
-  "message": "Invalid password"
+  "message": "无效的密码"
 }
 ```
 
-## Feature enablement phase
+## 功能启用阶段
 
-Clients that supports features that needs enabling should as their first message (with `"id": 1`) send a message in the form:
+支持需要启用的功能的客户端应在其第一条消息中（`"id": 1`）发送以下格式的消息：
 
 ```
 {
@@ -97,11 +97,11 @@ Clients that supports features that needs enabling should as their first message
 }
 ```
 
-As of now the only feature supported is 'coalesce_messages' which result in messages being sent coalesced in bulk instead of individually. 
+截至目前，唯一支持的功能是 'coalesce_messages'，它会导致消息以批量的方式而非单独发送。
 
-## Command phase
+## 命令阶段
 
-During this phase the client can give commands to the server. The server will respond to each command with a `result` message indicating when the command is done and if it was successful along with the context of the command.
+在此阶段，客户端可以向服务器发出命令。服务器将对每个命令响应一条 `result` 消息，指示命令何时完成，以及是否成功，以及命令的上下文。
 
 ```json
 {
@@ -118,20 +118,20 @@ During this phase the client can give commands to the server. The server will re
 }
 ```
 
-## Subscribe to events
+## 订阅事件
 
-The command `subscribe_events` will subscribe your client to the event bus. You can either listen to all events or to a specific event type. If you want to listen to multiple event types, you will have to send multiple `subscribe_events` commands.
+命令 `subscribe_events` 将使您的客户端订阅事件总线。您可以监听所有事件或特定事件类型。如果您希望监听多个事件类型，则必须发送多个 `subscribe_events` 命令。
 
 ```json
 {
   "id": 18,
   "type": "subscribe_events",
-  // Optional
+  // 可选
   "event_type": "state_changed"
 }
 ```
 
-The server will respond with a result message to indicate that the subscription is active.
+服务器将通过结果消息响应，以指示订阅处于活动状态。
 
 ```json
 {
@@ -142,7 +142,7 @@ The server will respond with a result message to indicate that the subscription 
 }
 ```
 
-For each event that matches, the server will send a message of type `event`. The `id` in the message will point at the original `id` of the `listen_event` command.
+对于每个匹配的事件，服务器将发送一条类型为 `event` 的消息。消息中的 `id` 将指向原始 `listen_event` 命令的 `id`。
 
 ```json
 {
@@ -169,7 +169,7 @@ For each event that matches, the server will send a message of type `event`. The
                ],
                "brightness":180,
                "white_value":200,
-               "friendly_name":"Bed Light"
+               "friendly_name":"床灯"
             },
             "last_updated":"2016-11-26T01:37:24.265390+00:00",
             "context": {
@@ -184,7 +184,7 @@ For each event that matches, the server will send a message of type `event`. The
             "state":"off",
             "attributes":{
                "supported_features":147,
-               "friendly_name":"Bed Light"
+               "friendly_name":"床灯"
             },
             "last_updated":"2016-11-26T01:37:10.466994+00:00",
             "context": {
@@ -206,9 +206,9 @@ For each event that matches, the server will send a message of type `event`. The
 }
 ```
 
-## Subscribe to trigger
+## 订阅触发器
 
-You can also subscribe to one or more triggers with `subscribe_trigger`. These are the same triggers syntax as used for [automation triggers](https://www.home-assistant.io/docs/automation/trigger/). You can define one or a list of triggers.
+您还可以使用 `subscribe_trigger` 订阅一个或多个触发器。这些触发器的语法与用于 [自动化触发器](https://www.home-assistant.io/docs/automation/trigger/) 的相同。您可以定义一个或多个触发器。
 
 ```json
 {
@@ -223,7 +223,7 @@ You can also subscribe to one or more triggers with `subscribe_trigger`. These a
 }
 ```
 
-As a response you get:
+响应为：
 
 ```json
 {
@@ -234,7 +234,7 @@ As a response you get:
 }
 ```
 
-For each trigger that matches, the server will send a message of type `trigger`. The `id` in the message will point at the original `id` of the `subscribe_trigger` command. Note that your variables will be different based on the used trigger.
+对于每个匹配的触发器，服务器将发送一条类型为 `trigger` 的消息。消息中的 `id` 将指向原始 `subscribe_trigger` 命令的 `id`。请注意，您的变量将基于所使用的触发器而有所不同。
 
 ```json
 {
@@ -252,7 +252,7 @@ For each trigger that matches, the server will send a message of type `trigger`.
                     "state": "off",
                     "attributes": {
                         "device_class": "motion",
-                        "friendly_name": "motion occupancy"
+                        "friendly_name": "运动占用传感器"
                     },
                     "last_changed": "2022-01-09T10:30:37.585143+00:00",
                     "last_updated": "2022-01-09T10:33:04.388104+00:00",
@@ -267,7 +267,7 @@ For each trigger that matches, the server will send a message of type `trigger`.
                     "state": "on",
                     "attributes": {
                         "device_class": "motion",
-                        "friendly_name": "motion occupancy"
+                        "friendly_name": "运动占用传感器"
                     },
                     "last_changed": "2022-01-09T10:33:04.391956+00:00",
                     "last_updated": "2022-01-09T10:33:04.391956+00:00",
@@ -279,7 +279,7 @@ For each trigger that matches, the server will send a message of type `trigger`.
                 },
                 "for": null,
                 "attribute": null,
-                "description": "state of binary_sensor.motion_occupancy"
+                "description": "binary_sensor.motion_occupancy 的状态"
             }
         },
         "context": {
@@ -291,9 +291,9 @@ For each trigger that matches, the server will send a message of type `trigger`.
 }
 ```
 
-### Unsubscribing from events
+### 取消事件订阅
 
-You can unsubscribe from previously created subscriptions. Pass the id of the original subscription command as value to the subscription field.
+您可以取消之前创建的订阅。将原始订阅命令的 id 作为值传给订阅字段。
 
 ```json
 {
@@ -303,7 +303,7 @@ You can unsubscribe from previously created subscriptions. Pass the id of the or
 }
 ```
 
-The server will respond with a result message to indicate that unsubscribing was successful.
+服务器将通过结果消息响应，以指示取消订阅成功。
 
 ```json
 {
@@ -314,16 +314,16 @@ The server will respond with a result message to indicate that unsubscribing was
 }
 ```
 
-## Fire an event
+## 触发事件
 
-This will fire an event on the Home Assistant event bus.
+这将触发 Home Assistant 事件总线上的事件。
 
 ```json
 {
   "id": 24,
   "type": "fire_event",
   "event_type": "mydomain_event",
-  // Optional
+  // 可选
   "event_data": {
     "device_id": "my-device-id",
     "type": "motion_detected"
@@ -331,7 +331,7 @@ This will fire an event on the Home Assistant event bus.
 }
 ```
 
-The server will respond with a result message to indicate that the event was fired successful.
+服务器将通过结果消息响应，以指示事件已成功触发。
 
 ```json
 {
@@ -348,9 +348,9 @@ The server will respond with a result message to indicate that the event was fir
 }
 ```
 
-## Calling a service action
+## 调用服务操作
 
-This will call a service action in Home Assistant. Right now there is no return value. The client can listen to `state_changed` events if it is interested in changed entities as a result of a call.
+这将调用 Home Assistant 中的服务操作。目前没有返回值。如果客户端对调用结果中的状态变化感兴趣，可以监听 `state_changed` 事件。
 
 ```json
 {
@@ -358,21 +358,21 @@ This will call a service action in Home Assistant. Right now there is no return 
   "type": "call_service",
   "domain": "light",
   "service": "turn_on",
-  // Optional
+  // 可选
   "service_data": {
     "color_name": "beige",
     "brightness": "101"
   }
-  // Optional
+  // 可选
   "target": {
     "entity_id": "light.kitchen"
   }
-  // Must be included for service actions that return response data
+  // 服务操作返回响应数据时必须包含
   "return_response": true
 }
 ```
 
-The server will indicate with a message indicating that the action is done executing.
+服务器将通过消息指示操作已完成执行。
 
 ```json
 {
@@ -390,11 +390,11 @@ The server will indicate with a message indicating that the action is done execu
 }
 ```
 
-The `result` of the call will always include a `response` to account for service actions that support responses. When a action that doesn't support responses is called, the value of `response` will be `null`.
+调用的 `result` 将始终包含一个 `response`，以便处理支持响应的服务操作。当调用不支持响应的操作时，`response` 的值将为 `null`。
 
-## Fetching states
+## 获取状态
 
-This will get a dump of all the current states in Home Assistant.
+这将获取 Home Assistant 中所有当前状态的快照。
 
 ```json
 {
@@ -403,7 +403,7 @@ This will get a dump of all the current states in Home Assistant.
 }
 ```
 
-The server will respond with a result message containing the states.
+服务器将通过结果消息响应，包含状态信息。
 
 ```json
 {
@@ -414,9 +414,9 @@ The server will respond with a result message containing the states.
 }
 ```
 
-## Fetching config
+## 获取配置
 
-This will get a dump of the current config in Home Assistant.
+这将获取 Home Assistant 中当前配置的快照。
 
 ```json
 {
@@ -425,7 +425,7 @@ This will get a dump of the current config in Home Assistant.
 }
 ```
 
-The server will respond with a result message containing the config.
+服务器将通过结果消息响应，包含配置。
 
 ```json
 {
@@ -436,9 +436,9 @@ The server will respond with a result message containing the config.
 }
 ```
 
-## Fetching service actions
+## 获取服务操作
 
-This will get a dump of the current service actions in Home Assistant.
+这将获取 Home Assistant 中当前服务操作的快照。
 
 ```json
 {
@@ -447,7 +447,7 @@ This will get a dump of the current service actions in Home Assistant.
 }
 ```
 
-The server will respond with a result message containing the service actions.
+服务器将通过结果消息响应，包含服务操作。
 
 ```json
 {
@@ -458,9 +458,9 @@ The server will respond with a result message containing the service actions.
 }
 ```
 
-## Fetching panels
+## 获取面板
 
-This will get a dump of the current registered panels in Home Assistant.
+这将获取 Home Assistant 中当前注册的面板的快照。
 
 ```json
 {
@@ -469,7 +469,7 @@ This will get a dump of the current registered panels in Home Assistant.
 }
 ```
 
-The server will respond with a result message containing the current registered panels.
+服务器将通过结果消息响应，包含当前注册的面板。
 
 ```json
 {
@@ -480,9 +480,9 @@ The server will respond with a result message containing the current registered 
 }
 ```
 
-## Pings and pongs
+## Ping 和 Pong
 
-The API supports receiving a ping from the client and returning a pong. This serves as a heartbeat to ensure the connection is still alive:
+API 支持接收客户端的 ping 并返回 pong。这用作心跳，以确保连接仍然有效：
 
 ```json
 {
@@ -491,7 +491,7 @@ The API supports receiving a ping from the client and returning a pong. This ser
 }
 ```
 
-The server must send a pong back as quickly as possible, if the connection is still active:
+如果连接仍然有效，服务器必须尽快发送 pong 回来：
 
 ```json
 {
@@ -500,9 +500,9 @@ The server must send a pong back as quickly as possible, if the connection is st
 }
 ```
 
-## Validate config
+## 验证配置
 
-This command allows you to validate triggers, conditions and action configurations. The keys `trigger`, `condition` and `action` will be validated as if part of an automation (so a list of triggers/conditions/actions is also allowed). All fields are optional and the result will only contain keys that were passed in.
+此命令允许您验证触发器、条件和操作配置。`trigger`、`condition` 和 `action` 键将被验证，仿佛它们是自动化的一部分（因此也允许触发器/条件/操作的列表）。所有字段都是可选的，结果将仅包含传入的键。
 
 ```json
 {
@@ -514,7 +514,7 @@ This command allows you to validate triggers, conditions and action configuratio
 }
 ```
 
-The server will respond with the validation results. Only fields will be included in the response that were also included in the command message.
+服务器将响应验证结果。仅将被包含在命令消息中的字段包含在响应中。
 
 ```json
 {
@@ -523,15 +523,15 @@ The server will respond with the validation results. Only fields will be include
   "success": true,
   "result": {
     "trigger": {"valid": true, "error": null},
-    "condition": {"valid": false, "error": "Invalid condition specified for data[0]"},
+    "condition": {"valid": false, "error": "数据[0]指定的条件无效"},
     "action": {"valid": true, "error": null}
   }
 }
 ```
 
-## Error handling
+## 错误处理
 
-If an error occurs, the `success` key in the `result` message will be set to `false`. It will contain an `error` key containing an object with two keys: `code` and `message`.
+如果发生错误，`result` 消息中的 `success` 键将设置为 `false`。它将包含一个 `error` 键，包含一个对象，其中包含两个键：`code` 和 `message`。
 
 ```json
 {
@@ -540,16 +540,16 @@ If an error occurs, the `success` key in the `result` message will be set to `fa
    "success": false,
    "error": {
       "code": "invalid_format",
-      "message": "Message incorrectly formatted: expected str for dictionary value @ data['event_type']. Got 100"
+      "message": "消息格式错误：预期字符串作为字典值 @ data['event_type']。得到 100"
    }
 }
 ```
 
-### Error handling during service action calls and translations
+### 服务操作调用和翻译中的错误处理
 
-The JSON below shows an example of an error response. If `HomeAssistantError` error (or a subclass of `HomeAssistantError`) is handled, translation information, if set, will be added to the response. 
+下面的 JSON 显示了错误响应的示例。如果处理了 `HomeAssistantError` 错误（或其子类），则相应的翻译信息（如果设置）将被添加到响应中。
 
-When handling `ServiceValidationError` (`service_validation_error`) a stack trace is printed to the logs at debug level only.
+在处理 `ServiceValidationError`（`service_validation_error`）时，堆栈跟踪将仅在调试级别记录到日志中。
 
 ```json
 {
@@ -558,7 +558,7 @@ When handling `ServiceValidationError` (`service_validation_error`) a stack trac
    "success": false,
    "error": {
       "code": "service_validation_error",
-      "message": "Option 'custom' is not a supported mode.",
+      "message": "选项 'custom' 不是支持的模式。",
       "translation_key": "unsupported_mode",
       "translation_domain": "kitchen_sink",
       "translation_placeholders": {
@@ -568,4 +568,4 @@ When handling `ServiceValidationError` (`service_validation_error`) a stack trac
 }
 ```
 
-[Read more](/docs/core/platform/raising_exceptions) about raising exceptions or and the [localization of exceptions](/docs/internationalization/core/#exceptions).
+[阅读更多](/docs/core/platform/raising_exceptions)关于引发异常或[异常的本地化](/docs/internationalization/core/#exceptions)。

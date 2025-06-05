@@ -1,108 +1,108 @@
 ---
-title: "Android linter"
-sidebar_label: "Linter"
+title: "Android 检查工具"
+sidebar_label: "检查工具"
 ---
 
-## What is a linter?
+## 什么是检查工具？
 
-A linter is a static code analyzer that helps identify well-known issues and potential improvements in your code. It goes beyond what a compiler does by ensuring proper usage of the language and adherence to best practices. While a compiler validates code against a grammar, a linter focuses on code quality and architecture.
+检查工具是一个静态代码分析器，帮助识别代码中的众所周知的问题和潜在的改进。它超越了编译器的功能，通过确保语言的正确使用和遵循最佳实践来提升代码质量。虽然编译器通过语法验证代码，但检查工具专注于代码的质量和架构。
 
 :::note
-Having no complaints from a linter doesn't mean everything is perfect. A review from another developer is still necessary to double-check.
+没有检查工具的投诉并不意味着一切都完美。仍然需要另一位开发者进行审查以进行双重检查。
 :::
 
-## Why use a linter?
+## 为什么使用检查工具？
 
-Using a linter ensures:
+使用检查工具可以确保：
 
-- **Consistency**: Enforces a standard code style, similar to our [codestyle](/docs/android/codestyle).
-- **Focus**: Allows reviewers to focus on logic rather than formatting or trivial issues.
-- **Prevention**: Helps avoid crashes and bugs by catching common mistakes, such as using APIs not supported by the target Android API level.
+- **一致性**：强制执行标准的代码风格，类似于我们的 [代码风格](/docs/android/codestyle)。
+- **专注**：使审查者能够专注于逻辑，而不是格式或琐碎的问题。
+- **预防**：通过捕捉常见错误来帮助避免崩溃和错误，例如使用不受目标 Android API 级别支持的 API。
 
-For example, failing to check the Android API version before using an unsupported API can lead to crashes.
+例如，在使用不受支持的 API 之前未检查 Android API 版本可能会导致崩溃。
 
-## Linters used in the project
+## 项目中使用的检查工具
 
 ### KTLint
 
-We use [KTLint](https://pinterest.github.io/ktlint) as our Kotlin linter, integrated via [Gradle plugin](https://github.com/JLLeitschuh/ktlint-gradle). The configuration is located in the main `build.gradle.kts` file. We mostly use the default configuration but enable [SARIF](/docs/android/tips/sarif_reports) reports for GitHub Actions to annotate issues in pull requests.
+我们使用 [KTLint](https://pinterest.github.io/ktlint) 作为我们的 Kotlin 检查工具，集成通过 [Gradle 插件](https://github.com/JLLeitschuh/ktlint-gradle)。配置位于主要的 `build.gradle.kts` 文件中。我们主要使用默认配置，但启用 [SARIF](/docs/android/tips/sarif_reports) 报告以在 GitHub Actions 中注释拉取请求中的问题。
 
-#### Ignoring an issue
+#### 忽略问题
 
-Always try to fix issues rather than ignoring them. If ignoring is necessary, follow these steps:
+始终尝试修复问题，而不是忽略它们。如果必须忽略，请遵循以下步骤：
 
-1. Use the `@Suppress` annotation for specific constructs:
+1. 对特定结构使用 `@Suppress` 注解：
    ```kotlin
    @Suppress("trailing-comma-on-call-site")
     fun myCallSiteExample() {
         myFunction(
             "value1",
-            "value2", // This trailing comma would normally cause a warning
+            "value2", // 这个尾随逗号通常会导致警告
         )
     }
    ```
 
-2. For project-wide suppression, update the `.editorconfig` file as per [this guide](https://pinterest.github.io/ktlint/0.49.1/faq/#how-do-i-globally-disable-a-rule-without-editorconfig). Open a dedicated PR with an explanation for disabling the rule:
+2. 对于整个项目的抑制，请按照 [本指南](https://pinterest.github.io/ktlint/0.49.1/faq/#how-do-i-globally-disable-a-rule-without-editorconfig) 更新 `.editorconfig` 文件。打开一个专门的 PR，并解释禁用规则的原因：
     ```editorconfig
     ...
-    # Allow trailing commas but do not enfoce it to follow Kotlin convention
+    # 允许尾随逗号，但不强制遵循 Kotlin 约定
     ktlint_standard_trailing-comma-on-call-site = disabled
     ij_kotlin_allow_trailing_comma_on_call_site = true
     ktlint_standard_trailing-comma-on-declaration-site = disabled
     ij_kotlin_allow_trailing_comma = true
     ```
 
-#### Running KTLint locally
+#### 在本地运行 KTLint
 
-Run the following command to check all code in the repository:
+运行以下命令检查版本库中的所有代码：
 
 ```bash
 ./gradlew ktlintCheck :build-logic:convention:ktlintCheck --continue
 ```
 
 :::note
-Use `--continue` to get all issues across Gradle modules instead of stopping at the first failure.
+使用 `--continue` 可以获取所有 Gradle 模块中的问题，而不是在第一个失败时停止。
 :::
 
-You can add this check to be run automatically through a git [pre-commit hook](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) by running this command
+您可以通过运行以下命令将此检查添加到 git [预提交钩子](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks) 以自动运行
 
 ```bash
 ./gradlew addKtlintCheckGitPreCommitHook
 ```
 
-### Android Linter
+### Android 检查工具
 
-The Android linter is enabled for all variants to ensure comprehensive checks. Its configuration is located in `build-logic/convention/src/main/kotlin/AndroidCommonConventionPlugin.kt`. SARIF reports are generated for GitHub Actions to annotate issues in pull requests.
+Android 检查工具已为所有变体启用，以确保全面检查。其配置位于 `build-logic/convention/src/main/kotlin/AndroidCommonConventionPlugin.kt`。为 GitHub Actions 生成 SARIF 报告，以注释拉取请求中的问题。
 
-#### Ignoring an issue
+#### 忽略问题
 
-Follow these steps to ignore an issue:
+按照以下步骤忽略问题：
 
-1. Use the `@Suppress` annotation for specific constructs.
-2. Add the issue to the `lint-baseline.xml` file. (See [how to](#updating-the-baseline))
-3. Disable the issue in the lint settings directly.
+1. 对特定结构使用 `@Suppress` 注解。
+2. 将问题添加到 `lint-baseline.xml` 文件中。（查看 [如何](#updating-the-baseline)）
+3. 直接在 lint 设置中禁用该问题。
 
-If you disable an issue, open a dedicated PR with an explanation.
+如果您禁用问题，请打开一个专门的 PR 进行解释。
 
-#### Running the Android linter locally
+#### 在本地运行 Android 检查工具
 
-Run the following command:
+运行以下命令：
 
 ```bash
 ./gradlew lintDebug --continue
 ```
 
 :::note
-Use `--continue` to get all issues across Gradle modules instead of stopping at the first failure.
+使用 `--continue` 可以获取所有 Gradle 模块中的问题，而不是在第一个失败时停止。
 :::
 
-## Managing lint rules
+## 管理 lint 规则
 
-### Changing the lint level of an issue
+### 更改问题的 lint 级别
 
-The Android linter comes with predefined rules bundled into the Android Gradle plugin. Some libraries, like [Timber](https://github.com/JakeWharton/timber), also provide custom lint rules.
+Android 检查工具附带了捆绑在 Android Gradle 插件中的预定义规则。一些库，例如 [Timber](https://github.com/JakeWharton/timber)，还提供自定义 lint 规则。
 
-To change the severity of a rule, update the Gradle configuration in `build-logic/convention/src/main/kotlin/AndroidCommonConventionPlugin.kt`:
+要更改规则的严重性，请在 `build-logic/convention/src/main/kotlin/AndroidCommonConventionPlugin.kt` 中更新 Gradle 配置：
 
 ```kotlin
 lint {
@@ -112,39 +112,39 @@ lint {
 }
 ```
 
-- **`LogNotTimber`**: Promoted from a warning to an error to enforce the usage of Timber instead of the classic logger.
-- **`MissingTranslation`**: Disabled because translations are added only during CI release builds.
+- **`LogNotTimber`**：从警告提升为错误，以强制使用 Timber 而不是传统记录器。
+- **`MissingTranslation`**：因翻译仅在 CI 发布构建时添加而禁用。
 
-Changes to lint levels should be made in a PR with a clear explanation.
+对于 lint 级别的更改，应在 PR 中进行，并附上清晰的解释。
 
-## Baseline management
+## 基准管理
 
-### What is a baseline?
+### 基准是什么？
 
-The baseline is an XML file (`lint-baseline.xml`) in each Gradle module that lists ignored errors. It was created when the linter was first enabled to avoid fixing hundreds of pre-existing issues.
+基准是每个 Gradle 模块中的 XML 文件 (`lint-baseline.xml`)，列出了被忽略的错误。它是在第一次启用检查工具时创建的，以避免修复数百个已有问题。
 
 :::note
-A great first contribution is to remove issues from the baseline by fixing them.
+一个很好的首次贡献是通过修复问题从基准中删除它们。
 :::
 
-### Updating the baseline
+### 更新基准
 
-When updating the Android Gradle Plugin, new lint issues may arise, or existing ones may change. To regenerate the baseline:
+在更新 Android Gradle 插件时，可能会出现新的 lint 问题，或现有问题可能会有所变化。要重新生成基准：
 
 ```bash
 ./gradlew updateLintBaseline
 ```
 
-After updating, review the ignored errors to determine if they should be addressed now or later. Open a GitHub PR or issue as needed.
+更新后，请审查被忽略的错误，以确定它们是现在解决还是稍后解决。根据需要打开 GitHub PR 或问题。
 
-## Extending lint rules
+## 扩展 lint 规则
 
-We encourage you to propose new linter rules specific to our project. These rules can help identify misuse of APIs or enforce design patterns.
+我们鼓励您提出针对我们项目的新的检查工具规则。这些规则可以帮助识别 API 的误用或强制执行设计模式。
 
-## Tips for contributors
+## 贡献者提示
 
-- Fix lint issues rather than ignoring them whenever possible.
-- Provide clear explanations in PRs for any changes to lint configurations or baselines.
-- Use the linter locally to catch issues early and save CI resources.
+- 尽可能修复 lint 问题，而不是忽略它们。
+- 在 PR 中为任何 lint 配置或基准的更改提供清晰的解释。
+- 在本地使用检查工具以提前捕捉问题，节省 CI 资源。
 
-Happy linting! 🚀
+祝检查顺利！ 🚀

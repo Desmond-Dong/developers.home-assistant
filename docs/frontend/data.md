@@ -1,29 +1,29 @@
 ---
-title: "Frontend data"
-sidebar_label: "Data"
+title: "前端数据"
+sidebar_label: "数据"
 ---
 
-The frontend passes a single `hass` object around. This object contains the latest state, allows you to send commands back to the server and provides helpers to format entity state.
+前端传递一个单一的 `hass` 对象。这个对象包含了最新的状态，允许你发送命令回服务器，并提供格式化实体状态的辅助功能。
 
-Whenever a state changes, a new version of the objects that changed are created. So you can easily see if something has changed by doing a strict equality check:
+每当状态发生变化时，都会创建一个新的变化对象。所以你可以通过进行严格的相等性检查轻松看出是否有变化：
 
 ```js
 const changed = newVal !== oldVal;
 ```
 
-In order to see the data available in the `hass` object, visit your HomeAssistant frontend in your favorite browser and open the browser's developer tools. On the elements panel, select the `<home-assistant>` element, or any other element that has the `hass` property, and then run the following command in the console panel:
+为了查看 `hass` 对象中可用的数据，访问你喜欢的浏览器中的 HomeAssistant 前端并打开浏览器的开发者工具。在元素面板中，选择 `<home-assistant>` 元素，或任何其他具有 `hass` 属性的元素，然后在控制台面板中运行以下命令：
 
 ```js
 $0.hass
 ```
 
-This method of reading the `hass` object should only be used as a reference. In order to interact with `hass` in your code, make sure it is passed to your code correctly.
+这种读取 `hass` 对象的方法仅应作为参考。为了在你的代码中与 `hass` 进行交互，确保它被正确传递给你的代码。
 
-## Data
+## 数据
 
 ### `hass.states`
 
-An object containing the states of all entities in Home Assistant. The key is the entity_id, the value is the state object.
+一个包含 Home Assistant 中所有实体状态的对象。键是 entity_id，值是状态对象。
 
 ```json
 {
@@ -39,7 +39,7 @@ An object containing the states of all entities in Home Assistant. The key is th
       "next_setting": "2018-08-17T18:07:37+00:00",
       "elevation": 60.74,
       "azimuth": 297.69,
-      "friendly_name": "Sun"
+      "friendly_name": "太阳"
     },
     "last_changed": "2018-08-17T13:46:59.083836+00:00",
     "last_updated": "2018-08-17T13:49:30.378101+00:00",
@@ -70,7 +70,7 @@ An object containing the states of all entities in Home Assistant. The key is th
         0.496
       ],
       "white_value": 200,
-      "friendly_name": "Ceiling Lights",
+      "friendly_name": "天花板灯",
       "supported_features": 151
     },
     "last_changed": "2018-08-17T13:46:59.129248+00:00",
@@ -85,7 +85,7 @@ An object containing the states of all entities in Home Assistant. The key is th
 
 ### `hass.user`
 
-The logged in user.
+已登录用户。
 
 ```json
 {
@@ -102,13 +102,13 @@ The logged in user.
 }
 ```
 
-## Methods
+## 方法
 
-All methods starting with `call` are async methods. This means that they will return a `Promise` that will resolve with the result of the call.
+所有以 `call` 开头的方法都是异步方法。这意味着它们将返回一个 `Promise`，该 `Promise` 将以调用的结果解析。
 
 ### `hass.callService(domain, service, data)`
 
-Call a service action on the backend.
+在后台调用一个服务操作。
 
 ```js
 hass.callService('light', 'turn_on', {
@@ -118,62 +118,62 @@ hass.callService('light', 'turn_on', {
 
 ### `hass.callWS(message)`
 
-Call a WebSocket command on the backend.
+在后台调用 WebSocket 命令。
 
 ```js
 this.hass.callWS({
   type: 'config/auth/create',
   name: 'Paulus',
 }).then(userResponse =>
-  console.log("Created user", userResponse.user.id));
+  console.log("创建用户", userResponse.user.id));
 ```
 
 ### `hass.callApi(method, path, data)`
 
-Call an API on the Home Assistant server. For example, if you want to fetch all Home Assistant backups by issuing a GET request to `/api/hassio/backups`:
+在 Home Assistant 服务器上调用 API。例如，如果你想通过向 `/api/hassio/backups` 发出 GET 请求来获取所有 Home Assistant 备份：
 
 ```js
 hass.callApi('get', 'hassio/backups')
-  .then(backups => console.log('Received backups!', backups));
+  .then(backups => console.log('接收到的备份！', backups));
 ```
 
-If you need to pass in data, pass a third argument:
+如果需要传递数据，传递第三个参数：
 
 ```js
 hass.callApi('delete', 'notify.html5', { subscription: 'abcdefgh' });
 ```
 
 :::info
-We're moving away from API calls and are migrating everything to `hass.callWS(message)` calls.
+我们正在逐步淘汰 API 调用，并将一切迁移到 `hass.callWS(message)` 调用。
 :::
 
-## Entity state formatting
+## 实体状态格式化
 
-These methods allow you to format the state and attributes of an entity. The value will be localized using user profile settings (language, number format, date format, timezone) and unit of measurement.
+这些方法允许你格式化实体的状态和属性。值将使用用户个人资料设置（语言、数字格式、日期格式、时区）和计量单位进行本地化。
 
 ### `hass.formatEntityState(stateObj, state)`
 
-Format the state of an entity. You need to pass the entity state object.
+格式化实体的状态。你需要传递实体状态对象。
 
 ```js
-hass.formatEntityState(hass.states["light.my_light"]); // "On"
+hass.formatEntityState(hass.states["light.my_light"]); // "开启"
 ```
 
-You can force the state value using the second optional parameter.
+你可以使用第二个可选参数强制状态值。
 
 ```js
-hass.formatEntityState(hass.states["light.my_light"], 'off'); // "Off"
+hass.formatEntityState(hass.states["light.my_light"], 'off'); // "关闭"
 ```
 
 ### `hass.formatEntityAttributeValue(stateObj, attribute, value)`
 
-Format the attribute value of an entity. You need to pass the entity state object and the attribute name.
+格式化实体的属性值。你需要传递实体状态对象和属性名称。
 
 ```js
 hass.formatEntityAttributeValue(hass.states["climate.thermostat"], "current_temperature"); // "20.5 °C"
 ```
 
-You can force the state value using the third optional parameter.
+你可以使用第三个可选参数强制状态值。
 
 ```js
 hass.formatEntityAttributeValue(hass.states["climate.thermostat"], "current_temperature", 18); // "18 °C"
@@ -181,8 +181,7 @@ hass.formatEntityAttributeValue(hass.states["climate.thermostat"], "current_temp
 
 ### `hass.formatEntityAttributeName(stateObj, attribute)`
 
-Format the attribute name of an entity. You need to pass the entity state object and the attribute name.
+格式化实体的属性名称。你需要传递实体状态对象和属性名称。
 
 ```js
-hass.formatEntityAttributeName(hass.states["climate.thermostat"], "current_temperature"); // "Current temperature"
-```
+hass.formatEntityAttributeName(hass.states["climate.thermostat"], "current_temperature"); // "当前温度"

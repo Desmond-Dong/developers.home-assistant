@@ -1,20 +1,20 @@
 ---
-title: "Integration with multiple platforms"
-sidebar_label: Multiple platforms
+title: "与多个平台的集成"
+sidebar_label: 多个平台
 ---
 
-Most integrations consist of a single platform. And in that case, it's fine to just define that one platform. However, if you are going to add a second platform, you will want to centralize your connection logic. This is done inside the component (`__init__.py`).
+大多数集成由单个平台组成。在这种情况下，只需定义一个平台即可。然而，如果您要添加第二个平台，您将希望集中管理您的连接逻辑。这在组件内部完成（`__init__.py`）。
 
-If your integration is configurable via `configuration.yaml`, it will cause the entry point of your configuration to change, as now users will need to set up your integration directly, and it is up to your integration to set up the platforms.
+如果您的集成可以通过 `configuration.yaml` 进行配置，则会导致您的配置入口点发生变化，因为现在用户需要直接设置您的集成，您的集成负责设置平台。
 
-## Loading platforms when configured via a config entry
+## 当通过配置条目配置时加载平台
 
-If your integration is set up via a config entry, you will need to forward the config entry to the appropriate integration to set up your platform. For more info, see the [config entry documentation](config_entries_index.md#for-platforms).
+如果您的集成是通过配置条目设置的，您需要将配置条目转发到适当的集成，以设置您的平台。欲了解更多信息，请参见 [配置条目文档](config_entries_index.md#for-platforms)。
 
-## Loading platforms when configured via configuration.yaml
+## 当通过 configuration.yaml 配置时加载平台
 
-If your integration is not using config entries, it will have to use our discovery helpers to set up its platforms. Note, this approach does not support unloading.
+如果您的集成不使用配置条目，则必须使用我们的发现助手来设置其平台。请注意，此方法不支持卸载。
 
-To do this, you will need to use the `load_platform` and `async_load_platform` methods from the discovery helper.
+为此，您需要使用发现助手中的 `load_platform` 和 `async_load_platform` 方法。
 
-- See also a [full example that implements this logic](https://github.com/home-assistant/example-custom-config/tree/master/custom_components/example_load_platform/)
+- 另见 [实现该逻辑的完整示例](https://github.com/home-assistant/example-custom-config/tree/master/custom_components/example_load_platform/)

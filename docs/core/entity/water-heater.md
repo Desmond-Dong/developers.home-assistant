@@ -1,81 +1,80 @@
 ---
-title: Water heater entity
-sidebar_label: Water heater
+title: 热水器实体
+sidebar_label: 热水器
 ---
 
-Derive entity platforms from [`homeassistant.components.water_heater.WaterHeaterEntity`](https://github.com/home-assistant/home-assistant/blob/master/homeassistant/components/water_heater/__init__.py)
+从 [`homeassistant.components.water_heater.WaterHeaterEntity`](https://github.com/home-assistant/home-assistant/blob/master/homeassistant/components/water_heater/__init__.py) 派生实体平台
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应始终仅返回内存中的信息，而不进行输入/输出（如网络请求）。实现 `update()` 或 `async_update()` 来获取数据。
 :::
 
-| Name                  | Type        | Default   | Description
+| 名称                   | 类型        | 默认值      | 描述
 | --------------------- | ----------- | --------- | -----------
-| `min_temp`            | `float`     | 110°F     | The minimum temperature that can be set.
-| `max_temp`            | `float`     | 140°F     | The maximum temperature that can be set.
-| `current_temperature` | `float`     | `None`    | The current temperature.
-| `target_temperature`  | `float`     | `None`    | The temperature we are trying to reach.
-| `target_temperature_high` | `float` | `None`    | Upper bound of the temperature we are trying to reach.
-| `target_temperature_low` | `float`  | `None`    | Lower bound of the temperature we are trying to reach.
-| `target_temperature_step` | `float`  | `None`    | The supported step size a target temperature can be increased or decreased.
-| `temperature_unit`    | `str`       | `NotImplementedError` | One of `TEMP_CELSIUS`, `TEMP_FAHRENHEIT`, or `TEMP_KELVIN`.
-| `current_operation`   | `string`    | `None`    | The current operation mode.
-| `operation_list`      | `List[str]` | `None`    | List of possible operation modes.
-| `supported_features`  | `List[str]` | `NotImplementedError` | List of supported features.
-| `is_away_mode_on`     | `bool`      | `None`    | The current status of away mode.
+| `min_temp`            | `float`     | 110°F     | 可设定的最低温度。
+| `max_temp`            | `float`     | 140°F     | 可设定的最高温度。
+| `current_temperature` | `float`     | `None`    | 当前温度。
+| `target_temperature`  | `float`     | `None`    | 我们试图达到的温度。
+| `target_temperature_high` | `float` | `None`    | 我们试图达到的温度的上限。
+| `target_temperature_low` | `float`  | `None`    | 我们试图达到的温度的下限。
+| `target_temperature_step` | `float`  | `None`    | 目标温度可以增加或减少的支持步长。
+| `temperature_unit`    | `str`       | `NotImplementedError` | `TEMP_CELSIUS`、`TEMP_FAHRENHEIT` 或 `TEMP_KELVIN` 之一。
+| `current_operation`   | `string`    | `None`    | 当前操作模式。
+| `operation_list`      | `List[str]` | `None`    | 可能的操作模式列表。
+| `supported_features`  | `List[str]` | `NotImplementedError` | 支持的功能列表。
+| `is_away_mode_on`     | `bool`      | `None`    | 现状的外出模式。
 
-The allowed operation modes are the states specified in the base component and implementations of the water_heater component cannot differ.
+允许的操作模式是基本组件中指定的状态，水热器组件的实现不能有所不同。
 
-Properties have to follow the units defined in the `temperature_unit`.
+属性必须遵循 `temperature_unit` 中定义的单位。
 
-## States
+## 状态
 
-| State | Description
-| ----- | -----------
-| `STATE_ECO` | Energy efficient mode, provides energy savings and fast heating.
-| `STATE_ELECTRIC` | Electric only mode, uses the most energy.
-| `STATE_PERFORMANCE` | High performance mode.
-| `STATE_HIGH_DEMAND` | Meet high demands when water heater is undersized.
-| `STATE_HEAT_PUMP` | Slowest to heat, but uses less energy.
-| `STATE_GAS` | Gas only mode, uses the most energy.
-| `STATE_OFF` | The water heater is off.
+| 状态         | 描述
+| ---------- | -----------
+| `STATE_ECO` | 节能模式，提供节能和快速加热。
+| `STATE_ELECTRIC` | 仅电模式，使用最多的能源。
+| `STATE_PERFORMANCE` | 高性能模式。
+| `STATE_HIGH_DEMAND` | 满足当热水器规模不足时的高需求。
+| `STATE_HEAT_PUMP` | 加热最慢，但使用较少能源。
+| `STATE_GAS` | 仅燃气模式，使用最多的能源。
+| `STATE_OFF` | 热水器关闭。
 
-## Supported features
+## 支持的功能
 
-Supported features are defined by using values in the `WaterHeaterEntityFeature` enum
-and are combined using the bitwise or (`|`) operator.
+支持的功能通过使用 `WaterHeaterEntityFeature` 枚举中的值定义，并使用按位或（`|`）运算符组合。
 
-| Value                | Description               |
+| 值                   | 描述                       |
 | -------------------- | ------------------------- |
-| `TARGET_TEMPERATURE` | Temperature can be set    |
-| `OPERATION_MODE`     | Operation mode can be set |
-| `AWAY_MODE`          | Away mode can be set      |
-| `ON_OFF`             | Can be turned on or off   |
+| `TARGET_TEMPERATURE` | 可以设置温度               |
+| `OPERATION_MODE`     | 可以设置操作模式           |
+| `AWAY_MODE`          | 可以设置外出模式           |
+| `ON_OFF`             | 可以打开或关闭             |
 
-## Methods
+## 方法
 
-### `set_temperature` or `async_set_temperature`
+### `set_temperature` 或 `async_set_temperature`
 
-Sets the temperature the water heater should heat water to.
+设置热水器加热水的温度。
 
-### `set_operation_mode`or `async_set_operation_mode`
+### `set_operation_mode` 或 `async_set_operation_mode`
 
-Sets the operation mode of the water heater. Must be in the operation_list.
+设置热水器的操作模式。必须出现在操作列表中。
 
-### `turn_away_mode_on` or `async_turn_away_mode_on`
+### `turn_away_mode_on` 或 `async_turn_away_mode_on`
 
-Set the water heater to away mode.
+将热水器设置为外出模式。
 
-### `turn_away_mode_off` or `async_turn_away_mode_off`
+### `turn_away_mode_off` 或 `async_turn_away_mode_off`
 
-Set the water heater back to the previous operation mode. Turn off away mode.
+将热水器恢复到之前的操作模式。关闭外出模式。
 
-### `turn_on` or `async_turn_on`
+### `turn_on` 或 `async_turn_on`
 
-Turns the water heater on.
+打开热水器。
 
-### `turn_off` or `async_turn_off`
+### `turn_off` 或 `async_turn_off`
 
-Turns the water heater off.
+关闭热水器。

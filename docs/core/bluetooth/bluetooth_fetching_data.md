@@ -1,36 +1,35 @@
 ---
-title: "Fetching Bluetooth data"
+title: "获取蓝牙数据"
 ---
 
-## Choosing a method to fetch data
+## 选择获取数据的方法
 
-If the device's primary method to notify of updates is Bluetooth advertisements and its primary function is a sensor, binary sensor, or firing events:
+如果设备的主要更新通知方式是蓝牙广告，并且其主要功能是传感器、二进制传感器或触发事件：
 
-- If all sensors are updated via Bluetooth advertisements: [`PassiveBluetoothProcessorCoordinator`](#passivebluetoothprocessorcoordinator)
-- If active connection are needed for some sensors: [`ActiveBluetoothProcessorCoordinator`](#activebluetoothprocessorcoordinator)
+- 如果所有传感器通过蓝牙广告更新：[`PassiveBluetoothProcessorCoordinator`](#passivebluetoothprocessorcoordinator)
+- 如果某些传感器需要主动连接：[`ActiveBluetoothProcessorCoordinator`](#activebluetoothprocessorcoordinator)
 
-If the device's primary method to notify of updates is Bluetooth advertisements and its primary function is **not** a sensor, binary sensor, or firing events:
+如果设备的主要更新通知方式是蓝牙广告，并且其主要功能**不是**传感器、二进制传感器或触发事件：
 
-- If all entities are updated via Bluetooth advertisements: [`PassiveBluetoothCoordinator`](#passivebluetoothcoordinator)
-- If active connections are needed: [`ActiveBluetoothCoordinator`](#activebluetoothcoordinator)
+- 如果所有实体通过蓝牙广告更新：[`PassiveBluetoothCoordinator`](#passivebluetoothcoordinator)
+- 如果需要主动连接：[`ActiveBluetoothCoordinator`](#activebluetoothcoordinator)
 
-If your device only communicates with an active Bluetooth connection and does not use Bluetooth advertisements:
+如果您的设备仅通过主动蓝牙连接进行通信，并且不使用蓝牙广告：
 
 - [`DataUpdateCoordinator`](/docs/integration_fetching_data)
 
 ## BluetoothProcessorCoordinator
 
-The `ActiveBluetoothProcessorCoordinator` and `PassiveBluetoothProcessorCoordinator` significantly reduce the code needed for creating integrations that primary function as sensor, binary sensors, or fire events. By formatting the data fed into the processor coordinators into a `PassiveBluetoothDataUpdate` object, the
-frameworks can take care of creating the entities on demand and allow for minimal `sensor` and `binary_sensor` platform implementations.
+`ActiveBluetoothProcessorCoordinator`和`PassiveBluetoothProcessorCoordinator`显著减少了创建主要作为传感器、二进制传感器或触发事件的集成所需的代码。通过将传递到处理器协调器的数据格式化为`PassiveBluetoothDataUpdate`对象，框架可以按需创建实体，并允许最小化的`sensor`和`binary_sensor`平台实现。
 
-These frameworks require the data coming from the library to be formatted into a `PassiveBluetoothDataUpdate` as shown below:
+这些框架要求来自库的数据被格式化为`PassiveBluetoothDataUpdate`，如下所示：
 
 ```python
 @dataclasses.dataclass(frozen=True)
 class PassiveBluetoothEntityKey:
-    """Key for a passive bluetooth entity.
+    """被动蓝牙实体的键。
 
-    Example:
+    例子：
     key: temperature
     device_id: outdoor_sensor_1
     """
@@ -40,7 +39,7 @@ class PassiveBluetoothEntityKey:
 
 @dataclasses.dataclass(frozen=True)
 class PassiveBluetoothDataUpdate(Generic[_T]):
-    """Generic bluetooth data."""
+    """通用蓝牙数据。"""
 
     devices: dict[str | None, DeviceInfo] = dataclasses.field(default_factory=dict)
     entity_descriptions: Mapping[
@@ -56,7 +55,7 @@ class PassiveBluetoothDataUpdate(Generic[_T]):
 
 ### PassiveBluetoothProcessorCoordinator
 
-Example `async_setup_entry` for an integration `__init__.py` using a `PassiveBluetoothProcessorCoordinator`:
+使用`PassiveBluetoothProcessorCoordinator`的集成`__init__.py`的示例`async_setup_entry`：
 
 ```python
 import logging
@@ -77,7 +76,7 @@ from your_library import DataParser
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Set up example BLE device from a config entry."""
+    """从配置条目设置示例BLE设备。"""
     address = entry.unique_id
     data = DataParser()
     coordinator = hass.data.setdefault(DOMAIN, {})[
@@ -91,13 +90,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     )
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(
-        # only start after all platforms have had a chance to subscribe
+        # 仅在所有平台都有机会订阅后开始
         coordinator.async_start()
     )
     return True
 ```
 
-Example `sensor.py`:
+示例`sensor.py`：
 
 ```python
 from homeassistant import config_entries
@@ -116,10 +115,9 @@ from .const import DOMAIN
 
 
 def sensor_update_to_bluetooth_data_update(parsed_data):
-    """Convert a sensor update to a Bluetooth data update."""
-    # This function must convert the parsed_data
-    # from your library's update_method to a `PassiveBluetoothDataUpdate`
-    # See the structure above
+    """将传感器更新转换为蓝牙数据更新。"""
+    # 此函数必须将parsed_data从您库的update_method转换为`PassiveBluetoothDataUpdate`
+    # 参见上述结构
     return PassiveBluetoothDataUpdate(
         devices={},
         entity_descriptions={},
@@ -133,7 +131,7 @@ async def async_setup_entry(
     entry: config_entries.ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up the example BLE sensors."""
+    """设置示例BLE传感器。"""
     coordinator: PassiveBluetoothProcessorCoordinator = hass.data[DOMAIN][
         entry.entry_id
     ]
@@ -147,23 +145,20 @@ async def async_setup_entry(
 
 
 class ExampleBluetoothSensorEntity(PassiveBluetoothProcessorEntity, SensorEntity):
-    """Representation of an example BLE sensor."""
+    """示例BLE传感器的表示。"""
 
     @property
     def native_value(self) -> float | int | str | None:
-        """Return the native value."""
+        """返回原始值。"""
         return self.processor.entity_data.get(self.entity_key)
 
 ```
 
 ### ActiveBluetoothProcessorCoordinator
 
-An `ActiveBluetoothProcessorCoordinator` functions nearly the same as a `PassiveBluetoothProcessorCoordinator`
-but will also make an active connection to poll for data based on `needs_poll_method` and a `poll_method`
-function which are called when the device's Bluetooth advertisement changes. The `sensor.py` implementation
-is the same as the `PassiveBluetoothProcessorCoordinator`.
+`ActiveBluetoothProcessorCoordinator`的功能与`PassiveBluetoothProcessorCoordinator`几乎相同，但还会建立主动连接，根据`needs_poll_method`和`poll_method`函数轮询数据，当设备的蓝牙广告发生变化时调用。`sensor.py`的实现与`PassiveBluetoothProcessorCoordinator`相同。
 
-Example `async_setup_entry` for an integration `__init__.py` using an `ActiveBluetoothProcessorCoordinator`:
+使用`ActiveBluetoothProcessorCoordinator`的集成`__init__.py`的示例`async_setup_entry`：
 
 ```python
 from homeassistant.config_entries import ConfigEntry
@@ -188,7 +183,7 @@ from your_library import DataParser
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Set up example BLE device from a config entry."""
+    """从配置条目设置示例BLE设备。"""
     address = entry.unique_id
     assert address is not None
     data = DataParser()
@@ -214,10 +209,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         ):
             connectable_device = device
         else:
-            # We have no Bluetooth controller that is in range of
-            # the device to poll it
+            # 我们没有蓝牙控制器在设备的范围内
+            # 进行轮询
             raise RuntimeError(
-                f"No connectable device found for {service_info.device.address}"
+                f"未找到可连接的设备 {service_info.device.address}"
             )
         return await data.async_poll(connectable_device)
 
@@ -231,14 +226,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         update_method=data.update,
         needs_poll_method=_needs_poll,
         poll_method=_async_poll,
-        # We will take advertisements from non-connectable devices
-        # since we will trade the BLEDevice for a connectable one
-        # if we need to poll it
+        # 我们将从不可连接的设备中获取广告
+        # 因为如果我们需要对其进行轮询，我们将用可连接的设备替换BLEDevice
         connectable=False,
     )
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(
-        # only start after all platforms have had a chance to subscribe
+        # 仅在所有平台都有机会订阅后开始
         coordinator.async_start()
     )
     return True
@@ -246,14 +240,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 ## BluetoothCoordinator
 
-The `ActiveBluetoothCoordinator` and `PassiveBluetoothCoordinator` coordinators function similar
-to `DataUpdateCoordinators` except they are driven by incoming advertisement data instead of polling.
+`ActiveBluetoothCoordinator`和`PassiveBluetoothCoordinator`协调器的功能类似于`DataUpdateCoordinators`，但它们由传入的广告数据驱动，而不是轮询。
 
 ### PassiveBluetoothCoordinator
 
-Below is an example of a `PassiveBluetoothDataUpdateCoordinator`. Incoming
-data is received via `_async_handle_bluetooth_event` and processed by the integration's
-library.
+以下是`PassiveBluetoothDataUpdateCoordinator`的示例。通过`_async_handle_bluetooth_event`接收传入数据，并由集成的库处理。
 
 ```python
 import logging
@@ -272,7 +263,7 @@ if TYPE_CHECKING:
 class ExamplePassiveBluetoothDataUpdateCoordinator(
     PassiveBluetoothDataUpdateCoordinator[None]
 ):
-    """Class to manage fetching example data."""
+    """用于管理获取示例数据的类。"""
 
     def __init__(
         self,
@@ -281,7 +272,7 @@ class ExamplePassiveBluetoothDataUpdateCoordinator(
         ble_device: BLEDevice,
         device: YourLibDevice,
     ) -> None:
-        """Initialize example data coordinator."""
+        """初始化示例数据协调器。"""
         super().__init__(
             hass=hass,
             logger=logger,
@@ -295,7 +286,7 @@ class ExamplePassiveBluetoothDataUpdateCoordinator(
     def _async_handle_unavailable(
         self, service_info: bluetooth.BluetoothServiceInfoBleak
     ) -> None:
-        """Handle the device going unavailable."""
+        """处理设备变为不可用的情况。"""
 
     @callback
     def _async_handle_bluetooth_event(
@@ -303,16 +294,16 @@ class ExamplePassiveBluetoothDataUpdateCoordinator(
         service_info: bluetooth.BluetoothServiceInfoBleak,
         change: bluetooth.BluetoothChange,
     ) -> None:
-        """Handle a Bluetooth event."""
-        # Your device should process incoming advertisement data
+        """处理蓝牙事件。"""
+        # 您的设备应该处理传入的广告数据
 
 ```
 
 ### ActiveBluetoothCoordinator
 
-Below is an example of an `ActiveBluetoothDataUpdateCoordinator`. Incoming data is received via `_async_handle_bluetooth_event` and processed by the integration's library.
+以下是`ActiveBluetoothDataUpdateCoordinator`的示例。传入的数据通过`_async_handle_bluetooth_event`接收，并由集成的库处理。
 
-The method passed to `needs_poll_method` is called each time the Bluetooth advertisement changes to determine if the method passed to `poll_method` should be called to make an active connection to the device to obtain additional data.
+传递给`needs_poll_method`的方法在每次蓝牙广告变化时调用，以确定是否应该调用传递给`poll_method`的方法，以建立与设备的主动连接以获取附加数据。
 
 ```python
 import logging
@@ -331,7 +322,7 @@ if TYPE_CHECKING:
 class ExampleActiveBluetoothDataUpdateCoordinator(
     ActiveBluetoothDataUpdateCoordinator[None]
 ):
-    """Class to manage fetching example data."""
+    """用于管理获取示例数据的类。"""
 
     def __init__(
         self,
@@ -340,7 +331,7 @@ class ExampleActiveBluetoothDataUpdateCoordinator(
         ble_device: BLEDevice,
         device: YourLibDevice,
     ) -> None:
-        """Initialize example data coordinator."""
+        """初始化示例数据协调器。"""
         super().__init__(
             hass=hass,
             logger=logger,
@@ -358,8 +349,8 @@ class ExampleActiveBluetoothDataUpdateCoordinator(
         service_info: bluetooth.BluetoothServiceInfoBleak,
         seconds_since_last_poll: float | None,
     ) -> bool:
-        # Only poll if hass is running, we need to poll,
-        # and we actually have a way to connect to the device
+        # 仅在hass正在运行时需要轮询，我们需要轮询，
+        # 并且我们实际上有连接设备的方式
         return (
             self.hass.state == CoreState.running
             and self.device.poll_needed(seconds_since_last_poll)
@@ -373,13 +364,13 @@ class ExampleActiveBluetoothDataUpdateCoordinator(
     async def _async_update(
         self, service_info: bluetooth.BluetoothServiceInfoBleak
     ) -> None:
-        """Poll the device."""
+        """轮询设备。"""
 
     @callback
     def _async_handle_unavailable(
         self, service_info: bluetooth.BluetoothServiceInfoBleak
     ) -> None:
-        """Handle the device going unavailable."""
+        """处理设备变为不可用的情况。"""
 
     @callback
     def _async_handle_bluetooth_event(
@@ -387,7 +378,5 @@ class ExampleActiveBluetoothDataUpdateCoordinator(
         service_info: bluetooth.BluetoothServiceInfoBleak,
         change: bluetooth.BluetoothChange,
     ) -> None:
-        """Handle a Bluetooth event."""
-        # Your device should process incoming advertisement data
-
-```
+        """处理蓝牙事件。"""
+        # 您的设备应该处理传入的广告数据

@@ -1,126 +1,124 @@
 ---
-title: Humidifier entity
-sidebar_label: Humidifier
+title: 加湿器实体
+sidebar_label: 加湿器
 ---
 
-A humidifier entity is a device whose main purpose is to control humidity, i.e. a humidifier or dehumidifier. Derive entity platforms from [`homeassistant.components.humidifier.HumidifierEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/humidifier/__init__.py)
+加湿器实体是一个其主要目的是控制湿度的设备，即加湿器或除湿器。从 [`homeassistant.components.humidifier.HumidifierEntity`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/humidifier/__init__.py) 派生实体平台。
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应始终仅从内存中返回信息，而不进行 I/O（例如网络请求）。实现 `update()` 或 `async_update()` 来获取数据。
 :::
 
-| Name                    | Type                                           | Default                               | Description                                        |
+| 名称                    | 类型                                           | 默认值                               | 描述                                        |
 | ----------------------- | ---------------------------------------------- | ------------------------------------- | -------------------------------------------------- |
-| action                  | <code>HumidifierAction &#124; None</code>      | `None`                                | Returns the current status of the device.          |
-| available_modes         | <code>list[str] &#124; None</code>             | **Required by MODES**                 | The available modes. Requires `SUPPORT_MODES`.     |
-| current_humidity        | <code>float &#124; None</code>                   | `None`                                | The current humidity measured by the device.       |
-| device_class            | <code>HumidifierDeviceClass &#124; None</code> | `None`                                | Type of hygrostat                                  |
-| is_on                   | <code>bool &#124; None</code>                  | `None`                                | Whether the device is on or off.                   |
-| max_humidity            | `float`                                          | `DEFAULT_MAX_HUMIDITY` (value == 100) | The maximum humidity.                              |
-| min_humidity            | `float`                                          | `DEFAULT_MIN_HUMIDITY` (value == 0)   | The minimum humidity.                              |
-| mode                    | <code>str &#124; None</code>                   | **Required**                          | The current active mode. Requires `SUPPORT_MODES`. |
-| target_humidity         | <code>float &#124; None</code>                   | `None`                                | The target humidity the device is trying to reach. |
+| action                  | <code>HumidifierAction &#124; None</code>      | `None`                                | 返回设备的当前状态。                              |
+| available_modes         | <code>list[str] &#124; None</code>             | **要求 MODES**                         | 可用模式。需要 `SUPPORT_MODES`。                     |
+| current_humidity        | <code>float &#124; None</code>                   | `None`                                | 设备测量的当前湿度。                             |
+| device_class            | <code>HumidifierDeviceClass &#124; None</code> | `None`                                | Hygrostat 类型                                    |
+| is_on                   | <code>bool &#124; None</code>                  | `None`                                | 设备是否开启。                                   |
+| max_humidity            | `float`                                          | `DEFAULT_MAX_HUMIDITY`（值 == 100） | 最大湿度。                                     |
+| min_humidity            | `float`                                          | `DEFAULT_MIN_HUMIDITY`（值 == 0）    | 最小湿度。                                     |
+| mode                    | <code>str &#124; None</code>                   | **要求**                              | 当前活动模式。需要 `SUPPORT_MODES`。                   |
+| target_humidity         | <code>float &#124; None</code>                   | `None`                                | 设备试图达到的目标湿度。                         |
 
-### Available device classes
+### 可用设备类别
 
-| Constant                             | Description                                |
-| ------------------------------------ | ------------------------------------------ |
-| `HumidifierDeviceClass.DEHUMIDIFIER` | A dehumidifier                             |
-| `HumidifierDeviceClass.HUMIDIFIER`   | A humidifier                               |
+| 常量                               | 描述                                  |
+| ---------------------------------- | -------------------------------------- |
+| `HumidifierDeviceClass.DEHUMIDIFIER` | 除湿器                                  |
+| `HumidifierDeviceClass.HUMIDIFIER`   | 加湿器                                  |
 
 
-### Modes
+### 模式
 
-A device can have different modes of operation that it might want to show to the user. They could be viewed as presets or some device states with reduced or enhanced functionality for special conditions, i.e. "auto" or "baby". There are a couple of built-in modes that will offer translations, but you're also allowed to add custom modes if that better represents the device.
+设备可以具有不同的操作模式，它可能希望向用户显示。这些可以视为预设或在特殊条件下具有减少或增强功能的一些设备状态，例如“自动”或“婴儿”。有几个内置模式将提供翻译，但如果更好地表示设备，您也可以添加自定义模式。
 
-| Name           | Description                              |
-| -------------- | ---------------------------------------  |
-| `MODE_NORMAL`  | No preset is active, normal operation    |
-| `MODE_ECO`     | Device is running an energy-saving mode  |
-| `MODE_AWAY`    | Device is in away mode                   |
-| `MODE_BOOST`   | Device turn all valve full up            |
-| `MODE_COMFORT` | Device is in comfort mode                |
-| `MODE_HOME`    | Device is in home mode                   |
-| `MODE_SLEEP`   | Device is prepared for sleep             |
-| `MODE_AUTO`    | Device is controlling humidity by itself |
-| `MODE_BABY`    | Device is trying to optimize for babies  |
+| 名称           | 描述                                  |
+| -------------- | -------------------------------------  |
+| `MODE_NORMAL`  | 没有激活预设，正常操作                |
+| `MODE_ECO`     | 设备正在运行节能模式                  |
+| `MODE_AWAY`    | 设备处于离家模式                      |
+| `MODE_BOOST`   | 设备将所有阀门全开                    |
+| `MODE_COMFORT` | 设备处于舒适模式                      |
+| `MODE_HOME`    | 设备处于家居模式                      |
+| `MODE_SLEEP`   | 设备为睡眠做好准备                    |
+| `MODE_AUTO`    | 设备自主控制湿度                      |
+| `MODE_BABY`    | 设备试图优化以适应婴儿                 |
 
-## Supported features
+## 支持的特性
 
-Supported features are defined by using values in the `HumidifierEntityFeature` enum
-and are combined using the bitwise or (`|`) operator.
+支持的特性通过使用 `HumidifierEntityFeature` 枚举中的值定义，并使用按位或（`|`）运算符组合。
 
-| Value   | Description                          |
-| ------- | ------------------------------------ |
-| `MODES` | The device supports different modes. |
+| 值      | 描述                              |
+| ------- | ---------------------------------- |
+| `MODES` | 设备支持不同的模式。              |
 
-## Action
+## 操作
 
-The `action` property may return the current operating state of the device, whether it is humidifying or idle. This is an informational property. Please note that when the device is off, the `action` attribute, if present, will automatically be replaced with "off". Also, please note that setting `action` to `off` does not replace the `is_on` property.
+`action` 属性可以返回设备的当前操作状态，是否正在加湿或空闲。 这是一个信息性属性。请注意，当设备关闭时，`action` 属性（如果存在）将自动替换为“off”。此外，请注意，将 `action` 设置为 `off` 不会替换 `is_on` 属性。
 
-Current values for `HumidifierAction`:
+`HumidifierAction` 的当前值：
 
-| Name          | Description                                |
-| ------------- | ------------------------------------------ |
-| `HUMIDIFYING` | The device is currently humidifying.       |
-| `DRYING`      | The device is currently dehumidifying.     |
-| `IDLE`        | The device is on but not active right now. |
-| `OFF`         | The device is switched off.                |
+| 名称          | 描述                                |
+| ------------- | ------------------------------------ |
+| `HUMIDIFYING` | 设备正在加湿。                       |
+| `DRYING`      | 设备正在除湿。                       |
+| `IDLE`        | 设备开启但目前不活动。               |
+| `OFF`         | 设备已关闭。                         |
 
-## Methods
+## 方法
 
-### Set mode
+### 设置模式
 
 ```python
 class MyHumidifierEntity(HumidifierEntity):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def set_mode(self, mode):
-        """Set new target preset mode."""
+        """设置新的目标预设模式。"""
 
     async def async_set_mode(self, mode):
-        """Set new target preset mode."""
+        """设置新的目标预设模式。"""
 ```
 
-### Set humidity
+### 设置湿度
 
-If the current mode does not allow to adjust target humidity, the device should automatically change its mode to the one which makes it possible upon this call.
+如果当前模式不允许调整目标湿度，设备应在此调用时自动将其模式更改为可以实现的那个模式。
 
 ```python
 class MyHumidifierEntity(HumidifierEntity):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def set_humidity(self, humidity):
-        """Set new target humidity."""
+        """设置新的目标湿度。"""
 
     async def async_set_humidity(self, humidity):
-        """Set new target humidity."""
+        """设置新的目标湿度。"""
 ```
 
-### Turn on
+### 开启
 
 ```python
 class MyHumidifierEntity(HumidifierEntity):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def turn_on(self, **kwargs):
-        """Turn the device on."""
+        """将设备开启。"""
 
     async def async_turn_on(self, **kwargs):
-        """Turn the device on."""
+        """将设备开启。"""
 ```
 
-### Turn off
+### 关闭
 
 ```python
 class MyHumidifierEntity(HumidifierEntity):
-    # Implement one of these methods.
+    # 实现这些方法之一。
 
     def turn_off(self, **kwargs):
-        """Turn the device off."""
+        """将设备关闭。"""
 
     async def async_turn_off(self, **kwargs):
-        """Turn the device off."""
-```
+        """将设备关闭。"""

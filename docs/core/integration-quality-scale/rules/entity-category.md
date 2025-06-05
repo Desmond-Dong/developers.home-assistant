@@ -1,30 +1,30 @@
 ---
-title: "Entities are assigned an appropriate EntityCategory"
+title: "实体被分配了适当的实体类别"
 ---
 
-## Reasoning
+## 理由
 
-Entities should be assigned an appropriate EntityCategory to ensure that they are correctly classified and can be easily identified, when the default category is inappropriate.
-The entity category is used in, for example, auto-generated dashboards.
+实体应该被分配一个适当的实体类别，以确保它们被正确分类并且在默认类别不合适时可以被轻松识别。
+实体类别在例如自动生成的仪表板中使用。
 
-## Example implementation
+## 示例实现
 
-In this example, we have a sensor that returns a diagnostic value.
+在这个例子中，我们有一个返回诊断值的传感器。
 
 `sensor.py`
 ```python {4} showLineNumbers
 class MySensor(SensorEntity):
-    """Representation of a sensor."""
+    """传感器的表示。"""
 
     _attr_entity_category = EntityCategory.DIAGNOSTIC
 
     def __init__(self, ...) -> None:
 ```
 
-## Additional resources
+## 额外资源
 
-To learn more about the registry properties, checkout the [documentation](/docs/core/entity#registry-properties) about it.
+要了解更多关于注册表属性的信息，请查看 [文档](/docs/core/entity#registry-properties)。
 
-## Exceptions
+## 例外
 
-There are no exceptions to this rule.
+此规则没有例外。

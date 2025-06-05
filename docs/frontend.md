@@ -1,19 +1,19 @@
 ---
-title: "Home Assistant Frontend"
-sidebar_label: "Introduction"
+title: "Home Assistant 前端"
+sidebar_label: "介绍"
 ---
 
-The Home Assistant frontend allows users to browse and control the state of their house, manage their automations and configure integrations.
+Home Assistant 前端允许用户浏览和控制他们家中的状态，管理自动化并配置集成。
 
-The frontend is designed as a mobile-first experience. It is a progressive web application and offers an app-like experience to our users.
+前端设计为移动优先体验。它是一个渐进式网络应用程序，为我们的用户提供类似应用的体验。
 
-The Home Assistant frontend needs to be fast. But it also needs to work on a wide range of old devices. To do this, we ship two versions of the frontend:
+Home Assistant 前端需要快速运行。但它也需要在广泛的旧设备上工作。为了实现这一点，我们发布了两个版本的前端：
 
-- **Latest:** this build is compatible with the two latest versions of evergreen browsers and is optimized to be fast.
-- **ES5:** this build is compatible with browsers released in the last 5+ years and is optimized to be compatible.
+- **最新版本：** 此构建与两个最新版本的常青浏览器兼容，并进行了优化以加快速度。
+- **ES5：** 此构建与过去 5 年内发布的浏览器兼容，并进行了兼容性优化。
 
-A device that runs the latest technology does not also have to be fast. You can buy budget Android phones that run the latest Android version with access to the latest Firefox and Chrome browsers, but with low performance chipset and limited memory. Our latest build needs to run smooth on these devices too.
+运行最新技术的设备并不一定也要快速。您可以购买预算型安卓手机，这些手机运行最新的安卓版本，并可以访问最新的 Firefox 和 Chrome 浏览器，但处理器性能较低且内存有限。我们的最新构建也需要在这些设备上运行流畅。
 
-For a deep dive into our frontend and its design choices, see [this blog post](/blog/2019/05/22/internet-of-things-and-the-modern-web).
+有关我们的前端及其设计选择的深入探讨，请参见 [这篇博客文章](/blog/2019/05/22/internet-of-things-and-the-modern-web)。
 
-![Screenshot of the Home Assistant Frontend](/img/en/frontend/frontend-hero.png)
+![Home Assistant 前端截图](/img/en/frontend/frontend-hero.png)

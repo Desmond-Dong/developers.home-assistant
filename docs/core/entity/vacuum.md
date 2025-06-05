@@ -1,93 +1,91 @@
 ---
-title: Vacuum entity
-sidebar_label: Vacuum
+title: 吸尘器实体
+sidebar_label: 吸尘器
 ---
 
-Derive entity platforms from [`homeassistant.components.vacuum.StateVacuumEntity`](https://github.com/home-assistant/home-assistant/blob/master/homeassistant/components/vacuum/__init__.py)
+从 [`homeassistant.components.vacuum.StateVacuumEntity`](https://github.com/home-assistant/home-assistant/blob/master/homeassistant/components/vacuum/__init__.py) 派生实体平台
 
-## Properties
+## 属性
 
 :::tip
-Properties should always only return information from memory and not do I/O (like network requests). Implement `update()` or `async_update()` to fetch data.
+属性应该始终只从内存中返回信息，而不进行 I/O（如网络请求）。实现 `update()` 或 `async_update()` 以获取数据。
 :::
 
 :::note
-`VacuumEntity` is deprecated and will be removed in future releases. Please use or migrate to the `StateVacuumEntity`
+`VacuumEntity` 已被弃用，并将在将来的版本中移除。请使用或迁移到 `StateVacuumEntity`
 :::
 
-| Name | Type | Default | Description
+| 名称 | 类型 | 默认 | 描述
 | ---- | ---- | ------- | -----------
-| battery_icon | string | function | Battery icon to show in UI.
-| battery_level | int | `none` | Current battery level.
-| fan_speed | string | `none` | The current fan speed.
-| fan_speed_list | list | `NotImplementedError()`| List of available fan speeds.
-| name | string | **Required** | Name of the entity.
-| activity | VacuumActivity | **Required** | Return one of the states listed in the states section.
+| battery_icon | 字符串 | 函数 | 在 UI 中显示的电池图标。
+| battery_level | 整数 | `none` | 当前电池电量。
+| fan_speed | 字符串 | `none` | 当前风扇速度。
+| fan_speed_list | 列表 | `NotImplementedError()` | 可用风扇速度的列表。
+| name | 字符串 | **必需** | 实体的名称。
+| activity | VacuumActivity | **必需** | 返回在状态部分列出的状态之一。
 
-## States
+## 状态
 
-Setting the state should return an enum from VacuumActivity in the `activity` property.
+设置状态应返回 `activity` 属性中的 `VacuumActivity` 枚举。
 
-| Value | Description
+| 值 | 描述
 | ----- | -----------
-| `CLEANING` | The vacuum is currently cleaning.
-| `DOCKED` | The vacuum is currently docked, it is assumed that docked can also mean charging.
-| `IDLE` | The vacuum is not paused, not docked and does not have any errors.
-| `PAUSED` | The vacuum was cleaning but was paused without returning to the dock.
-| `RETURNING` | The vacuum is done cleaning and is currently returning to the dock, but not yet docked.
-| `ERROR` | The vacuum encountered an error while cleaning.
+| `CLEANING` | 吸尘器正在清洁中。
+| `DOCKED` | 吸尘器当前已停靠，假定停靠也可以意味着充电。
+| `IDLE` | 吸尘器未暂停，未停靠且没有任何错误。
+| `PAUSED` | 吸尘器正在清洁但暂停，没有返回到停靠点。
+| `RETURNING` | 吸尘器清洁完成，正在返回停靠点，但尚未停靠。
+| `ERROR` | 吸尘器在清洁时遇到错误。
 
-## Supported features
+## 支持的功能
 
-Supported features are defined by using values in the `VacuumEntityFeature` enum
-and are combined using the bitwise or (`|`) operator.
-Note that all vacuum entity platforms derived from `homeassistant.components.vacuum.StateVacuumEntity`
-must set the `VacuumEntityFeature.STATE` flag.
+支持的功能由 `VacuumEntityFeature` 枚举中的值定义，并使用按位或 (`|`) 运算符组合。
+请注意，所有从 `homeassistant.components.vacuum.StateVacuumEntity` 派生的吸尘器实体平台必须设置 `VacuumEntityFeature.STATE` 标志。
 
-| Value          | Description                                          |
-| -------------- | ---------------------------------------------------- |
-| `BATTERY`      | The vacuum supports retrieving battery status.       |
-| `CLEAN_SPOT`   | The vacuum supports spot cleaning.                   |
-| `FAN_SPEED`    | The vacuum supports setting fan speed.               |
-| `LOCATE`       | The vacuum supports locating.                        |
-| `MAP`          | The vacuum supports retrieving its map.              |
-| `PAUSE`        | The vacuum supports the pause command.               |
-| `RETURN_HOME`  | The vacuum supports the return to the dock command.  |
-| `SEND_COMMAND` | The vacuum supports sending a command to the vacuum. |
-| `START`        | The vacuum supports the start command.               |
-| `STATE`        | The vacuum supports returning its state.             |
-| `STOP`         | The vacuum supports the stop command.                |
+| 值            | 描述                                              |
+| -------------- | --------------------------------------------------- |
+| `BATTERY`      | 吸尘器支持获取电池状态。                           |
+| `CLEAN_SPOT`   | 吸尘器支持点清洁。                                |
+| `FAN_SPEED`    | 吸尘器支持设置风扇速度。                          |
+| `LOCATE`       | 吸尘器支持定位。                                  |
+| `MAP`          | 吸尘器支持获取其地图。                            |
+| `PAUSE`        | 吸尘器支持暂停命令。                              |
+| `RETURN_HOME`  | 吸尘器支持返回停靠点命令。                        |
+| `SEND_COMMAND` | 吸尘器支持向吸尘器发送命令。                      |
+| `START`        | 吸尘器支持开始命令。                              |
+| `STATE`        | 吸尘器支持返回其状态。                            |
+| `STOP`         | 吸尘器支持停止命令。                              |
 
-## Methods
+## 方法
 
-### `clean_spot` or `async_clean_spot`
+### `clean_spot` 或 `async_clean_spot`
 
-Perform a spot clean-up.
+执行点清洁。
 
-### `locate` or `async_locate`
+### `locate` 或 `async_locate`
 
-Locate the vacuum cleaner.
+定位吸尘器。
 
-### `pause` or `async_pause`
+### `pause` 或 `async_pause`
 
-Pause the cleaning task.
+暂停清洁任务。
 
-### `return_to_base` or `async_return_to_base`
+### `return_to_base` 或 `async_return_to_base`
 
-Set the vacuum cleaner to return to the dock.
+设置吸尘器返回停靠点。
 
-### `send_command` or `async_send_command`
+### `send_command` 或 `async_send_command`
 
-Send a command to a vacuum cleaner.
+向吸尘器发送命令。
 
-### `set_fan_speed` or `async_set_fan_speed`
+### `set_fan_speed` 或 `async_set_fan_speed`
 
-Set the fan speed.
+设置风扇速度。
 
-### `start` or `async_start`
+### `start` 或 `async_start`
 
-Start or resume the cleaning task.
+启动或恢复清洁任务。
 
-### `stop` or `async_stop`
+### `stop` 或 `async_stop`
 
-Stop the vacuum cleaner, do not return to base.
+停止吸尘器，不返回到基站。

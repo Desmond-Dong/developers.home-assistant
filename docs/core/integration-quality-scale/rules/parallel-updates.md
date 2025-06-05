@@ -1,57 +1,57 @@
 ---
-title: "Number of parallel updates is specified"
+title: "指定并行更新的数量"
 ---
 
-## Reasoning
+## 理由
 
-Some devices or services don't like receiving a lot of requests at the same time.
-To avoid that, Home Assistant has a built-in feature to limit the number of requests that are sent to a device or service at the same time.
+某些设备或服务不喜欢同时接收大量请求。  
+为了避免这种情况，Home Assistant 内置了一个功能，以限制同时发送到设备或服务的请求数量。
 
-This will be applied to both entity updates and actions calls.
+这将适用于实体更新和动作调用。
 
-We consider it a good practice to explicitly set the number of parallel updates.
+我们认为显式设置并行更新的数量是一种良好的实践。
 
-## Example implementation
+## 示例实现
 
-In the example below, we set the number of parallel updates to 1.
-Which means if there are more entities on the sensor platform, they will be updated one by one.
-If there is no need to limit the number of parallel updates, you can set it to 0.
+在下面的示例中，我们将并行更新的数量设置为 1。  
+这意味着如果传感器平台上有更多实体，它们将逐个更新。  
+如果不需要限制并行更新的数量，可以将其设置为 0。
 
 `sensor.py`
 ```python {1} showLineNumbers
 PARALLEL_UPDATES = 1
 
 class MySensor(SensorEntity):
-    """Representation of a sensor."""
+    """传感器的表示。"""
 
     def __init__(self, device: Device) -> None:
-        """Initialize the sensor."""
+        """初始化传感器。"""
         ...
 ```
 
-### When using a coordinator
+### 使用协调器时
 
-When using a coordinator, you are already centralizing the data updates.
-This means you can set `PARALLEL_UPDATES = 0` for read-only platforms (`binary_sensor`, `sensor`, `device_tracker`, `event`)
-and only the action calls will be relevant to consider for setting an appropriate number of parallel updates.
+使用协调器时，您已经集中管理数据更新。  
+这意味着您可以为只读平台（`binary_sensor`、`sensor`、`device_tracker`、`event`）设置 `PARALLEL_UPDATES = 0`，  
+并且只有动作调用会考虑设置适当的并行更新数量。
 
 `sensor.py`
 ```python {1,2} showLineNumbers
-# Coordinator is used to centralize the data updates
+# 使用协调器集中管理数据更新
 PARALLEL_UPDATES = 0
 
 class MySensor(CoordinatorEntity, SensorEntity):
-    """Representation of a sensor."""
+    """传感器的表示。"""
 
     def __init__(self, device: Device) -> None:
-        """Initialize the sensor."""
+        """初始化传感器。"""
         ...
 ```
 
-## Additional resources
+## 额外资源
 
-For more information about request parallelism, check the [documentation](/docs/integration_fetching_data#request-parallelism) for it.
+有关请求并行性的更多信息，请查看 [文档](/docs/integration_fetching_data#request-parallelism)。
 
-## Exceptions
+## 例外
 
-There are no exceptions to this rule.
+对此规则没有例外。
